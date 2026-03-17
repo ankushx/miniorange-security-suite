@@ -1,0 +1,1123 @@
+/* Admin CSS for IP Restriction Extension - Matching BruteForceProtection Style */
+
+/* Toggle Switch Styles */
+    .toggle-slider {
+        position: relative;
+        width: 4.5rem;
+        height: 2.3rem;
+        background-color: #e5e7eb;
+        border-radius: 9999px;
+        transition: background-color 0.3s ease-in-out;
+        display: flex;
+        align-items: center;
+        padding: 0 5px;
+        cursor: pointer;
+    }
+
+    .toggle-slider::after {
+        content: '';
+        position: absolute;
+        top: 5px;
+        left: 0.8rem;
+        width: 1.25rem;
+        height: 1.25rem;
+        background-color: white;
+        border-radius: 9999px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .peer:checked + .toggle-slider {
+        background-color: #eb5202;
+    }
+
+    .peer:checked + .toggle-slider::after {
+        transform: translateX(1.5rem);
+        border-color: white;
+    }
+
+    .peer {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    /* Toggle container styling */
+    .toggle-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: #f9fafb;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .toggle-container:hover {
+        background-color: #f3f4f6;
+    }
+
+    .toggle-label {
+        font-size: 1.4rem;
+        font-weight: 500;
+        color: #374151;
+    }
+
+    .toggle-description {
+        font-size: 1.2rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+    }
+
+    /* Form Section Styles */
+    .form-section {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .form-section h3 {
+        color: #495057;
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .form-section h3 i {
+        font-size: 1.8rem;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #495057;
+        font-size: 1.4rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        max-width: 500px;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: 0;
+        border-color: #eb5202;
+    }
+
+    .form-group textarea {
+        min-height: 150px;
+        font-family: monospace;
+    }
+
+    .help-text {
+        font-size: 1.2rem;
+        color: #6c757d;
+        margin-top: 5px;
+        font-style: italic;
+    }
+
+    /* Button Styles */
+    .btn-save {
+        background: #eb5202;
+        color: white;
+        padding: 1rem 1.5rem;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        transition: background-color 0.2s;
+    }
+
+    .btn-save:hover {
+        background: #ba4000;
+        color: white;
+    }
+
+    .btn-save:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
+    }
+
+    /* Header with buttons styling */
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 35px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .header-title {
+        flex: 1;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .btn-back,
+    .btn-setup-guide {
+        padding: 0.8rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+        white-space: nowrap;
+        box-sizing: border-box;
+    }
+
+    .btn-back {
+        background: white;
+        color: #eb5202;
+        border-color: #eb5202;
+    }
+
+    .btn-back:hover {
+        background: #fff5f2;
+        color: #eb5202;
+        text-decoration: none;
+        border-color: #eb5202;
+    }
+
+    .btn-setup-guide {
+        background: #eb5202;
+        color: white;
+        border: none;
+    }
+
+    .btn-setup-guide:hover {
+        background: #ba4000;
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-back:disabled,
+    .btn-setup-guide:disabled {
+        background: #e0e0e0;
+        color: #999;
+        border-color: #e0e0e0;
+        cursor: not-allowed;
+    }
+
+    /* Main Content Container */
+    .rate-limit-main-content {
+        width: 90%;
+        margin: 20px auto;
+    }
+
+    .bg-white {
+        background: white;
+    }
+
+    .rounded-lg {
+        border-radius: 8px;
+    }
+
+    .shadow {
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+
+    .p-6 {
+        padding: 2rem;
+    }
+
+    /* Section Title */
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 2rem;
+        color: #1F2937;
+        padding-top: 1rem;
+    }
+
+    /* Checkpoint Section */
+    .checkpoint-section {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .checkpoint-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #495057;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .checkpoint-title i {
+        color: #eb5202;
+    }
+
+    /* Dropdown Container Styles */
+    .dropdown-container {
+        margin-bottom: 20px;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .dropdown-header {
+        background: #f8f9fa;
+        padding: 15px 20px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e9ecef;
+        transition: background-color 0.3s ease;
+    }
+
+    .dropdown-header:hover {
+        background: #e9ecef;
+    }
+
+    .dropdown-header.active {
+        background: #e9ecef;
+    }
+
+    .dropdown-title {
+        font-size: 18px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .dropdown-title i {
+        font-size: 1.8rem;
+    }
+
+    .dropdown-icon {
+        transition: transform 0.3s ease;
+    }
+
+    .dropdown-header.active .dropdown-icon {
+        transform: rotate(180deg);
+    }
+
+    .dropdown-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        background: white;
+    }
+
+    .dropdown-content.active {
+        max-height: 2000px;
+    }
+
+    .dropdown-inner {
+        padding: 20px;
+    }
+
+    /* Form Row */
+    .form-row {
+        display: flex;
+        gap: 20px;
+    }
+
+    .form-row .form-group {
+        flex: 1;
+    }
+
+    /* Table Styles */
+    .logs-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .logs-table th,
+    .logs-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .logs-table th {
+        background: #f5f5f5;
+        font-weight: bold;
+        color: #495057;
+    }
+
+    .no-logs {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+    }
+
+    /* Card Styles for Selection */
+    .selection-card {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .selection-card:hover {
+        border-color: #eb5202;
+        transform: translateY(-2px);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .icon-title-group {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .icon-wrapper {
+        width: 50px;
+        height: 50px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card-icon {
+        font-size: 24px;
+        color: #eb5202;
+    }
+
+    .card-subtitle {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #1F2937;
+        margin: 0;
+    }
+
+    .card-text {
+        font-size: 1.4rem;
+        color: #4B5563;
+        line-height: 1.6;
+    }
+
+    .chevron {
+        color: #9CA3AF;
+        font-size: 18px;
+        transition: transform 0.3s ease;
+    }
+
+    .selection-card:hover .chevron {
+        transform: translateX(5px);
+    }
+
+    .page-title {
+        margin-bottom: 2rem;
+        color: var(--admin-gray);
+    }
+
+    /* SecuritySuite-style classes */
+    .row {
+        margin: 0;
+    }
+
+    .col-sm-8 {
+        padding: 20px;
+    }
+
+    .page {
+        padding: 0 1%;
+        min-height: 395px;
+    }
+
+    .page_rate {
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .settings-table {
+        /* Container for settings forms */
+    }
+
+    .mosp_table_layout {
+        /* Container for table-based layouts */
+    }
+
+    .submit_admin {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .save {
+        border: 0;
+        padding: 8px 15px;
+        background: #ff8500;
+        color: #fff;
+        box-shadow: 1px 1px 4px #dadada;
+        -moz-box-shadow: 1px 1px 4px #dadada;
+        -webkit-box-shadow: 1px 1px 4px #dadada;
+        -webkit-appearance: button;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .save:hover {
+        background: #ea7b00;
+        color: #fff;
+    }
+
+    /* Table styles matching SecuritySuite */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table th, table td {
+        padding: 10px;
+        text-align: left;
+    }
+
+    table thead th {
+        background-color: #f4f4f4;
+        border-bottom: 2px solid #ddd;
+        font-weight: bold;
+    }
+
+    table tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    /* Form elements in tables */
+    td>input[type=text],
+    td>input[type=number],
+    td>input[type=password],
+    td>input[type=email],
+    td>input[type=url],
+    td>input[type=tel],
+    td>textarea,
+    td>select {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        border: 1px solid #c2c2c2;
+        -moz-box-shadow: 1px 1px 4px #ebebeb;
+        -webkit-box-shadow: 1px 1px 4px #ebebeb;
+        box-shadow: 1px 1px 4px #ebebeb;
+        padding: 5px;
+    }
+
+    /* Form group styles matching SecuritySuite */
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #555;
+    }
+
+    .form-group input[type="checkbox"] {
+        margin-right: 10px;
+    }
+
+    .form-group input[type="number"],
+    .form-group input[type="text"],
+    .form-group input[type="password"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .form-group button {
+        background-color: #ff8500;
+        border: none;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .form-group button:hover {
+        background-color: #eb800d;
+    }
+
+    /* Section headers */
+    h3 {
+        color: #333;
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+
+    hr {
+        margin: 20px 0;
+        border: 0;
+        border-top: 1px solid #ddd;
+    }
+
+    /* Help text */
+    i {
+        font-style: italic;
+        font-size: 12px;
+    }
+
+    /* Additional styles from PHTML files */
+
+    /* Scope Selector Styles */
+    .scope-selector-container {
+        background: #f8f9fa;
+        border: none;
+        border-radius: 8px;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+    }
+    
+    .scope-selector-container form {
+        margin-top: 20px;
+    }
+    
+    .scope-selector-container .dropdown-container {
+        margin-top: 15px;
+    }
+    
+    .scope-selector-container .dropdown-container:first-of-type {
+        margin-top: 0;
+    }
+    
+    .scope-selector-container .dropdown-header {
+        background: white !important;
+    }
+    
+    .scope-selector-container .dropdown-header:hover {
+        background: #e9ecef !important;
+    }
+    
+    .scope-selector-container .dropdown-header.active {
+        background: #e9ecef !important;
+    }
+
+    .scope-selector-row {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 12px;
+    }
+
+    .scope-label {
+        font-weight: 600;
+        color: #495057;
+        font-size: 14px;
+    }
+
+    .scope-dropdown-wrapper {
+        position: relative;
+        flex: 1;
+        max-width: 400px;
+    }
+
+    .scope-dropdown {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        background: white;
+        font-size: 14px;
+        color: #495057;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23495057' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 35px;
+    }
+
+    .scope-dropdown:focus {
+        outline: 0;
+        border-color: #eb5202;
+    }
+
+    .scope-help-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #6c757d;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+        cursor: help;
+        position: relative;
+    }
+
+    .scope-help-icon:hover {
+        background: #5a6268;
+    }
+
+    .scope-help-icon[data-title]:hover::after {
+        content: attr(data-title);
+        position: absolute;
+        left: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #333;
+        color: white;
+        padding: 10px 14px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: normal;
+        white-space: normal;
+        width: 280px;
+        z-index: 1000;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        pointer-events: none;
+        line-height: 1.4;
+    }
+
+    .scope-help-icon[data-title]:hover::before {
+        content: '';
+        position: absolute;
+        left: 25px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: 5px solid transparent;
+        border-right-color: #333;
+        z-index: 1001;
+        pointer-events: none;
+    }
+
+    .scope-description {
+        font-size: 12px;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+
+    /* Checkpoint Table Styles */
+    .checkpoint-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    .checkpoint-table th {
+        background-color: #e5e7eb;
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
+        color: #374151;
+        border-bottom: 2px solid #d1d5db;
+    }
+
+    .checkpoint-table td {
+        padding: 12px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .checkpoint-table tr:hover {
+        background-color: #f9fafb;
+    }
+    
+    /* Table header styles to match user management */
+    table thead.bg-gray-100 th {
+        background-color: #f3f4f6 !important;
+        color: #6b7280 !important;
+        font-weight: 500 !important;
+        font-size: 1.7rem !important;
+    }
+    
+    table thead.bg-gray-100 th.font-medium.text-gray-500 {
+        color: #6b7280 !important;
+    }
+
+    .checkpoint-icon {
+        margin-right: 8px;
+        font-size: 16px;
+    }
+
+    /* Utility Classes */
+    .text-3xl {
+        font-size: 2rem;
+    }
+
+    .font-bold {
+        font-weight: 700;
+    }
+
+    .text-black {
+        color: #000;
+    }
+
+    .mb-6 {
+        margin-bottom: 1.5rem;
+    }
+
+    /* Button Add Styles */
+    .btn-add {
+        background: #eb5202;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        margin-right: 10px;
+        transition: background-color 0.3s;
+    }
+
+    .btn-add:hover {
+        background: #d04a02;
+    }
+
+    /* Green Button Add (for country restrictions) */
+    .btn-add.btn-add-green {
+        background: #28a745;
+    }
+
+    .btn-add.btn-add-green:hover {
+        background: #218838;
+    }
+
+    /* Restriction Item Styles */
+    .restriction-item {
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        background: #f9fafb;
+    }
+
+    /* Country Select Wrapper */
+    .country-select-wrapper {
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        padding: 10px;
+        background: white;
+    }
+
+    .country-select-wrapper select[multiple] {
+        width: 100%;
+        min-height: 150px;
+        border: none;
+        padding: 5px;
+    }
+
+    .country-select-wrapper select[multiple] option {
+        padding: 5px;
+        margin: 2px 0;
+    }
+
+    /* Checkpoint Item */
+    .checkpoint-item {
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f9fafb;
+        border-radius: 4px;
+    }
+
+    /* Support Icon and Form Styles */
+    .support-icon {
+        position: fixed;
+        bottom: 16px;
+        right: 20px;
+        display: flex;
+        background: #ffffff;
+        padding: 2px;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        background-color: #fbf6e599;
+    }
+
+    .support-icon-img {
+        width: 61px;
+        border-radius: 50%;
+    }
+
+    .support-form {
+        position: fixed;
+        bottom: 11px;
+        right: 92px;
+        width: 300px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        display: none;
+        z-index: 1001;
+    }
+
+    .support-form-head {
+        background: black;
+        color: white;
+        padding: 0.8rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .support-form-head p {
+        margin: 0;
+        font-weight: 600;
+        font-size: 1.3rem;
+    }
+
+    .close-btn {
+        cursor: pointer;
+        color: white;
+        font-size: 1.4rem;
+    }
+
+    .support-form form {
+        padding: 1.3rem;
+        padding-bottom: 2.5rem;
+        font-size: 1.2rem;
+        height: auto;
+    }
+
+    .support-form label {
+        font-weight: 600;
+        color: #6b778c;
+        margin-bottom: 5px;
+        display: block;
+        font-size: 1.2rem;
+    }
+
+    .support-form input,
+    .support-form textarea,
+    .support-form select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #e3e3e3;
+        border-radius: 4px;
+        background: white;
+        color: black;
+        box-sizing: border-box;
+    }
+
+    .support-form input::placeholder,
+    .support-form textarea::placeholder {
+        color: #a4b0be;
+    }
+
+    .support-form button {
+        background: black;
+        color: white;
+        border: none;
+        padding: 4px 4px 6px 4px;
+        border-radius: 4px;
+        width: 100%;
+        font-size: 1.3rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .support-form button:hover {
+        /* background: #2980b9; */
+    }
+
+    .successMessage {
+        display: none;
+        text-align: center;
+        padding: 15px;
+        font-size: 1rem;
+        border-radius: 5px;
+        margin-top: 10px;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        font-size: 1.4rem;
+    }
+
+    .right_image {
+        font-size: 3rem;
+    }
+
+    .help-container {
+        box-sizing: border-box;
+        outline: none;
+        -webkit-font-smoothing: antialiased;
+        color: #1e2c38;
+        font-size: 16px;
+        width: 235px;
+        bottom: 23px;
+        position: fixed;
+        right: 5.5%;
+        z-index: 10;
+        display: none;
+    }
+
+    .span1 {
+        flex: none;
+        box-sizing: border-box;
+        outline: none;
+        display: block;
+    }
+
+    .need {
+        cursor: pointer;
+        position: relative;
+        color: #1e2c38;
+        background: #fff;
+        border-radius: .625rem;
+        box-shadow: 0 2px 6px 0 rgba(120, 111, 111, 0.4);
+    }
+
+    .div11 {
+        overflow: hidden;
+        position: relative;
+        border-radius: inherit;
+    }
+
+    .div12 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 1rem;
+        max-width: 100%;
+        font-size: 1.4rem;
+        white-space: normal;
+    }
+
+    .helpline {
+        font-size: 0.9em;
+        color: #1e2c38;
+        margin-top: 8px;
+    }
+
+    .span2 {
+        display: block;
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        right: -10px;
+        bottom: 10px;
+        background-color: inherit;
+        z-index: -1;
+        transform: translateX(-6px) rotate(45deg);
+        pointer-events: none;
+        box-shadow: 2px -2px 2px 0 rgba(0, 0, 0, .2);
+    }
+
+    /* Navbar Styles */
+    .topnav {
+        background-color: #333;
+        overflow: hidden;
+        margin-bottom: 2%;
+    }
+
+    .topnav a {
+        float: left;
+        display: block;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+    }
+
+    .topnav a:hover {
+        background-color: #ee9c65;
+        color: black;
+    }
+
+    .topnav a.active {
+        background-color: #eb5202;
+        color: white;
+    }
+
+    /* Form Group Input/Select Max Width Override */
+    .form-group input[type="number"],
+    .form-group input[type="text"],
+    .form-group input[type="password"],
+    .form-group select {
+        max-width: 300px;
+    }
+
+    /* Form Group Textarea Specific */
+    .form-group textarea {
+        max-width: 100%;
+    }
+
+    /* Utility Classes for Layout */
+    .p-6.width-85 {
+        width: 85%;
+    }
+
+    .bg-white.width-100 {
+        width: 100%;
+    }
+
+    .text-3xl.font-bold.mb-6.text-black {
+        font-size: 2.5rem;
+        padding-top: 1rem;
+    }
+
+    .margin-top-20 {
+        margin-top: 20px;
+    }
+
+    .padding-left-1 {
+        padding: 0 1%;
+    }
+
+    .text-uppercase {
+        text-transform: uppercase;
+    }
+
+    .font-bold.mb-10 {
+        font-weight: bold;
+        margin-bottom: 10px;
+        font-size: 1.6rem;
+    }

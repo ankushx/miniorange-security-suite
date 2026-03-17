@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="miniorange_tfa_users" resource="default" engine="innodb" comment="MiniOrange MFA">
+        <column xsi:type="smallint" name="id" padding="6" unsigned="false" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="varchar" name="username" nullable="false" length="255" comment="Username"/>
+        <column xsi:type="varchar" name="email" nullable="false" length="255" comment="Email"/>
+        <column xsi:type="varchar" name="countrycode" nullable="false" length="255" comment="Country Code"/>
+        <column xsi:type="varchar" name="phone" nullable="false" length="255" comment="Phone number"/>
+        <column xsi:type="varchar" name="configured_methods" nullable="false" length="255" comment="Configured Methods"/>
+        <column xsi:type="varchar" name="active_method" nullable="false" length="255" comment="Active Method"/>
+        <column xsi:type="varchar" name="status_of_motfa" nullable="false" length="255" comment="Status of Motfa"/>
+        <column xsi:type="varchar" name="force_reset" nullable="false" length="255" comment="Force RESET"/>
+        <column xsi:type="varchar" name="disable_motfa" nullable="false" length="255" comment="Disable Motfa"/>
+        <column xsi:type="varchar" name="backup_method" nullable="false" length="255" comment="Backup Method"/>
+        <column xsi:type="varchar" name="secret" nullable="false" length="255" comment="Authenticator Secret"/>
+        <column xsi:type="varchar" name="transactionId" nullable="false" length="255" comment="Transaction ID"/>
+        <column xsi:type="varchar" name="website_id" nullable="false" length="255" comment="Website ID"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+</schema>

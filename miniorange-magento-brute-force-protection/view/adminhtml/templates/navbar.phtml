@@ -1,0 +1,87 @@
+<?php
+
+use MiniOrange\BruteForceProtection\Helper\BruteForceConstants;
+use MiniOrange\BruteForceProtection\Helper\Curl;
+
+// initialize all variables
+$bruteforcesettings = $this->getExtensionPageUrl('bruteforcesettings');
+$customerloginlogs = $this->getExtensionPageUrl('customerloginlogs');
+$usermanagement = $this->getExtensionPageUrl('blockedusers');
+$upgrade = $this->getExtensionPageUrl('upgrade');
+$activeTab = $this->getCurrentActiveTab();
+$currentAdminRole = $this->getCurrentAdminUser()->getRole()->getRoleName();
+$ifSandboxTrialEnabled = "style='display:block'";
+$checkDataAdded = $block->checkDataAdded();
+
+if($checkDataAdded == null)
+{  $currentAdminUser =  $block->getCurrentAdminUser();  
+   $adminEmail = $currentAdminUser['email'];
+   $domain = $block->getBaseUrl();
+   $environmentName = $block->getEdition();
+   $environmentVersion = $block->getProductVersion();
+   $miniorangeAccountEmail= '';
+   $trackingDate = $block->getCurrentDate();
+   $timeStamp = $block->getTimeStamp();
+   $freeInstalledDate = $block->getCurrentDate();
+   $other = '';
+
+   // Store/update admin email in DB so it stays current (gets updated every time admin visits)
+   // This ensures we always have the latest admin email even when admin session is not available
+   if ($adminEmail) {
+       $block->updateStoredAdminEmail($adminEmail);
+   }
+
+   Curl::submit_to_magento_team($timeStamp,
+   $adminEmail,
+   $domain,
+   $miniorangeAccountEmail,
+   $activeTab,
+   $environmentName,
+   $environmentVersion,
+   $freeInstalledDate,
+   $other);
+
+   $block->dataAdded();
+}
+?>
+
+<div style=" padding: 0 1%;">
+    <?php
+        // Trial feature check removed
+        ?>
+
+    <!-- Free Limit Exceeded Banner -->
+    <?php if ($this->isAnyLimitExceeded()): ?>
+    <div class="free-limit-banner">
+        <div class="free-limit-banner-content">
+            <div class="free-limit-banner-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="free-limit-banner-text">
+                You have reached your free limit. Upgrade to Premium to continue using all features.
+            </div>
+            <?php if ($activeTab != 'upgrade'): ?>
+            <div class="free-limit-banner-action">
+                <a href="<?= $block->escapeUrl($upgrade) ?>" class="free-limit-upgrade-btn">
+                    <i class="fas fa-external-link-alt"></i>
+                    Upgrade Now
+                </a>
+            </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <div class="topnav" id="myTopnav">
+        <a class="nav-tab <?= $block->escapeHtmlAttr(($activeTab == 'bruteforce_settings') ? 'active' : '') ?>"
+           href="<?= $block->escapeUrl($bruteforcesettings) ?>">BruteForce Settings</a>
+        <a class="nav-tab <?= $block->escapeHtmlAttr(($activeTab == 'customer_login_logs') ? 'active' : '') ?>"
+           href="<?= $block->escapeUrl($customerloginlogs) ?>">Customer Logs</a>
+        <div <?= $block->escapeHtmlAttr($ifSandboxTrialEnabled) ?>>
+        <a class="nav-tab <?= $block->escapeHtmlAttr(($activeTab == 'blocked_users') ? 'active' : '') ?>"
+           href="<?= $block->escapeUrl($usermanagement) ?>">Blocked Users</a>
+        </div>
+        <a class="nav-tab <?= $block->escapeHtmlAttr(($activeTab == 'upgrade') ? 'active' : '') ?>"
+           href="<?= $block->escapeUrl($upgrade) ?>">Upgrade</a>
+    </div>
+</div>

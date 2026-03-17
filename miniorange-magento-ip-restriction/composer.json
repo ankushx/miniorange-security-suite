@@ -1,0 +1,39 @@
+{
+    "name": "miniorange_inc/miniorange-magento-ip-restriction",
+    "description": "miniOrange IP Restriction Extension for Magento 2",
+    "keywords": [
+        "IP Restriction"
+    ],
+    "require": {
+        "php": "~7|~8"
+    },
+    "suggest": {
+        "geoip2/geoip2": "^2.0"
+    },
+    "type": "magento2-module",
+    "version": "1.0.1",
+    "license": [
+        "Commercial",
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "MiniOrange\\IpRestriction\\": ""
+        }
+    },
+    "authors": [
+        {
+            "name": "miniOrange",
+            "homepage": "https://www.miniorange.com/",
+            "email": "info@xecurify.com"
+        }
+    ],
+    "support": {
+        "email": "magentosupport@xecurify.com"
+    }
+}
+

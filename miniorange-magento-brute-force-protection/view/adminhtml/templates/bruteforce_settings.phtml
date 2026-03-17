@@ -1,0 +1,45 @@
+<!--
+    This template file is for the BruteForce settings.
+    File acts as a view file for our BruteForce Settings.
+-->
+
+<?php
+$type = $this->getRequest()->getParam('type', 'general');
+
+if ($type === 'customer' || $type === 'admin') {
+    // Show configuration table for specific type
+    echo '<div class="bruteforce-main-content">
+        <div class="row">
+            <div class="">
+                <div class="page" id="bruteforce_settings" style="">
+                    <div class="mosp_table_layout">';
+    
+    echo $this->getLayout()
+        ->createBlock("MiniOrange\BruteForceProtection\Block\BruteForce")
+        ->setTemplate("MiniOrange_BruteForceProtection::bruteforce_settings_configuration_table.phtml")
+        ->toHtml();
+    
+    echo '           </div>
+                </div>
+            </div>
+        </div>
+    </div>';
+} else {
+    // Show selection cards for general settings
+    print_r('<div class="bruteforce-main-content">
+          <div class="row">
+    <div class="">
+                <div class="page" id="bruteforce_settings" style="">
+                <div class="mosp_table_layout">');
+
+
+        echo $this->getLayout()
+            ->createBlock("MiniOrange\BruteForceProtection\Block\BruteForce")
+            ->setTemplate("MiniOrange_BruteForceProtection::bruteforce_admin_customer_box.phtml")
+            ->toHtml();
+
+    print_r('           </div>
+            </div>
+          </div>
+    </div>');
+}

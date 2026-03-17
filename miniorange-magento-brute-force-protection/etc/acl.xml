@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <!-- Defines the Access Control for the Settings and Modules -->
+    <acl>
+        <resources>
+            <!-- Magento Admin ACL -->
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Backend::content">
+                    <!-- BruteForce Protection Client ACL Settings Definition -->
+                    <resource id="MiniOrange_BruteForceProtection::BruteForceProtection" title="miniOrange BruteForce Protection Extension" sortOrder="60">
+                        <!-- BruteForce Settings -->
+                        <resource id="MiniOrange_BruteForceProtection::bruteforce_settings" title="BruteForce Settings" sortOrder="1"/>
+                        
+                        <!-- Customer Login Logs -->
+                        <resource id="MiniOrange_BruteForceProtection::customer_login_logs" title="Customer Logs" sortOrder="2"/>
+                        
+                        <!-- Blocked Users -->
+                        <resource id="MiniOrange_BruteForceProtection::blocked_users" title="Blocked Users" sortOrder="3"/>
+                        
+                        <!-- Support -->
+                        <resource id="MiniOrange_BruteForceProtection::support" title="Support" sortOrder="4"/>
+                        
+                        <!-- Upgrade -->
+                        <resource id="MiniOrange_BruteForceProtection::upgrade" title="Upgrade Section" sortOrder="5"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

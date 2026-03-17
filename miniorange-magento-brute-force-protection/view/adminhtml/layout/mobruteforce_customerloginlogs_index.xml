@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="MiniOrange_BruteForceProtection::css/adminSettings.css"/>
+        <css src="MiniOrange_BruteForceProtection::css/upgrade.css"/>
+        <css src="MiniOrange_BruteForceProtection::css/all.min.css"/>
+        <title>Customer Logs</title>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <!-- This adds the navbar to the phtml file for easy navigation -->
+            <block class="MiniOrange\BruteForceProtection\Block\BruteForce"
+                   name="miniorange.bruteforce.navbar"
+                   template="navbar.phtml"/>
+
+            <block class="MiniOrange\BruteForceProtection\Block\BruteForce"
+                   name="miniorange.bruteforce.support"
+                   template="Applications/support.phtml"/>
+
+            <block class="MiniOrange\BruteForceProtection\Block\BruteForce" name="customer_login_logs" template="MiniOrange_BruteForceProtection::customer_login_logs.phtml" cacheable="false"/>
+        </referenceContainer>
+        <referenceContainer name="before.body.end">
+            <block class="MiniOrange\BruteForceProtection\Block\BruteForce"
+                   template="js.phtml"
+                   name="before_body_js"/>
+        </referenceContainer>
+    </body>
+</page>
+

@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/menu.xsd">
+    <menu>
+        <add id="MiniOrange_SecuritySuite::SecuritySuite"
+             title="Security Suite"
+             module="MiniOrange_SecuritySuite"
+             sortOrder="50"
+             resource="MiniOrange_SecuritySuite::SecuritySuite"/>
+
+        
+        <!-- Use controller for dynamic URL generation -->
+        <add id="MiniOrange_SecuritySuite::twofactor"
+             title="Two-Factor Authentication"
+             module="MiniOrange_SecuritySuite"
+             sortOrder="10"
+             parent="MiniOrange_SecuritySuite::SecuritySuite"
+             action="securitysuite/redirect/index/module/twofa"
+             resource="MiniOrange_SecuritySuite::twofactor"/>
+
+        <add id="MiniOrange_SecuritySuite::ip_restriction"
+             title="IP Restriction"
+             module="MiniOrange_SecuritySuite"
+             sortOrder="20"
+             parent="MiniOrange_SecuritySuite::SecuritySuite"
+             action="securitysuite/redirect/index/module/ip-restriction"
+             resource="MiniOrange_SecuritySuite::ip_restriction"/>
+
+        <add id="MiniOrange_SecuritySuite::brute_force_protection"
+             title="Brute Force Protection"
+             module="MiniOrange_SecuritySuite"
+             sortOrder="30"
+             parent="MiniOrange_SecuritySuite::SecuritySuite"
+             action="securitysuite/redirect/index/module/brute-force-protection"
+             resource="MiniOrange_SecuritySuite::brute_force_protection"/>
+
+        <add id="MiniOrange_SecuritySuite::admin_logs"
+             title="Admin Logs"
+             module="MiniOrange_SecuritySuite"
+             sortOrder="40"
+             parent="MiniOrange_SecuritySuite::SecuritySuite"
+             action="securitysuite/redirect/index/module/admin-logs"
+             resource="MiniOrange_SecuritySuite::admin_logs"/>
+
+               
+               <!--
+               Adding a upgrade menu item to show users the different plans
+                    that we have and that user can upgrade to. Parent Menu Item is the
+                    miniOrange Security Suite menu item mentioned above. Action is the controllerAction
+                    to be called when menu item is clicked.
+               -->
+               <add id="MiniOrange_SecuritySuite::upgrade"
+               title="Upgrade"
+               module="MiniOrange_SecuritySuite"
+               sortOrder="100"
+               parent="MiniOrange_SecuritySuite::SecuritySuite"
+               action="securitysuite/upgrade"
+               resource="MiniOrange_SecuritySuite::upgrade"/>
+
+    </menu>
+</config>

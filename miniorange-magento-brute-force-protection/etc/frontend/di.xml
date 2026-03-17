@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Plugin for customer login controller to add BruteForce protection -->
+    <type name="Magento\Customer\Controller\Account\LoginPost">
+        <plugin name="bruteforce_protection_login_post" type="MiniOrange\BruteForceProtection\Plugin\LoginPostPlugin" sortOrder="10" />
+    </type>
+    <type name="MiniOrange\TwoFA\Controller\Account\LoginPost">
+        <plugin name="bruteforce_protection_login_post" type="MiniOrange\BruteForceProtection\Plugin\LoginPostPlugin" sortOrder="0" />
+    </type>
+
+    
+
+</config>

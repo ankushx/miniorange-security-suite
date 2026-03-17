@@ -1,0 +1,38 @@
+{
+    "name": "miniorange_inc/miniorange-2fa",
+    "description": "miniOrange 2FA free",
+    "keywords": ["magento 2fa",
+    "magento 2 2fa",
+    "magento two factor authentication",
+    "2fa magento 2",
+    "2fa magento",
+    "magento mfa",
+    "Magento 2FA for Frontend Users",
+    "Magento 2FA for Backend Users",
+    "2FA"],
+
+    "type": "magento2-module",
+    "version": "3.2.3",
+     "license": [
+        "Commercial"
+    ],
+     "autoload": {
+        "files": [ "registration.php" ],
+        "psr-4": {
+            "MiniOrange\\TwoFA\\": ""
+        }
+    },
+    "authors": [
+        {
+            "name": "miniOrange",
+            "homepage": "https://www.miniorange.com/",
+            "email": "info@xecurify.com"
+        }
+    ],
+    "support": {
+        "email": "magentosupport@xecurify.com"
+    },
+    "require": {
+        "php": "~7|~8"
+    }
+}

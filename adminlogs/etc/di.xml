@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="MiniOrange\AdminLogs\Model\ResourceModel\AdminLoginLogs\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">miniorange_admin_login_logs</argument>
+            <argument name="identifierName" xsi:type="string">log_id</argument>
+            <argument name="resourceModel" xsi:type="string">MiniOrange\AdminLogs\Model\ResourceModel\AdminLoginLogs</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="adminlogs_login_listing_data_source" xsi:type="string">MiniOrange\AdminLogs\Model\ResourceModel\AdminLoginLogs\Collection</item>
+                <item name="adminlogs_activesessions_listing_data_source" xsi:type="string">Magento\Security\Model\ResourceModel\AdminSessionInfo\Collection</item>
+                <item name="adminlogs_concurrentsessions_listing_data_source" xsi:type="string">MiniOrange\AdminLogs\Model\ResourceModel\ConcurrentSessions\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="MiniOrange\AdminLogs\Model\ActiveSessions\DataProvider">
+        <arguments>
+            <argument name="name" xsi:type="string">adminlogs_activesessions_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+        </arguments>
+    </type>
+    <type name="MiniOrange\AdminLogs\Model\ConcurrentSessions\DataProvider">
+        <arguments>
+            <argument name="name" xsi:type="string">adminlogs_concurrentsessions_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">user_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Backend\Model\Auth">
+        <plugin name="miniorange_adminlogs_logout" type="MiniOrange\AdminLogs\Plugin\Auth" sortOrder="10"/>
+    </type>
+    <type name="Magento\Framework\HTTP\PhpEnvironment\RemoteAddress">
+        <plugin name="miniorange_adminlogs_override_remote_ip" type="MiniOrange\AdminLogs\Plugin\RemoteAddressPlugin" sortOrder="10"/>
+    </type>
+</config>

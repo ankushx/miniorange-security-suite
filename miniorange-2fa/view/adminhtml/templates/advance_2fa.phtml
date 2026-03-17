@@ -1,0 +1,354 @@
+<?php
+
+$formKey = $block->getFormKey(); 
+
+$customer_remember_device = '';
+$customer_remember_device_days = '';
+$customer_remember_device_count = '';
+
+$customer_skip_twofa = '';
+$customer_skip_days = '';
+
+$customer_popup_customization = '';
+$customer_ip_listing = '';
+$whitelistIPs = [];
+$blacklistIPs = [];
+
+$pricing = $block->getExtensionPageUrl('upgrade');
+
+$current_otp_length = 6;
+
+$authenticator_app_name_enabled = '';
+$authenticator_app_name = 'miniOrange';
+
+$disabled = "disabled";
+
+// Default popup UI values
+$popup_ui_values = (object)[
+    'BgColor' => '#ffffff',
+    'popupBgColor' => '#ffffff',
+    'popupTextColor' => '#000000',
+    'popupBtnColor' => '#ff8500'
+];
+
+?>
+<div class="p-6" style="width:70%; max-width: 100%;overflow-x: hidden;">
+    <div class="bg-white rounded-lg shadow p-6" style="width: 100%;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h1 class="text-3xl font-bold mb-6 text-black" style="font-size: 2.5rem; margin: 0; color: #000000;">Advanced 2FA Settings </h1>
+            <span class="enterprise_feature" style="display: inline-block; margin-right: 2rem">
+                <span style="color:red;"> *</span>
+                <span style="color:black; font-weight:normal"> (Available in the <a href="<?= $escaper->escapeUrl($pricing) ?>" class="premium btn-link">premium</a> version)</span>
+            </span>
+        </div>
+        <p class="text-gray-600 mb-8" style="font-size: 1.5rem;padding-top:0.1rem">Customize your two-factor
+            authentication experience.</p>
+
+        <form id="advance_saveSettings" method="post" action="">
+            <input type="hidden" name="form_key" value="<?= $escaper->escapeHtmlAttr($formKey) ?>" />
+            <input type="hidden" name="option" value="advance_saveSettings">
+
+            <!-- 2FA Popup Customization Section -->
+            <div class="container mx-auto p-6">
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4 mt-2" style="font-size:1.8rem">
+                        <i class="fas fa-palette text-black-600 mr-3"></i>Popup Customization
+                    </h2>
+
+                    <div class="flex items-center justify-between mb-4" style="font-size:1.4rem; padding-top:1rem;">
+                        <span class="text-gray-700">Enable Popup Customization</span>
+                        <label class="switch">
+                            <input type="checkbox" name="customer_popup_customization" disabled
+                                   class="hidden">
+                            <div class="slider round"></div>
+                        </label>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6" style="font-size:1.4rem;padding-top:1.5rem">
+                        <div class="space-y-4">
+                            <div>
+                                <label for="BgColor" class="block text-gray-700 mb-2">Background Color</label>
+                                <div class="flex items-center">
+                                    <input type="color" id="BgColor" name="BgColor" disabled
+                                           class="w-17 h-15 mr-3 border rounded"
+                                           value="<?= $escaper->escapeHtmlAttr($popup_ui_values->BgColor) ?>">
+                                    <span id="bgColorValue"
+                                          class="text-gray-600"><?= $escaper->escapeHtml($popup_ui_values->BgColor) ?></span>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="popupBtnColor" class="block text-gray-700 mb-2">Button Color</label>
+                                <div class="flex items-center">
+                                    <input type="color" id="popupBtnColor"
+                                           name="popupBtnColor" disabled
+                                           class="w-17 h-15 mr-3 border rounded"
+                                           value="<?= $escaper->escapeHtmlAttr($popup_ui_values->popupBtnColor) ?>">
+                                    <span id="buttonColorValue"
+                                          class="text-gray-600"><?= $escaper->escapeHtml($popup_ui_values->popupBtnColor) ?></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="popupTextColor" class="block text-gray-700 mb-2">Text Color</label>
+                                <div class="flex items-center">
+                                    <input type="color" id="popupTextColor"
+                                           name="popupTextColor" disabled
+                                           class="w-17 h-15 mr-3 border rounded"
+                                           value="<?= $escaper->escapeHtmlAttr($popup_ui_values->popupTextColor) ?>">
+                                    <span id="textColorValue"
+                                          class="text-gray-600"><?= $escaper->escapeHtml($popup_ui_values->popupTextColor) ?></span>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="popupBgColor" class="block text-gray-700 mb-2">Popup Color</label>
+                                <div class="flex items-center">
+                                    <input type="color" id="popupBgColor"
+                                           name="popupBgColor" disabled
+                                           class="w-17 h-15 mr-3 border rounded"
+                                           value="<?= $escaper->escapeHtmlAttr($popup_ui_values->popupBgColor) ?>">
+                                    <span id="popupColorValue"
+                                          class="text-gray-600"><?= $escaper->escapeHtml($popup_ui_values->popupBgColor) ?></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Remember Device Section -->
+            <div class="container mx-auto p-6">
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4 mt-2" style="font-size:1.8rem">
+                        <i class="fas fa-desktop text-black-600 mr-3"></i>Remember My Device
+                    </h2>
+                    <div class="flex items-center justify-between mb-4" style="font-size:1.4rem; padding-top:1rem;">
+                        <span class="text-gray-700">Enable Remember Device</span>
+                        <label class="switch">
+                            <input type="checkbox" name="customer_remember_device" disabled
+                                   class="hidden">
+                            <div class="slider round"></div>
+                        </label>
+                    </div>
+
+                    <!-- Note -->
+                    <div id="noteSection" class="bg-white border border-yellow-600 text-yellow-300 rounded-lg p-4 my-8"
+                         style="color:black">
+                        <div class="flex items-center">
+                            <i class="fas fa-info-circle text-lg mr-2"></i>
+                            <p class="text-lg font-medium">Note</p>
+                        </div>
+                        <p class="mt-2" style="font-size: 1.3rem;">
+                            Enabling this option activates the <strong>"Remember Device"</strong> feature. Trusted
+                            devices bypass the second factor (e.g., OTP) on subsequent logins, allowing access
+                            with just a username and password.
+                        </p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4" style="font-size:1.4rem; padding-top:1rem;">
+                        <div>
+                            <label for="customer_device_count" class="block text-gray-700 mb-2 font-semibold">Maximum Devices</label>
+                            <select id="customer_device_count" class="w-full p-2 border border-gray-300 rounded-md"
+                                    name="customer_device_count" disabled>
+                                <option value="" selected>Select the maximum number of devices</option>
+                                <option value="1">1 Device</option>
+                                <option value="2">2 Devices</option>
+                                <option value="3">3 Devices</option>
+                                <option value="4">4 Devices</option>
+                                <option value="5">5 Devices</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="customer_remember_device_Days" class="block text-gray-700 mb-2 font-semibold">Device Remember Period</label>
+                            <select id="customer_remember_device_Days" class="w-full p-2 border border-gray-300 rounded-md" disabled
+                                name="customer_remember_device_Days">
+                                <option value="" selected>Select the maximum number of days</option>
+                                <option value="7">7 Days</option>
+                                <option value="14">14 Days</option>
+                                <option value="30">30 Days</option>
+                                <option value="90">90 Days</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skip 2FA Section -->
+            <div class="container mx-auto p-6">
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4 mt-2" style="font-size:1.8rem">
+                        <i class="fa-solid fa-forward text-black-600 mr-3"></i>Skip Two-Factor Authentication
+                    </h2>
+                    <div class="flex items-center justify-between mb-4" style="font-size:1.4rem; padding-top:1rem;">
+                        <span class="text-gray-700">Allow 2FA Skip</span>
+                        <label class="switch">
+                            <input type="checkbox" name="customer_skip_inline" disabled
+                                   class="hidden">
+                            <div class="slider round"></div>
+                        </label>
+                    </div>
+
+                    <!-- Note -->
+                    <div id="noteSection" class="bg-white border border-yellow-600 text-yellow-300 rounded-lg p-4 my-8"
+                         style="color:black">
+                        <div class="flex items-center">
+                            <i class="fas fa-info-circle  text-lg mr-2"></i>
+                            <p class="text-lg font-medium">Note</p>
+                        </div>
+                        <p class=" mt-2" style="font-size: 1.3rem;">
+                            Enabling this option will provide customers with the <strong>"Remind me later"</strong>
+                            feature. Customers can bypass the second factor (e.g., OTP) for a specified number
+                            of days, allowing access using only their username and password.
+                        </p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2"
+                               style="font-size:1.4rem; padding-top:1rem;">Skip Days</label>
+                        <input type="number" disabled
+                               placeholder="Enter the maximum number of days to skip Two-Factor Authentication"
+                               name="customer_skip_days" value="" min="1"
+                               max="90" class="w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                </div>
+            </div>
+
+            <!-- IP Whitelist/Blacklist Section -->
+            <div class="container mx-auto p-6">
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4 mt-2" style="font-size:1.8rem">
+                        <i class="fas fa-shield-alt text-black-600 mr-3"></i>IP Access Control
+                    </h2>
+
+                    <!-- toggle -->
+                    <div class="flex items-center justify-between mb-4" style="font-size:1.4rem; padding-top:1rem;">
+                        <span class="text-gray-700">Enable Toggle for IP Blacklisting and Whitelisting</span>
+                        <label class="switch">
+                            <input type="checkbox" name="customer_ip_listing"
+                                   class="hidden" disabled>
+                            <div class="slider round"></div>
+                        </label>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4" style="font-size:1.4rem; padding-top:1rem;">
+                        <!-- Whitelist IPs Section -->
+                        <div class="bg-white p-6 rounded-lg">
+                            <label class="block text-gray-700 mb-2 ml-3 font-semibold">Whitelist IPs</label>
+                            <div class="tags-input-container" id="whitelist-tags-container">
+                                <input type="hidden" name="whitelistIPs" id="whitelistIPsHidden" value="">
+                                <textarea disabled
+                                    class="w-full p-2 border border-gray-300 rounded-md"
+                                    id="whitelist-tags-input"
+                                    placeholder="Enter all your IP addresses with ; (example: ip1; ip2; ip3;...;)"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Blacklist IPs Section -->
+                        <div class="bg-white p-6 rounded-lg">
+                            <label class="block text-gray-700 mb-3 ml-3 font-semibold">Blacklist IPs</label>
+                            <div class="tags-input-container" id="blacklist-tags-container">
+                                <input type="hidden" name="blacklistIPs" id="blacklistIPsHidden" value="">
+                                <textarea disabled
+                                    class="w-full p-2 border border-gray-300 rounded-md"
+                                    id="blacklist-tags-input"
+                                    placeholder="Enter all your IP addresses with ; (example: ip1; ip2; ip3;...;)"
+                                ></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OTP Length Section -->
+            <div class="container mx-auto p-6">
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4 mt-2" style="font-size:1.8rem">
+                        <i class="fas fa-key text-black-600 mr-3"></i>miniOrange Gateway OTP Length Configuration
+                    </h2>
+                    <div class="mb-4">
+                        <label for="otp_length" class="block text-sm font-medium text-gray-700 mb-2"
+                               style="font-size:1.6rem; padding-top: 1.4rem; padding-bottom: 1rem;">
+                            OTP Length
+                        </label>
+                        <div class="relative w-full">
+                             <select id="otp_length" name="otp_length" disabled
+                                     class="block w-full px-4 py-4 text-gray-700 border border-gray-300 rounded-lg shadow-sm"
+                                     style="font-size:1.6rem">
+                                 <option value="4">4 digits</option>
+                                 <option value="5">5 digits</option>
+                                 <option value="6" selected>6 digits</option>
+                                 <option value="7">7 digits</option>
+                                 <option value="8">8 digits</option>
+                             </select>
+                         </div>
+                         <!-- Note -->
+                     <div id="noteSection" class="bg-white border border-yellow-600 text-yellow-300 rounded-lg p-4 my-8"
+                          style="color:black">
+                         <div class="flex items-center">
+                             <i class="fas fa-info-circle  text-lg mr-2"></i>
+                             <p class="text-lg font-medium">Note</p>
+                         </div>
+                         <p class="mt-2" style="font-size: 1.3rem;">
+                            This length applies only when using the default miniOrange gateway (not a custom gateway). By default, the OTP length is 6. You can change it by following <a href="https://faq.miniorange.com/knowledgebase/change-length-otp/" target="_blank" class="text-blue-600 hover:text-blue-800 underline"><strong>this</strong></a>.
+                        </p>
+                     </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Authenticator App Name Section -->
+            <div class="container mx-auto p-6">
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4 mt-2" style="font-size:1.8rem">
+                        <i class="fas fa-wrench text-black-600 mr-3"></i>Authenticator App Name
+                    </h2>
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between mb-4" style="font-size:1.4rem; padding-top:1rem;">
+                            <span class="text-gray-700">Enable App Name</span>
+                            <label class="switch">
+                                <input type="checkbox" name="authenticator_app_name_enabled" disabled
+                                       class="hidden">
+                                <div class="slider round"></div>
+                            </label>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="authenticator_app_name" class="block text-sm font-medium text-gray-700 mb-2"
+                                   style="font-size:1.6rem; padding-top: 1.4rem; padding-bottom: 1rem;">
+                                App Name:
+                            </label>
+                            <div class="relative w-full">
+                                <input type="text" id="authenticator_app_name" name="authenticator_app_name" 
+                                       disabled
+                                       class="block w-full px-4 py-4 text-gray-700 border border-gray-300 rounded-lg shadow-sm"
+                                       style="font-size:1.6rem"
+                                       value="<?= $escaper->escapeHtmlAttr($authenticator_app_name) ?>"
+                                       placeholder="Enter custom app name">
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2" style="font-size:1.3rem;">
+                                Default: "miniOrange"
+                            </p>
+                        </div>
+
+                        <!-- Note -->
+                        <div class="bg-white border border-yellow-600 text-yellow-300 rounded-lg p-4 my-8"
+                             style="color:black">
+                            <div class="flex items-center">
+                                <i class="fas fa-info-circle text-lg mr-2"></i>
+                                <p class="text-lg font-medium">Note</p>
+                            </div>
+                            <p class="mt-2" style="font-size: 1.3rem;">
+                                This name will appear in users' authenticator apps (Google Authenticator, Microsoft Authenticator, etc.) when they scan the QR code. Choose a recognizable name for your service.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 flex space-x-4" style="margin: 2rem 0rem 0rem 1.5rem;">
+                <button id="saveSettingsBtn" type="submit" disabled
+                        class="px-6 py-4 text-white font-semibold rounded-lg transition-colors duration-200">
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

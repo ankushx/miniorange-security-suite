@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	  xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="admin_login"/>
+    <head>
+        <css src="MiniOrange_TwoFA::css/adminSettings.css"/>
+        <css src="MiniOrange_TwoFA::css/all.min.css"/>
+    </head>
+    <body>
+    <referenceContainer name="login.content">
+            <block class="MiniOrange\TwoFA\Block\TwoFA" template="otp.phtml"
+                   name="mp.import.form.before" as="mp_form_before"/>
+        </referenceContainer>
+    </body>
+</page>

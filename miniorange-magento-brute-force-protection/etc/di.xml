@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Plugin for customer login controller to add BruteForce protection -->
+    <type name="Magento\Customer\Controller\Account\LoginPost">
+        <plugin name="bruteforce_protection_login_post" type="MiniOrange\BruteForceProtection\Plugin\LoginPostPlugin" sortOrder="10" />
+    </type>
+
+    <!-- Plugin for backend Auth model to add BruteForce protection -->
+    <type name="Magento\Backend\Model\Auth">
+        <plugin name="bruteforce_protection_admin_auth" type="MiniOrange\BruteForceProtection\Plugin\AuthPlugin" sortOrder="10" />
+    </type>
+    
+   
+
+    <!-- Override customer forgot password controller with our BruteForce protected version -->
+    <preference for="Magento\Customer\Controller\Account\ForgotPasswordPost" type="MiniOrange\BruteForceProtection\Controller\Account\ForgotPasswordPost" />
+
+    <!-- Plugin to prevent Magento's default brute force and CAPTCHA settings from being enabled -->
+    <type name="Magento\Framework\App\Config\Storage\WriterInterface">
+        <plugin name="prevent_default_bruteforce_config_writer" 
+                type="MiniOrange\BruteForceProtection\Plugin\PreventDefaultBruteForceConfig" 
+                sortOrder="10" />
+    </type>
+    
+    <!-- Plugin for ResourceModel Config -->
+    <type name="Magento\Config\Model\ResourceModel\Config">
+        <plugin name="prevent_default_bruteforce_config_resource" 
+                type="MiniOrange\BruteForceProtection\Plugin\PreventDefaultBruteForceConfig" 
+                sortOrder="10" />
+    </type>
+    
+    <!-- Plugin for Config Model (used by admin dashboard) -->
+    <type name="Magento\Config\Model\Config">
+        <plugin name="prevent_default_bruteforce_config_model" 
+                type="MiniOrange\BruteForceProtection\Plugin\PreventConfigModelSave" 
+                sortOrder="10" />
+    </type>
+    
+    <!-- Plugin for Customer Token Service API to add BruteForce protection -->
+    <type name="Magento\Integration\Api\CustomerTokenServiceInterface">
+        <plugin name="bruteforce_protection_customer_token" 
+                type="MiniOrange\BruteForceProtection\Plugin\CustomerTokenPlugin" 
+                sortOrder="10" />
+    </type>
+
+     <type name="Magento\Integration\Model\AdminTokenService">
+    <plugin name="miniorange_bruteforce_admin_token"
+            type="MiniOrange\BruteForceProtection\Plugin\AdminTokenPlugin" />
+</type>
+</config>

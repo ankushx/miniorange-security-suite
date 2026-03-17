@@ -1,0 +1,163 @@
+
+<style>
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2.5rem;
+        margin-top: 2rem;
+    }
+
+    @media (max-width: 768px) {
+        .grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .selection-card {
+        background: white;
+        border: 2px solid #E5E7EB;
+        border-radius: 0.5rem;
+        padding: 3rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 2rem;
+    }
+
+    .selection-card:hover {
+        border-color: #eb5202;
+        transform: translateY(-2px);
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+
+    .icon-title-group {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .icon-wrapper {
+        background-color: #FFF7ED;
+        padding: 1.6rem;
+        border-radius: 0.5rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .selection-card:hover .icon-wrapper {
+        background-color: #FFEDD5;
+    }
+
+    .card-icon {
+        font-size: 3rem;
+        color: #eb5202;
+    }
+
+    .chevron {
+        color: #9CA3AF;
+        transition: color 0.3s ease;
+    }
+
+    .selection-card:hover .chevron {
+        color: #eb5202;
+    }
+
+    .card-subtitle {
+        font-size: 1.9rem;
+        font-weight: 700;
+        color: #1F2937;
+    }
+
+    .card-text {
+        color: #4B5563;
+        font-size: 1.5rem;
+        line-height: 1.5;
+        margin-top: -2rem;
+    }
+</style>
+
+<?php
+// PHP Initialization
+$formKey = $block->getFormKey(); // Security form key
+$create_account_first = ($this->checkaccountVerified()) ? '' : 'disabled';
+$account = $this->getExtensionPageUrl('account');
+$is_enterpriseplan_active = '';
+$adminBruteForce = $this->getExtensionPageUrl('bruteforcesettings') . '?type=admin';
+$customerBruteForce = $this->getExtensionPageUrl('bruteforcesettings') . '?type=customer';
+
+$isEnabled = true;
+$disabled = "";
+
+if ($this->isTrialExpired()) {
+    $disabled = "disabled";
+}
+?>
+
+<div style="width:97%; margin:0 auto;">
+    <h1 class="text-3xl font-bold text-black" style="font-size: 2.5rem; margin-bottom: 5px; padding-bottom: 10px; margin-top: 5rem;">
+        BruteForce Protection Setup
+    </h1>
+
+    <div class="grid">
+        <!-- Customer Configuration Card -->
+        <div class="selection-card" onclick="handleSelection('customer')">
+            <div class="card-header">
+                <div class="icon-title-group">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-users card-icon"></i>
+                    </div>
+                    <h3 class="card-subtitle">Customer BruteForce Protection</h3>
+                </div>
+                <i class="fas fa-chevron-right chevron"></i>
+            </div>
+            <br>
+            <p class="card-text">
+            Configure and manage BruteForce protection settings for customer accounts.
+            Define thresholds, lockout durations, and other security rules individually for each website or store to prevent repeated failed login attempts and unauthorized access.
+            </p>
+        </div>
+
+        <!-- Admin Configuration Card -->
+        <div class="selection-card" onclick="handleSelection('admin')">
+            <div class="card-header">
+                <div class="icon-title-group">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-shield-alt card-icon"></i>
+                    </div>
+                    <h3 class="card-subtitle">Admin BruteForce Protection</h3>
+                </div>
+                <i class="fas fa-chevron-right chevron"></i>
+            </div>
+            <br>
+            <p class="card-text">
+            Set up BruteForce protection rules and policies for administrative users.
+            Configure thresholds, lockout durations, and security measures to protect the Magento Admin Panel from repeated failed login attempts and unauthorized access.
+            </p>
+            <br>
+        </div>
+        <br>
+    </div>
+</div>
+
+<!-- Hidden Form -->
+<form id="redirect-form" method="post">
+    <input name="form_key" type="hidden" value="<?= $block->escapeHtmlAttr($formKey) ?>" />
+</form>
+
+<script>
+    function handleSelection(type) {
+        // Determine the action URL based on the type
+        const actionUrl = (type === 'customer')
+            ? "<?= $block->escapeJs($customerBruteForce) ?>"
+            : "<?= $block->escapeJs($adminBruteForce) ?>";
+
+        // Redirect to the URL
+        window.location.href = actionUrl;
+    }
+</script>

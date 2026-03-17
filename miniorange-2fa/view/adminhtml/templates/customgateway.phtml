@@ -1,0 +1,451 @@
+<?php
+
+$create_account_first = 'disabled';
+$formKey = $block->getBlockHtml('formkey');
+$pricing = $block->getExtensionPageUrl('upgrade');
+$enable_email_customgateway=$block->get_enable_email_customgateway()?'checked':'';
+$enable_sms_customgateway=$block->get_enable_sms_customgateway()?'checked':'';
+
+$account = $block->getExtensionPageUrl('account');
+?>
+
+<div class="p-6 custom-gateway-container">
+    
+    <div class="bg-white rounded-lg shadow p-3 w-full">
+        <div class="bg-white-50 rounded-lg p-6">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h1 class="text-3xl font-bold text-gray-900" style="font-size: 2.5rem; margin: 0;">Custom Gateway Configuration</h1>
+                <span class="enterprise_feature" style="display: inline-block; margin-right: 2rem">
+                    <span style="color:red;"> *</span>
+                    <span style="color:black; font-weight:normal"> (Available in the <a href="<?php print_r($pricing); ?>" class="premium btn-link">premium</a> version)</span>
+                </span>
+            </div>
+            <p class="text-gray-600 mb-8" style="font-size: 1.7rem; padding-top:0.1rem;">
+                Configure your communication gateways for two-factor authentication.
+            </p>
+        </div>
+
+        <!-- Configuration Sections -->
+        <div class="p-8">
+            <!-- Email Gateway Configuration -->
+            <div class="mb-8 border rounded-lg">
+                <div class="flex justify-between items-center bg-gray-100 p-7 cursor-pointer configuration-toggle">
+                    <div class="flex items-center" style="font-size: 1.7rem;">
+                        <i class="fas fa-envelope text-black-600 mr-3"></i>
+                        <h2 class="font-semibold text-gray-700" style="margin: 0; font-size: 1.7rem; line-height: 1.2;">Email Gateway Configuration</h2>
+                        <?php if($enable_email_customgateway=='checked'): ?>
+                            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full">Enabled</span>
+                        <?php else: ?>
+                            <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full">Disabled</span>
+                        <?php endif; ?>
+                    </div>
+                    <div>
+                        <i class="fas fa-chevron-down transition-transform duration-300 toggle-icon"></i>
+                                </div>
+        </div>
+
+                <!-- Collapsible Content -->
+                <div class="collapsible-content bg-white shadow-lg rounded-lg">
+                    <div class="container p-6">
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 shadow-sm">
+                            <div class="flex items-center space-x-4"></div>
+
+                            <!-- Email Configuration Form -->
+                            <div id="showHideEmaildiv" class="space-y-6" style="">
+                                <form id="customGateway_email" method="post" action="">
+                                    <?php print_r($formKey); ?>
+                                    <input type="hidden" name="option" value="customGateway">
+                                    <input type="hidden" name="enable_Emailcustomgateway"
+                                           value="enable_Emailcustomgateway">
+
+
+                                    <div class="space-y-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div class="flex flex-col justify-end">
+                                            <label class="text-gray-700 font-medium" for="hostname">Hostname <span class="text-red-500">*</span></label>
+                                            <input type="text" disabled id="hostname" name="custom_gateway_hostname"
+                                                class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]"
+                                                placeholder="Host name or IP address of SMTP Server" required>
+                                        </div>
+
+                                        <div class="flex flex-col">
+                                            <label class="text-gray-700 font-medium" for="port">Port <span class="text-red-500">*</span></label>
+                                            <input type="text" disabled id="port" name="custom_gateway_port"
+                                                class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]"
+                                                placeholder="Port number for SMTP Server" required>
+                                        </div>
+
+                                        <div class="flex flex-col">
+                                            <label class="text-gray-700 font-medium" for="username">Username <span class="text-red-500">*</span></label>
+                                            <input type="text" disabled id="username" name="custom_gateway_username"
+                                                class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]"
+                                                placeholder="Enter username for SMTP Server" required>
+                                        </div>
+
+                                        <div class="flex flex-col">
+                                            <label class="text-gray-700 font-medium" for="password">Password <span class="text-red-500">*</span></label>
+                                            <input type="password" disabled id="password" name="custom_gateway_password"
+                                                class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]"
+                                                placeholder="Enter password" required>
+                                        </div>
+
+                                        <div class="flex flex-col">
+                                            <label class="text-gray-700 font-medium"
+                                                   for="custom_gateway_authentication">Authentication</label>
+                                            <select
+                                                id="custom_gateway_authentication" disabled
+                                                name="custom_gateway_authentication"
+                                                class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]"
+                                            >
+                                                <option value="smtp">None</option>
+                                                <option value="plain">PLAIN</option>
+                                                <option value="login">LOGIN</option>
+                                                <option value="crammd5">CRAM-MD5</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="flex flex-col">
+                                            <label class="text-gray-700 font-medium" for="custom_gateway_protocol">Protocol</label>
+                                            <select
+                                                id="custom_gateway_protocol" disabled
+                                                name="custom_gateway_protocol"
+                                                class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]"
+                                            >
+                                                <option value="">None</option>
+                                                <option value="ssl">SSL</option>
+                                                <option value="tls">TLS</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="flex flex-col">
+                                            <label class="text-gray-700 font-medium" for="sender_email">Sender's
+                                                Email <span class="text-red-500">*</span></label>
+                                            <input
+                                                type="email" disabled
+                                                id="sender_email"
+                                                name="customGateway_from_configuration"
+                                                class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]"
+                                                placeholder="Enter sender's email"
+                                                required
+                                            >
+                                        </div>
+
+                                        <div class="flex flex-col">
+                                            <label class="text-gray-700 font-medium" for="sender_name">Sender's Name
+                                                <span class="text-red-500">*</span></label>
+                                            <input
+                                                type="text" disabled
+                                                id="sender_name"
+                                                name="customGateway_name_configuration"
+                                                class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]"
+                                                placeholder="Enter sender's name"
+                                                required
+                                            >
+                                        </div>
+
+                                        <div class="flex flex-col">
+                                            <label class="text-gray-700 font-medium" for="otp_length">OTP Length
+                                                <span class="text-red-500">*</span></label>
+                                            <select disabled
+                                                name="customGateway_otpLength_configuration"
+                                                id="otp_length"
+                                                class="w-full border rounded-lg p-3 text-gray-700"
+                                            >
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="flex flex-col">
+                                            <label class="text-gray-700 font-medium" for="email_template">Email
+                                                Templates <span class="text-red-500">*</span></label>
+                                            <input
+                                                disabled
+                                                class="w-full border rounded-lg p-3 text-gray-700"
+                                                placeholder="Please register email template at Marketing->Email Templates->Add New Templates"
+                                            >
+                                            <p class="mt-2 text-gray-500" style="font-size: 1.3rem;">
+                                                Use {{var otp}} and {{var email}} in your template where you wish to
+                                                place OTP & Email respectively.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex justify-left gap-6 my-8">
+                                        <button
+                                            type="submit" name="customgateway_emailConfiguration"
+                                            class=" text-white py-3 px-6 rounded-lg font-semibold"
+                                            disabled
+                                        >
+                                            Save
+                                        </button>
+                                        <button disabled
+                                            type="submit" name="customgateway_emailConfiguration_delete"
+                                            class=" text-white py-3 px-6 rounded-lg font-semibold"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </form>
+
+                                <hr>
+
+                                <form id="customGateway_email_test" method="post" action="">
+                                    <?php print_r($formKey); ?>
+                                    <input type="hidden" name="option" value="customGateway">
+                                    <h2 class="text-gray-700 font-bold text-lg mt-6 mb-4" style="font-size:1.6rem">
+                                        Test Email Configuration</h2>
+                                    <div class="flex flex-wrap items-end justify-between">
+                                        <div style="width:70%">
+                                            <label class="text-gray-700 font-medium" for="test_email_email">Send Email
+                                                To</label>
+                                            <input
+                                                type="text" disabled
+                                                id="test_email_email"
+                                                name="custom_gateway_send_to"
+                                                class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]"
+                                                placeholder="Enter Email for testing"
+                                            >
+                                        </div>
+                                        <div class="mt-4">
+                                            <button
+                                                type="submit" disabled
+                                                name="test_email"
+                                                class=" text-white py-3 px-6 rounded-lg font-semibold"
+                                            >
+                                                Send Test Email
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SMS Gateway Configuration -->
+            <div class="mb-8 border rounded-lg">
+                <div class="flex justify-between items-center bg-gray-100 p-7 cursor-pointer configuration-toggle">
+                    <div class="flex items-center" style="font-size: 1.7rem;">
+                        <i class="fas fa-sms text-black-600 mr-3"></i>
+                        <h2 class="font-semibold text-gray-700" style="margin: 0; font-size: 1.7rem; line-height: 1.2;">SMS Gateway Configuration</h2>
+                        <?php if($enable_sms_customgateway=='checked'): ?>
+                            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full">Enabled</span>
+                        <?php else: ?>
+                            <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full">Disabled</span>
+                        <?php endif; ?>
+                    </div>
+                    <div>
+                        <i class="fas fa-chevron-down transition-transform duration-300 toggle-icon"></i>
+                    </div>
+</div>
+
+                <!-- Collapsible Content -->
+                <div class="collapsible-content bg-white shadow-lg rounded-lg">
+                    <div class="container p-6">
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 shadow-sm">
+                            <div class="flex items-center space-x-4 mb-6"></div>
+
+                            <!-- SMS Configuration Form -->
+                            <div id="showHideSMSdiv" class="space-y-6" style="">
+                                <form id="customGateway_sms" method="post" action="">
+                                    <?php print_r($formKey); ?>
+                                    <input type="hidden" name="option" value="customGateway">
+                                    <!-- API Provider Selection -->
+                                    <div class="flex flex-col mb-6">
+                                        <label class="text-gray-700 font-medium" for="api_provider">API Provider <span class="text-red-500">*</span></label>
+                                        <select id="api_provider" name="custom_gateway_apiProvider_sms" onchange="handleSMSGatewayMethodChange()"
+                                            class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]" required>
+                                            <option value="twilio">Twilio</option>
+                                            <option value="getMethod">Get Method</option>
+                                            <option value="postMethod">Post Method</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Method-Specific Configurations -->
+                                    <div id="method_configurations">
+                                        <!-- Twilio Configuration -->
+                                    <div
+                                        id="twilio_method" <?php if (isset($custom_gateway_sms_provider) && $custom_gateway_sms_provider == 'twilio') { ?><?php } elseif (isset($custom_gateway_sms_provider) && $custom_gateway_sms_provider != 'twilio') { ?> class="hidden" <?php } ?>>
+                                        <div class="grid grid-cols-2 gap-6">
+                                            <div>
+                                                <label class="text-gray-700 font-medium" for="twilio_sid">Twilio SID
+                                                    <span class="text-red-500">*</span></label>
+                                                <input type="text" disabled id="twilio_sid"
+                                                       name="custom_gateway_twilio_sid"
+                                                       class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]"
+                                                       placeholder="Enter Twilio SID"
+                                                       required>
+                                            </div>
+                                            <div>
+                                                <label class="text-gray-700 font-medium" for="twilio_token">Twilio
+                                                    Token <span class="text-red-500">*</span></label>
+                                                <input type="text" disabled
+                                                       id="twilio_token" name="custom_gateway_twilio_token"
+                                                       class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]"
+                                                       placeholder="Enter Twilio Token"
+                                                       required>
+                                            </div>
+                                            <div>
+                                                <label class="text-gray-700 font-medium" for="twilio_number">Twilio
+                                                    Number <span class="text-red-500">*</span></label>
+                                                <input type="text" disabled
+                                                       id="twilio_number" name="custom_gateway_twilio_ph_number"
+                                                       class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]"
+                                                       placeholder="Enter Twilio Number without + sign"
+                                                       required>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                        <!-- Get Method Configuration -->
+                                    <div
+                                        id="get_method" <?php if (isset($custom_gateway_sms_provider) && $custom_gateway_sms_provider == 'getMethod') { ?><?php } else { ?> class="hidden" <?php } ?>>
+                                            <div class="grid grid-cols-2 gap-6">
+                                                <div class="col-span-2 mt-1">
+                                                    <label class="text-gray-700 font-medium" for="get_url">SMS Gateway URL <span class="text-red-500">*</span></label>
+                                                    <input type="text" disabled id="get_url" name="custom_gateway_getmethodURL"
+                                                        class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]"
+                                                        placeholder="Enter Gateway URL" required>
+           </div>
+                                                <div class="col-span-2">
+                                                    <p class="text-gray-500">
+                                                        <strong class="font-semibold text-gray-800">Add your SMS API
+                                                            CURL URL</strong> and use the <span class="text-blue-500">##phone##</span>
+                                                        and <span class="text-blue-500">##message##</span> variables to
+                                                        pass the values of the mobile number and message fields.
+                                                    </p>
+                                                    <p class="mt-2 text-gray-500">
+                                                        Example: <code class="bg-gray-100 px-2 py-1 rounded-md"> {SMS
+                                                            API}?parameter1=value1&phone_parameter=##phone##&message_parameter=##message## </code>
+                                                    </p>
+           </div>
+           </div>
+        </div>
+
+                                        <!-- Post Method Configuration -->
+                                    <div
+                                        id="post_method" <?php if (isset($custom_gateway_sms_provider) && $custom_gateway_sms_provider == 'postMethod') { ?><?php } else { ?> class="hidden" <?php } ?>>
+                                            <div class="grid grid-cols-2 gap-6">
+                                                <div class="col-span-2 mt-1">
+                                                    <label class="text-gray-700 font-medium" for="post_url">SMS Gateway
+                                                    URL <span class="text-red-500">*</span></label>
+                                                    <input type="text" disabled id="post_url" name="custom_gateway_postmethodURL"
+                                                        class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]"
+                                                        placeholder="Enter Gateway URL" required>
+                                                </div>
+                                            </div>
+                                            <hr class="mt-12">
+                                            <h2 class="my-8"
+                                            style="margin-top:2rem; font-size: 1.5rem; color: #333; display: flex; align-items: center;">
+                                            <span id="add_custom_attr" class="text-white p-2 m-4"
+                                                  style="width: 4rem; height: 4rem;border-radius:3px; display: flex; justify-content: center; align-items: center; background-color: #eb5202; font-size: 1.5rem; font-weight: bold;cursor:pointer"
+                                                  disabled>
+                              +
+                            </span>
+                                            <span class="">Attribute</span>
+                                        </h2>
+                                            <div id="custom_parameters_section" class="mt-6">
+                                                <!-- Default Attributes -->
+                                                <div class="flex mt-4 items-center">
+                                                    <input type="text" value="" name="post_method_phone_attr" placeholder="Attribute name for phone"
+                                                        class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]" style="width: 57%;"
+                                                        disabled required>
+                                                    <input type="text" value="##phone##" readonly
+                                                        class="w-full border rounded-lg p-3 text-gray-700 ml-4" style="width: 57%;">
+                                                    <button class="remove-key text-white p-2 rounded ml-4 font-semibold" type="button"
+                                                        style="width: 5rem;background-color:#eb5202"
+                                                        disabled>-
+                                                    </button>
+                                                </div>
+                                                <div class="flex mt-4 items-center">
+                                                    <input type="text" value="" name="post_method_message_attr" placeholder="Attribute name for message"
+                                                        class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]" style="width: 57%;"
+                                                        disabled required>
+                                                    <input type="text" value="##message##" readonly
+                                                        class="w-full border rounded-lg p-3 text-gray-700 ml-4" style="width: 57%;">
+                                                    <button class="remove-key text-white p-2 rounded ml-4 font-semibold" type="button"
+                                                        style="width: 5rem;background-color:#eb5202"
+                                                        disabled>-
+                                                    </button>
+                                                </div>
+                                                <!-- Dynamic Attributes -->
+                                                <div id="dynamic_attributes" class="mt-4"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-span-2 mt-6">
+                                        <label class="text-gray-700 font-medium" for="sms_otp_length">OTP Length <span class="text-red-500">*</span></label>
+                                        <select name="customGateway_otpLength_configuration" id="sms_otp_length"
+                                            class="w-full border rounded-lg p-3 text-gray-700" disabled required>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-span-2 mt-6">
+                                        <label class="text-gray-700 font-medium"
+                                               for="customGateway_message_SMSconfiguration">SMS Messages <span
+                                                class="text-red-500">*</span></label>
+                                        <input type="text" id="customGateway_message_SMSconfiguration" name="customGateway_message_SMSconfiguration"
+                                            class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]"
+                                            placeholder="Example: Dear Customer, Your one time passcode is ##OTP##." disabled required>
+                                        <p class="mt-2 text-gray-700">
+                                            You need to write <span class="text-blue-500">##OTP##</span> where you
+                                            wish to place the generated OTP in this template.
+                                        </p>
+                                    </div>
+
+                                    <!-- Save and Delete Buttons -->
+                                    <div class="flex justify-left gap-6 my-8">
+                                        <button type="submit" disabled name="sms_submit"
+                                                class="text-white py-3 px-6 rounded-lg font-semibold">Save
+                                        </button>
+                                        <button type="submit" disabled
+                                                name="sms_submit_delete"
+                                                class="text-white py-3 px-6 rounded-lg font-semibold">Delete
+                                        </button>
+                                    </div>
+</form>
+
+                                <hr class="my-6">
+                                
+                                <form id="customGateway_sms_test" method="post" action="">
+                                    <?php print_r($formKey); ?>
+                                    <input type="hidden" name="option" value="customGateway">
+                                    <h2 class="text-gray-700 font-bold text-lg mt-6 mb-4" style="font-size:1.6rem">Test
+                                    SMS Configuration</h2>
+                                    <div class="flex flex-wrap items-end justify-between">
+                                        <div style="width:70%">
+                                            <label class="text-gray-700 font-medium" for="test_email_sms">Send SMS
+                                            To</label>
+                                            <input type="text" id="test_email_sms" name="custom_gateway_test_mobileNumber"
+                                                class="w-full border rounded-lg p-3 text-gray-700 focus:ring-2 focus:ring-[#eb5202]"
+                                                disabled
+                                                placeholder="Enter number for testing with '+' sign and Country code.">
+                                        </div>
+                                        <div class="mt-4">
+                                            <button type="submit" disabled name="test_sms"
+                                                class="font-semibold text-white py-3 px-6 rounded-lg font-semibold">
+                                            Send Test SMS
+                                        </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

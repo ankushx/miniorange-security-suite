@@ -1,0 +1,48 @@
+<?php
+$block = $this;
+$formKey = $block->getFormKey();
+$supportUrl = $block->getUrl('mobruteforce/support/index');
+?>
+
+<div class="panel-heading">
+    <div class="pull-right">
+        <div class="page bg-gray-50 py-6 rounded-lg shadow support_outer_div" id="minisupport">
+            <div class="mosp_table_layout">
+                <div class="p-2 support_heading"> Contact Us</div>
+                <hr>
+                <div class="flex">
+                    <form name="submit_form" method="post" action="<?= $block->escapeUrl($supportUrl) ?>">
+                        <input name="form_key" type="hidden" value="<?= $block->escapeHtmlAttr($formKey) ?>" />
+                        <h3 class="support_needHelp">
+                            Need any help? Just send us a query so we can assist you.
+                        </h3>
+                        <input type="hidden" name="option" value="supportQuery">
+                        <div>
+                            <table>
+                                <tr class="my-4">
+                                    <td class="mo-input-wrapper group my-6 support_padding">
+                                        <label class="mo-input-label_support">Email</label>
+                                        <input class="w-full mo-input border border-gray-300 rounded-lg p-2" id="query_email" type="email" name="email" value="" required placeholder="Enter your Email" >
+                                    </td>
+                                </tr>
+                                <tr class="my-4">
+                                    <td class="mo-input-wrapper group my-6 support_padding">
+                                        <textarea id="query" name="query"
+                                            class="resize-y h-28 w-full p-2 border border-gray-300 rounded-lg mo-input mo-input border border-gray-300"
+                                            style="height:120px;"
+                                            placeholder="Write your query here"></textarea>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <input type="submit" class="rounded-lg font-semibold text-white py-2 px-4 margin_left_support"
+                               name="send_query" id="send_query" value="Submit Query">
+                    </form>
+                </div>
+                <br>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+

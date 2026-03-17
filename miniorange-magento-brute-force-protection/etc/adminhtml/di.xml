@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Plugin for backend Auth model to add BruteForce protection -->
+    <type name="Magento\Backend\Model\Auth">
+        <plugin name="bruteforce_protection_admin_auth" type="MiniOrange\BruteForceProtection\Plugin\AuthPlugin" sortOrder="10" />
+    </type>
+    
+    <!-- Plugin for Admin Forgot Password controller to add BruteForce protection -->
+    <type name="Magento\User\Controller\Adminhtml\Auth\Forgotpassword">
+        <plugin name="miniorange_admin_forgotpassword_bruteforce"
+                type="MiniOrange\BruteForceProtection\Plugin\AdminForgotPasswordPlugin"
+                sortOrder="10"/>
+    </type>
+
+    <type name="Magento\Integration\Model\AdminTokenService">
+    <plugin name="miniorange_bruteforce_admin_token"
+            type="MiniOrange\BruteForceProtection\Plugin\AdminTokenPlugin" />
+</type>
+
+</config>
+
+    

@@ -1,0 +1,30 @@
+<!--
+    This template file is for the account settings.
+    File acts as a view file for our Account.
+-->
+
+<?php
+// initialize all values required on this page
+$status = $block->getRegistrationStatus();
+$userEmail = $block->getCurrentAdminUser()->getEmail();
+
+print_r('      <div class="row">
+<div class="">
+            <div class="page" id="account" style="">
+            <div class="mosp_table_layout">');
+
+if ($status == '' || $status == 'MO_VERIFY_CUSTOMER') {
+    echo $block->getLayout()
+        ->createBlock("MiniOrange\TwoFA\Block\TwoFA")
+        ->setTemplate("MiniOrange_TwoFA::register.phtml")
+        ->toHtml();
+} else {
+    echo $block->getLayout()
+        ->createBlock("MiniOrange\TwoFA\Block\TwoFA")
+        ->setTemplate("MiniOrange_TwoFA::profile.phtml")
+        ->toHtml();
+}
+
+
+print_r('       </div>
+        </div>');

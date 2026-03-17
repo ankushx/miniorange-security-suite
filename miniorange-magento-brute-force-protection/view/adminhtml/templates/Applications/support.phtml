@@ -1,0 +1,163 @@
+<?php
+$block = $this;
+?>
+<div class="support-icon" id="openSupportForm">
+    <!-- <i class="fa-solid fa-envelope" style="color:white"></i> -->
+    <img src="<?= $block->escapeUrl($block->getViewFileUrl('MiniOrange_BruteForceProtection::images/icon_mo.png')) ?>"
+         alt="miniOrange" class="support-icon-img">
+</div>
+
+<div id="help" class="help-container" style="display: none;">
+                    <span class="span1">
+                        <div class="need">
+                            <span class="span2"></span>
+                            <div class="div11">
+                                <div class="div12">
+                                    <span> Hello there! </span><br>
+                                    <p class="helpline">Need Help? Drop us an email !</p>
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+</div>
+
+<div class="support-form" id="supportForm">
+    <div class="support-form-head">
+        <p class="paragraph">miniOrange Support</p>
+        <span id="closeSupportForm" class="close-btn">✖</span>
+    </div>
+
+    <form id="contactForm">
+        <!-- Success Message Box (Initially Hidden) -->
+        <div id="successMessage" class="successMessage">
+            <span class="right_image">✅</span> <br>
+            Thanks for your inquiry. <br>
+            We will get back shortly via email. <br>
+            If you don't hear from us within 24 hours, <br>
+            please send a follow-up email to <strong>magentosupport@xecurify.com</strong>.
+        </div>
+
+
+        <div id="contactForm_inside">
+            <label for="email">Contact E-mail</label>
+            <input type="email" id="email" name="email" placeholder="Enter valid email" required>
+
+            <!-- future use -->
+            <!-- <label for="category">Select Category</label>
+            <select id="category" name="category" required>
+                <option value="">Select Category</option>
+                <option value="Payment Issue">Payment Issue</option>
+                <option value="OTP Not Working">OTP Not Working</option>
+                <option value="License Issue">License Issue</option>
+                <option value="Sales Enquiry">Sales Enquiry</option>
+                <option value="Schedule a Demo">Schedule a Demo</option>
+                <option value="Feedback">Feedback</option>
+            </select> -->
+
+            <label for="query">How can we help you?</label>
+            <textarea id="query" name="query" rows="4"
+                      placeholder="Enter your query here. We will get back to you as soon as possible via email."
+                      required></textarea>
+
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const openSupportForm = document.getElementById("openSupportForm");
+        const supportForm = document.getElementById("supportForm");
+        const closeSupportForm = document.getElementById("closeSupportForm");
+        const contactForm = document.getElementById("contactForm");
+        const categorySelect = document.getElementById("category");
+        const successMessage = document.getElementById("successMessage");
+        const contactForm_inside = document.getElementById("contactForm_inside");
+
+        openSupportForm.addEventListener("click", function () {
+            supportForm.style.display = "block";
+        });
+
+        closeSupportForm.addEventListener("click", function () {
+            supportForm.style.display = "none";
+        });
+
+        contactForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const email = document.getElementById("email").value;
+            // const category = categorySelect.value;
+            const query = document.getElementById("query").value;
+
+            // Convert form data into URL parameters
+            let params = new URLSearchParams({email, query}).toString();
+
+            // Update API URL to use GET request with admin URL
+            let apiUrl = '<?= $block->escapeUrl($block->getUrl('mobruteforce/support/submit')); ?>?' + params;
+
+
+            fetch(apiUrl, {
+                method: "GET",
+                headers: {"Content-Type": "application/json"}
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        successMessage.style.display = "block";
+                        contactForm_inside.style.display = "none";
+                    } else {
+                        successMessage.style.display = "block";
+                        contactForm_inside.style.display = "none";
+                    }
+
+                    // Auto-close message after 5 seconds
+                    setTimeout(() => {
+                        successMessage.style.display = "none";
+                        supportForm.style.display = "none";
+                        contactForm_inside.style.display = "block"; // Reset form
+                        contactForm_inside.reset();
+                    }, 5000);
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const supportIcon = document.getElementById("openSupportForm");
+        const helpContainer = document.getElementById("help");
+
+        // Check if the user has visited before
+        if (!localStorage.getItem("hasVisited")) {
+            helpContainer.style.display = "block"; // Show the help container initially
+            localStorage.setItem("hasVisited", "true"); // Store visit status
+            setTimeout(() => {
+                helpContainer.style.display = "none"; // Hide it after 5 seconds
+            }, 10000);
+        } else {
+            helpContainer.style.display = "none"; // Hide it for returning users
+        }
+
+        // Show on hover
+        supportIcon.addEventListener("mouseenter", function () {
+            helpContainer.style.display = "block";
+        });
+
+        supportIcon.addEventListener("mouseleave", function () {
+            helpContainer.style.display = "none";
+        });
+
+        // Keep open when hovering over the help container
+        helpContainer.addEventListener("mouseenter", function () {
+            helpContainer.style.display = "block";
+        });
+
+        helpContainer.addEventListener("mouseleave", function () {
+            helpContainer.style.display = "none";
+        });
+    });
+
+
+</script>
+

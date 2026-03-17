@@ -1,0 +1,44 @@
+<?php
+use MiniOrange\IpRestriction\Helper\Curl;
+use MiniOrange\IpRestriction\Helper\IpRestrictionConstants;
+
+$iprestrict = $this->getExtensionPageUrl('iprestrict');
+$upgrade = $this->getExtensionPageUrl('upgrade');
+$activeTab = $this->getCurrentActiveTab();
+
+$checkDataAdded = $this->checkDataAdded();
+if($checkDataAdded == null)
+{ 
+    $timeStamp = $this->getTimeStamp();
+    $currentAdminUser =  $this->getCurrentAdminUser();  
+    $adminEmail = $currentAdminUser ? $currentAdminUser['email'] : 'No Email Found';
+    $domain = $this->getBaseUrl();
+    $pluginFirstPageVisit = $activeTab;
+    $environmentName =  $this->getEdition();
+    $environmentVersion = $this->getProductVersion();
+    $freeInstalledDate = $this->getCurrentDate();
+
+    $data = [
+       'timeStamp' => $timeStamp,
+       'adminEmail' => $adminEmail,
+       'domain' => $domain,
+       'pluginFirstPageVisit' => $pluginFirstPageVisit,
+       'environmentName' => $environmentName,
+       'environmentVersion' => $environmentVersion,
+       'FreeInstalledDate' => $freeInstalledDate
+    ];
+    
+    Curl::submit_to_magento_team($data);
+    $this->dataAdded();
+}
+?>
+
+<div style="padding: 0 1%; width: 100%; box-sizing: border-box;">
+    <div class="topnav" id="myTopnav" style="width: 100%;">
+        <a class="nav-tab <?php ($activeTab == 'ip_restriction' || $activeTab == 'country_restrictions') ? print_r('active') : print_r('') ?>"
+           href="<?= $this->escapeUrl($iprestrict) ?>">IP Restriction</a>
+        <a class="nav-tab <?php ($activeTab == 'upgrade') ? print_r('active') : print_r('') ?>"
+           href="<?= $this->escapeUrl($upgrade) ?>">Upgrade</a>
+    </div>
+</div>
+

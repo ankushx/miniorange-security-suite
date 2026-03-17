@@ -1,0 +1,29 @@
+{
+    "name": "miniorange_inc/adminlogs",
+    "description": "Admin Logs Plugin to track user activity in Magento 2",
+    "keywords": ["Admin Action Logs", "User Activity Logs", "Admin Activity Logs", "Admin Logs"],
+    "require": {
+      "php": "~5|~6|~7|~8"
+    },
+    "type": "magento2-module",
+    "version": "1.0.0",
+     "license": [
+        "Commercial"
+    ],
+     "autoload": {
+        "files": [ "registration.php" ],
+        "psr-4": {
+            "MiniOrange\\AdminLogs\\": ""
+        }
+    },
+    "authors": [
+        {
+            "name": "miniOrange Team",
+            "homepage": "http://www.miniorange.com/",
+            "email": "info@xecurify.com"
+        }
+    ],
+    "support": {
+        "email": "info@xecurify.com"
+    }
+}

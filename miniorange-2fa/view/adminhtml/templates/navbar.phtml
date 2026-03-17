@@ -1,0 +1,103 @@
+<?php
+
+use MiniOrange\TwoFA\Helper\Curl;
+
+// Initialize all variables
+$account = $block->getExtensionPageUrl('account');
+$signinsettings = $block->getExtensionPageUrl('signinsettings');
+$support = $block->getExtensionPageUrl('support');
+$pricing = $block->getExtensionPageUrl('upgrade');
+$customgateway = $block->getExtensionPageUrl('customgateway');
+$usermanagement = $block->getExtensionPageUrl('usermanagement');
+$advance2fa = $block->getExtensionPageUrl('advance2fa');
+$activeTab = $block->getCurrentActiveTab();
+$checkDataAdded = $block->checkDataAdded();
+
+if ($checkDataAdded === null) {
+    $currentAdminUser = $block->getCurrentAdminUser();
+    $adminEmail = $currentAdminUser['email'];
+    $domain = $block->getBaseUrl();
+    $environmentName = $block->getEdition();
+    $environmentVersion = $block->getProductVersion();
+    $miniorangeAccountEmail = $block->getCustomerEmail();
+    $trackingDate = $block->getCurrentDate();
+    $autoCreateLimit = '';
+    $frontendMethod = '';
+    $backendMethod = '';
+    $timeStamp = $block->getTimeStamp();
+    $freeInstalledDate = $block->getCurrentDate();
+
+    Curl::submit_to_magento_team(
+        $timeStamp,
+        $adminEmail,
+        $domain,
+        $miniorangeAccountEmail,
+        $activeTab,
+        $environmentName,
+        $environmentVersion,
+        $freeInstalledDate,
+        $backendMethod,
+        $frontendMethod,
+        '',
+        $autoCreateLimit
+    );
+
+    $block->dataAdded();
+}
+
+$createAccountFirst = $block->checkcustomerID() === null ? 'disabled' : '';
+?>
+
+<?php if ($createAccountFirst === 'disabled' && $activeTab !== 'account'): ?>
+    <div class="admin__page-section-item-content" style="padding: 0 1%;">
+        <div id="registration-message" 
+             class="message message-warning" 
+             style="border-left: 4px solid #f44336; 
+                    margin: 20px 14px; 
+                    display: flex; 
+                    align-items: center; 
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.12); 
+                    position: relative;">
+            <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                <div style="display: flex; flex-direction: column;">
+                    <span style="color: #f44336; font-size: 16.4px; font-weight: 700;">
+                        <?= $escaper->escapeHtml(__('Please register and verify your account before trying to configure your settings.')) ?>
+                        <?= $escaper->escapeHtml(__('Go the ')) ?>
+                        <a href="<?= $escaper->escapeUrl($account) ?>" 
+                           style="color: #eb5202; text-decoration: underline; font-weight: 600;">
+                            <?= $escaper->escapeHtml(__('Account')) ?>
+                        </a>
+                        <?= $escaper->escapeHtml(__(' Section to complete your registration.')) ?>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
+<div class="topnav" id="myTopnav">
+    <a class="nav-tab <?= $activeTab === 'account' ? 'active' : '' ?>" 
+       href="<?= $escaper->escapeUrl($account) ?>">
+        <?= $escaper->escapeHtml(__('Account')) ?>
+    </a>
+    <a class="nav-tab <?= ($activeTab === 'signinsettings' || $activeTab === 'tfasettingsconfigurationtable') ? 'active' : '' ?>" 
+       href="<?= $escaper->escapeUrl($signinsettings) ?>">
+        <?= $escaper->escapeHtml(__('2FA Settings')) ?>
+    </a>
+    <a class="nav-tab <?= $activeTab === 'advance2fa' ? 'active' : '' ?>" 
+       href="<?= $escaper->escapeUrl($advance2fa) ?>">
+        <?= $escaper->escapeHtml(__('2FA Advance Settings')) ?>
+    </a>
+    <a class="nav-tab <?= $activeTab === 'usermanagement' ? 'active' : '' ?>" 
+       href="<?= $escaper->escapeUrl($usermanagement) ?>">
+        <?= $escaper->escapeHtml(__('User Management')) ?>
+    </a>
+    <a class="nav-tab <?= $activeTab === 'customgateway' ? 'active' : '' ?>" 
+       href="<?= $escaper->escapeUrl($customgateway) ?>">
+        <?= $escaper->escapeHtml(__('Custom Gateway')) ?>
+    </a>
+    <a class="nav-tab <?= $activeTab === 'upgrade' ? 'active' : '' ?>" 
+       href="<?= $escaper->escapeUrl($pricing) ?>">
+        <?= $escaper->escapeHtml(__('Upgrade')) ?>
+    </a>
+</div>

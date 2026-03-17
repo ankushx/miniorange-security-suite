@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="MiniOrange_IpRestriction::css/admin.css"/>
+        <css src="MiniOrange_IpRestriction::css/upgrade.css"/>
+        <css src="MiniOrange_IpRestriction::css/all.min.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="MiniOrange\IpRestriction\Block\IpRestriction"
+                   name="miniorange.iprestriction.navbar"
+                   template="MiniOrange_IpRestriction::navbar.phtml"/>
+            <block class="MiniOrange\IpRestriction\Block\IpRestriction"
+                   name="miniorange.iprestriction.support"
+                   template="MiniOrange_IpRestriction::support.phtml"/>
+            <block class="MiniOrange\IpRestriction\Block\IpRestriction"
+                   name="miniorange.iprestriction.admin.upgrade"
+                   template="MiniOrange_IpRestriction::upgrade.phtml"/>
+        </referenceContainer>
+    </body>
+</page>
+

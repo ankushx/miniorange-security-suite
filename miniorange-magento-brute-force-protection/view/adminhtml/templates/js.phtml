@@ -1,0 +1,212 @@
+<!-- Common JavaScript for BruteForce Protection Admin -->
+<script>
+// BruteForce Protection Admin JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize form validation
+    initializeFormValidation();
+    
+    // Initialize toggle switches
+    initializeToggleSwitches();
+    
+    // Initialize tooltips
+    initializeTooltips();
+});
+
+function initializeFormValidation() {
+    const forms = document.querySelectorAll('form[id$="Form"]');
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!validateForm(this)) {
+                e.preventDefault();
+            }
+        });
+    });
+}
+
+function validateForm(form) {
+    const requiredFields = form.querySelectorAll('[required]');
+    let isValid = true;
+    
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            showFieldError(field, 'This field is required');
+            isValid = false;
+        } else {
+            clearFieldError(field);
+        }
+    });
+    
+    // Validate number fields
+    const numberFields = form.querySelectorAll('input[type="number"]');
+    numberFields.forEach(field => {
+        const value = parseInt(field.value);
+        const min = parseInt(field.getAttribute('min'));
+        const max = parseInt(field.getAttribute('max'));
+        
+        if (value < min || value > max) {
+            showFieldError(field, `Value must be between ${min} and ${max}`);
+            isValid = false;
+        }
+    });
+    
+    return isValid;
+}
+
+function showFieldError(field, message) {
+    clearFieldError(field);
+    
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'field-error';
+    errorDiv.style.color = '#dc3545';
+    errorDiv.style.fontSize = '12px';
+    errorDiv.style.marginTop = '5px';
+    errorDiv.textContent = message;
+    
+    field.parentNode.appendChild(errorDiv);
+    field.style.borderColor = '#dc3545';
+}
+
+function clearFieldError(field) {
+    const existingError = field.parentNode.querySelector('.field-error');
+    if (existingError) {
+        existingError.remove();
+    }
+    field.style.borderColor = '';
+}
+
+function initializeToggleSwitches() {
+    const toggles = document.querySelectorAll('.switch input[type="checkbox"]');
+    toggles.forEach(toggle => {
+        toggle.addEventListener('change', function() {
+            const slider = this.nextElementSibling;
+            if (this.checked) {
+                slider.style.backgroundColor = '#eb5202';
+            } else {
+                slider.style.backgroundColor = '#ccc';
+            }
+        });
+    });
+}
+
+function initializeTooltips() {
+    const helpTexts = document.querySelectorAll('.help-text');
+    helpTexts.forEach(helpText => {
+        helpText.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = '#f8f9fa';
+            this.style.padding = '5px';
+            this.style.borderRadius = '4px';
+        });
+        
+        helpText.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+            this.style.padding = '';
+            this.style.borderRadius = '';
+        });
+    });
+}
+
+// Utility functions
+function showSuccessMessage(message) {
+    showMessage(message, 'success');
+}
+
+function showErrorMessage(message) {
+    showMessage(message, 'error');
+}
+
+function showMessage(message, type) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message message-${type}`;
+    messageDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 4px;
+        color: white;
+        font-weight: 500;
+        z-index: 9999;
+        max-width: 400px;
+        word-wrap: break-word;
+    `;
+    
+    if (type === 'success') {
+        messageDiv.style.backgroundColor = '#28a745';
+    } else if (type === 'error') {
+        messageDiv.style.backgroundColor = '#dc3545';
+    }
+    
+    messageDiv.textContent = message;
+    document.body.appendChild(messageDiv);
+    
+    setTimeout(() => {
+        messageDiv.remove();
+    }, 5000);
+}
+
+// Form submission handler
+function handleFormSubmission(formId, callback) {
+    const form = document.getElementById(formId);
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = {};
+            
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            
+            if (callback) {
+                callback(data);
+            } else {
+                this.submit();
+            }
+        });
+    }
+}
+
+// AJAX helper
+function makeAjaxRequest(url, data, method = 'POST') {
+    return fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .catch(error => {
+        console.error('AJAX Error:', error);
+        showErrorMessage('An error occurred while processing your request');
+    });
+}
+
+// Feature availability checker
+function checkFeatureAvailability(feature) {
+    // This would typically make an AJAX call to check feature availability
+    // For now, we'll use a simple check based on class names
+    const premiumElements = document.querySelectorAll('.premium-badge');
+    return premiumElements.length === 0 || feature !== 'premium';
+}
+
+// Initialize premium feature restrictions
+function initializePremiumRestrictions() {
+    const premiumElements = document.querySelectorAll('[data-premium="true"]');
+    premiumElements.forEach(element => {
+        element.addEventListener('click', function(e) {
+            if (!checkFeatureAvailability('premium')) {
+                e.preventDefault();
+                showErrorMessage('This feature requires a premium license. Please upgrade to continue.');
+            }
+        });
+    });
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    initializePremiumRestrictions();
+});
+</script>

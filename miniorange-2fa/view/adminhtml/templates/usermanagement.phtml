@@ -1,0 +1,558 @@
+<?php
+$formKey = $block->getBlockHtml('formkey');
+$tfausers = $block->getAllConfiguredUsers();
+// Free version uses checkcustomerID() instead of checkaccountVerified()
+$create_account_first = ($block->checkcustomerID() == NULL) ? 'disabled' : '';
+$pricing = $block->getExtensionPageUrl('upgrade');
+$account = $block->getExtensionPageUrl('account');
+
+$isEnabled = $block->isEnabled();
+$disabled = !$isEnabled ? "disabled" : "";
+
+// Note: Free version doesn't have isTrialExpired(), so we skip that check
+?>
+<!-- features:customize ui popup:
+
+login via backup method{email,kba} -->
+
+
+<div class="bg-gray-100">
+    <!-- Container -->
+    <div class="bg-white rounded-lg p-3 w-full">
+        <!-- Header Section -->
+        <div class="flex justify-between items-center mt-4 mb-6 py-2">
+            <div class="flex items-center space-x-3" style="font-size:1.5rem">
+                <label class="text-gray-700">Show</label>
+                <select class="border rounded-md px-3 py-2" style="width:50%" id="entriesSelect"
+                        onchange="updateEntries()" <?php print_r($create_account_first); ?>>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+
+                <label class="text-gray-700">entries</label>
+            </div>
+            <div class="relative" style="font-size:1.5rem">
+                <input
+                    type="text" <?php print_r($disabled); ?>
+                    id="searchInput"
+                    placeholder="Search users..."
+                    class="border rounded-md px-4 py-3 pl-12 w-80"
+                    onkeyup="searchUsers()"
+                >
+                <i class="fas fa-search absolute left-4 top-5 text-gray-400"></i>
+            </div>
+        </div>
+
+        <!-- Dropdown for action (Disable/Reset 2FA) -->
+        <div class="my-8">
+            <select id="actionDropdown" class="border rounded-md px-4 py-3" style="width:17%"
+                    onchange="performAction()" <?php print_r($disabled); ?>>
+                <option value="">Action</option>
+                <option value="disable_2fa">Disable 2FA</option>
+                <option value="reset_2fa">Reset 2FA</option>
+            </select>
+        </div>
+
+
+        <!-- Hidden Modal (Initially hidden) -->
+        <div id="confirmModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden"
+             style="z-index: 9999;">
+            <div class="bg-white p-12 rounded-lg shadow-lg w-96 text-center" style="width: 25%; z-index: 10000;">
+                <!-- Centered Heading -->
+                <h2 class="text-2xl font-bold text-gray-800 mb-6" style="font-size:1.8rem;color:#eb5202;">
+                    Confirmation</h2>
+
+                <!-- Message -->
+                <p id="modalMessage" class="text-gray mb-6">Are you sure you want to reset 2FA settings?</p>
+
+                <!-- Centered Buttons -->
+                <div class="flex justify-center space-x-4">
+                    <!-- Confirm Button -->
+                    <form id="userManagement" method="post" action="">
+                        <?php print_r($formKey); ?>
+                        <input type="hidden" name="option" value="saveSignInSettings" >
+                        <input type="hidden" name="email" value="<?php echo isset($email) ? $this->escapeHtmlAttr($email) : ''; ?>">
+                        <input type="hidden" name="website_id" value="<?php echo isset($websiteId) ? $this->escapeHtmlAttr($websiteId) : ''; ?>">
+                        <button id="confirmBtn"
+                                name="reset" <?php print_r($disabled); ?>
+                                class="px-4 py-2 text-white rounded-md transition-all duration-500"
+                                style="background-color:#eb5202; border:none;"
+                                onmouseover="this.style.backgroundColor='#d94e00';this.style.color='white'; this.style.transform='scale(1.1)';"
+                                onmouseout="this.style.backgroundColor='#eb5202'; this.style.transform='scale(1)';">
+                            Confirm
+                        </button>
+                    </form>
+
+                    <!-- Cancel Button -->
+                    <button id="cancelBtn"
+                            class="px-4 py-2 text-gray-800 rounded-md border transition-all duration-500"
+                            style="background-color: #ffffff;    border-color: rgb(255, 133, 0);"
+                            onmouseover="this.style.backgroundColor='#f7f7f7'; this.style.borderColor='#d94e00'; this.style.transform='scale(1.1)';"
+                            onmouseout="this.style.backgroundColor='#ffffff'; this.style.borderColor='#eb5202'; this.style.transform='scale(1)';">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- all selected users -->
+        <div id="confirmModalforSelectedUsers"
+             class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden"
+             style="z-index: 9999;">
+            <div class="bg-white p-12 rounded-lg shadow-lg w-96 text-center" style="width: 25%; z-index: 10000;">
+                <!-- Centered Heading -->
+                <h2 class="text-2xl font-bold text-gray-800 mb-6" style="font-size:1.8rem;color:#eb5202;">
+                    Confirmation</h2>
+
+                <!-- Message -->
+                <p id="modalMessageforSelectedUsers" class="text-gray-600 mb-6">Are you sure you want to reset 2FA
+                    settings?</p>
+
+                <!-- Centered Buttons -->
+                <div class="flex justify-center space-x-4">
+                    <!-- Confirm Button -->
+                    <form id="userManagementforAllUsers" method="post" action="">
+                        <?php print_r($formKey); ?>
+                        <input type="hidden" name="option" value="saveSignInSettings" >
+                        <input type="hidden" name="all users,website id" value="<?php ($email); ?>">
+                        <input type="hidden" name="all_users,website_id" value="">
+                        <input type="hidden" name="users" value="">
+                        <button id="confirmBtn_for_selected_users"
+                                name="reset_selected_users" <?php print_r($disabled); ?>
+                                class="px-4 py-2 text-white rounded-md transition-all duration-400"
+                                style="background-color:#eb5202; border:none;"
+                                onmouseover="this.style.backgroundColor='#d94e00';this.style.color='white'; this.style.transform='scale(1.1)';"
+                                onmouseout="this.style.backgroundColor='#eb5202'; this.style.transform='scale(1)';"> 
+                            Confirm
+                        </button>
+                    </form>
+                    <!-- Cancel Button -->
+                    <button id="cancelBtnforSelectedUsers"
+                            class="px-4 py-2 text-gray-800 rounded-md border transition-all duration-400"
+                            style="background-color: #ffffff;    border-color: rgb(255, 133, 0);"
+                            onmouseover="this.style.backgroundColor='#f7f7f7'; this.style.borderColor='#d94e00'; this.style.transform='scale(1.1)';"
+                            onmouseout="this.style.backgroundColor='#ffffff'; this.style.borderColor='#eb5202'; this.style.transform='scale(1)';">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- User Table -->
+        <div class="overflow-x-auto" id="userTableContainer">
+            <table class="min-w-full border" style="text-align:center">
+                <thead class="bg-gray-100" style="font-size: 1.7rem;">
+                <tr>
+                    <th class="font-medium text-gray-500 tracking-wider">
+                        <!-- Checkbox with dropdown -->
+                        <div class="action-multicheck-wrap">
+                            <input class="admin__control-checkbox" type="checkbox" id="selectAllCheckbox"
+                                   onclick="selectAllUsers()" <?php print_r($create_account_first); ?>>
+                            <label for="selectAllCheckbox"></label>
+                            <button class="action-multicheck-toggle">
+                                <span>Options</span>
+                            </button>
+                            <ul class="action-menu" id="actionDropdown" style="display: none;">
+
+                            </ul>
+                        </div>
+                    </th>
+
+                    <th class="p-4  font-medium text-gray-500  tracking-wider">Email</th>
+                    <th class="p-4  font-medium text-gray-500  tracking-wider">Website</th>
+                    <th class="p-4  font-medium text-gray-500  tracking-wider">Role</th>
+                    <th class="p-4  font-medium text-gray-500  tracking-wider">2FA Method</th>
+                    <th class="p-4  font-medium text-gray-500  tracking-wider">2FA Status</th>
+                    <th class="p-4  font-medium text-gray-500  tracking-wider">Actions</th>
+                </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200" id="userTableBody">
+                <!-- User rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 rounded-b-xl flex justify-between items-center">
+            <div class="text-gray-700" id="paginationInfo">Showing 1 to 10 of 25 entries</div>
+            <div class="flex space-x-2">
+                <button
+                    class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-semibold" <?php print_r($disabled); ?>
+                    id="prevBtn"
+                    onclick="prevPage()">Previous
+                </button>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-md font-semibold"
+                        id="nextBtn" <?php print_r($disabled); ?>
+                        style="background-color:#eb5202;border:none" onclick="nextPage()">Next
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentPage = 1;
+    let entriesPerPage = 10;
+    let users = <?= /* @noEscape */ json_encode($tfausers ?? []) ?>;// Assuming $tfausers is an array of user data.
+
+    function updateEntries() {
+        entriesPerPage = parseInt(document.getElementById('entriesSelect').value);
+        currentPage = 1;  // Reset to page 1 whenever entries per page changes
+        renderTable();
+    }
+
+    function selectAllUsers() {
+        const checkboxes = document.querySelectorAll('.user-checkbox');
+        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+    }
+
+
+    function renderTable() {
+        const startIndex = (currentPage - 1) * entriesPerPage;
+        const endIndex = currentPage * entriesPerPage;
+        const paginatedUsers = users.slice(startIndex, endIndex);
+        const tableBody = document.getElementById('userTableBody');
+        const paginationInfo = document.getElementById('paginationInfo');
+        const userTableContainer = document.getElementById('userTableContainer');
+
+        tableBody.innerHTML = '';
+
+        paginatedUsers.forEach(user => {
+            const row = `
+            <tr class="hover:bg-gray-50">
+                <td class="">
+                    <input type="checkbox" class="user-checkbox" value="${user.username}" data-website-id="${user.website_id}" <?php print_r($create_account_first); ?>>
+                </td>
+                <td class="p-4">${user.username}</td>
+                <td class="p-4">${user.website_id == -1 ? 'Backend' : `Frontend -> (${user.website_id})`}</td>              
+                <td class="p-4">${user.website_id == -1 ? 'Admin' : 'Customer'}</td>
+                <td class="p-4">
+            ${
+                user.active_method == 'OOS' ? 'OTP Over SMS' :
+                    user.active_method == 'OOE' ? 'OTP Over Email' :
+                        user.active_method == 'OOW' ? 'OTP Over WhatsApp' :
+                            user.active_method == 'OOSE' ? 'OTP Over Email + SMS' :
+                                user.active_method == 'GoogleAuthenticator' ? 'Google Authenticator' :
+                                    user.active_method == 'User_skipTwofa' ? 'User has skip 2fa' :
+                                        user.active_method == 'MicrosoftAuthenticator' ? 'Microsoft Authenticator' :
+                                        'user.active_method'
+            }
+            </td>
+            <td class="p-4">
+                ${(user.disable_2fa === true || user.disable_2fa === '1' || user.disable_2fa === 1) ?
+                '<span class="px-3 py-1 bg-red-100 text-red-800 rounded-full">Disabled</span>' :
+                '<span class="px-3 py-1 bg-green-100 text-green-800 rounded-full">Enabled</span>'
+            }
+            </td>
+              <td class="p-4">
+                <button onclick="resetTfaSettings('${user.username}','${user.website_id}')" class="text-red-600 hover:text-red-800" style="border:none;background-color:white"  <?php print_r($disabled); ?>>
+                  <i class="fas fa-redo"></i> Reset
+                </button>
+              </td>
+            </tr>
+          `;
+            tableBody.innerHTML += row;
+        });
+
+        // Update pagination info
+        paginationInfo.textContent = `Showing ${startIndex + 1} to ${Math.min(endIndex, users.length)} of ${users.length} entries`;
+
+        // Handle next/prev buttons visibility
+        document.getElementById('prevBtn').disabled = currentPage === 1;
+        document.getElementById('nextBtn').disabled = currentPage * entriesPerPage >= users.length;
+    }
+
+    function prevPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            renderTable();
+        }
+    }
+
+    function nextPage() {
+        if (currentPage * entriesPerPage < users.length) {
+            currentPage++;
+            renderTable();
+        }
+    }
+
+    function searchUsers() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const filteredUsers = users.filter(user => {
+            return (user.username).toLowerCase().includes(searchTerm);
+        });
+        renderFilteredTable(filteredUsers);
+    }
+
+    function renderFilteredTable(filteredUsers) {
+        const tableBody = document.getElementById('userTableBody');
+        tableBody.innerHTML = '';
+        filteredUsers.forEach(user => {
+            const row = `
+            <tr class="hover:bg-gray-50">
+              <td class="">
+                <input type="checkbox" class="user-checkbox" value="${user.username}" data-website-id="${user.website_id}" <?php print_r($create_account_first); ?>>
+              </td>
+              <td class="p-4">${user.username}</td>
+              <td class="p-4">${user.website_id == -1 ? 'Backend' : `Frontend -> (${user.website_id})`}</td>              
+              <td class="p-4">${user.website_id == -1 ? 'Admin' : 'Customer'}</td>
+              <td class="p-4">
+            ${
+                user.active_method == 'OOS' ? 'OTP Over SMS' :
+                    user.active_method == 'OOE' ? 'OTP Over Email' :
+                        user.active_method == 'OOW' ? 'OTP Over WhatsApp' :
+                            user.active_method == 'OOSE' ? 'OTP Over Email + SMS' :
+                                user.active_method == 'GoogleAuthenticator' ? 'Google Authenticator' :
+                                    user.active_method == 'User_skipTwofa' ? 'User has skip 2fa' :
+                                        user.active_method == 'MicrosoftAuthenticator' ? 'Microsoft Authenticator' :
+                                        'user.active_method'
+            }
+            </td>
+            <td class="p-4">
+                ${(user.disable_2fa === true || user.disable_2fa === '1' || user.disable_2fa === 1) ?
+                '<span class="px-3 py-1 bg-red-100 text-red-800 rounded-full">Disabled</span>' :
+                '<span class="px-3 py-1 bg-green-100 text-green-800 rounded-full">Enabled</span>'
+            }
+            </td>
+              <td class="p-4">
+                <button onclick="resetTfaSettings('${user.username}','${user.website_id}')" class="text-red-600 hover:text-red-800" style="border:none;background-color:white" <?php print_r($disabled); ?>>
+                  <i class="fas fa-redo"></i> Reset
+                </button>
+              </td>
+            </tr>
+          `;
+            tableBody.innerHTML += row;
+        });
+    }
+
+    function resetTfaSettings(username, website_id) {
+        // Get the modal and message elements
+        const modal = document.getElementById('confirmModal');
+        const modalMessage = document.getElementById('modalMessage');
+        const confirmBtn = document.getElementById('confirmBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+
+// Filter users with matching email/username and website_id
+        const user = users.filter(
+            user => (user.username) == username && user.website_id == website_id
+        );
+
+        if (!user) {
+            console.error('User not found');
+            return;
+        }
+
+        // Set the message in the modal
+        modalMessage.textContent = `Are you sure you want to reset 2FA settings for ${username}?`;
+
+        // Dynamically set the form values for email and website_id
+        const form = document.querySelector('#userManagement');
+        form.querySelector('input[name="email"]').value = username;
+        form.querySelector('input[name="website_id"]').value = website_id;
+
+        // Show the modal
+        modal.classList.remove('hidden');
+
+        // When user clicks 'Confirm'
+        confirmBtn.onclick = function () {
+            // Submit the form after confirmation
+            form.submit();
+
+            // Hide the modal after submission
+            modal.classList.add('hidden');
+
+            // Re-enable scrolling
+            document.body.style.overflow = 'auto';
+        };
+
+        // When user clicks 'Cancel'
+        cancelBtn.onclick = function () {
+            // Close the modal without submitting the form
+            modal.classList.add('hidden');
+
+            // Re-enable scrolling
+        };
+    }
+
+
+    function performAction() {
+        const action = document.getElementById('actionDropdown').value;
+
+        const selectedUsers = Array.from(document.querySelectorAll('.user-checkbox:checked')).map(checkbox => ({
+            username: checkbox.value,
+            website_id: parseInt(checkbox.getAttribute('data-website-id'))
+        }));
+
+        if (selectedUsers.length === 0) {
+            alert("No users selected!");
+            return;
+        }
+
+        if (action === "reset_2fa") {
+            resetSelectedUsers(selectedUsers);
+        } else if (action === "disable_2fa") {
+            disableSelectedUsers(selectedUsers);
+        }
+    }
+
+
+    function resetSelectedUsers(selectedUsers) {
+        const modal = document.getElementById('confirmModalforSelectedUsers');
+        const modalMessage = document.getElementById('modalMessageforSelectedUsers');
+        const confirmBtn = document.getElementById('confirmBtn_for_selected_users');
+        const cancelBtn = document.getElementById('cancelBtnforSelectedUsers');
+
+        // Match the selected users by both `username` and `website_id`
+        const usersToReset = selectedUsers
+            .map(selected =>
+                users.find(user =>
+                    (user.username) == selected.username &&
+                    user.website_id == selected.website_id
+                )
+            )
+            .filter(user => user !== undefined); // Filter out any undefined results
+
+        if (usersToReset.length === 0) {
+            console.error('No matching users found for reset.');
+            return;
+        }
+
+        // Set the message in the modal to list the selected users
+        modalMessage.innerHTML = `Are you sure you want to reset 2FA settings for the selected users?`;
+
+        // Set dynamic form values for all selected users
+        const form = document.querySelector('#userManagementforAllUsers');
+
+        // Convert usersToReset to a JSON string and set it in the hidden "users" input
+        form.querySelector('input[name="users"]').value = JSON.stringify(usersToReset.map(user => {
+            return {email: user.username, website_id: user.website_id};
+        }));
+
+        // You can also pass the 'all users' data as a hidden field if needed for backend processing
+        form.querySelector('input[name="all users,website id"]').value = JSON.stringify(usersToReset.map(user => {
+            return {email: user.username, website_id: user.website_id};
+        }));
+        // Also set the underscore version for compatibility
+        const underscoreField = form.querySelector('input[name="all_users,website_id"]');
+        if (underscoreField) {
+            underscoreField.value = JSON.stringify(usersToReset.map(user => {
+                return {email: user.username, website_id: user.website_id};
+            }));
+        }
+
+
+        // Show the modal
+        modal.classList.remove('hidden');
+
+        // When user clicks 'Confirm'
+        confirmBtn.onclick = function () {
+            // Submit the form after confirmation
+            form.submit();
+
+            // Hide the modal after submission
+            modal.classList.add('hidden');
+
+            // Re-enable scrolling
+            document.body.style.overflow = 'auto';
+        };
+
+        // When user clicks 'Cancel'
+        cancelBtn.onclick = function () {
+            // Close the modal without submitting the form
+            modal.classList.add('hidden');
+            // Reset the dropdown to "Action" (the default option)
+            const actionDropdown = document.getElementById('actionDropdown');
+            actionDropdown.value = ''; // This sets the dropdown back to its default value (empty)
+
+            // Re-enable scrolling
+        };
+    }
+
+    function disableSelectedUsers(selectedUsers) {
+        const modal = document.getElementById('confirmModalforSelectedUsers');
+        const modalMessage = document.getElementById('modalMessageforSelectedUsers');
+        const confirmBtn = document.getElementById('confirmBtn_for_selected_users');
+        const cancelBtn = document.getElementById('cancelBtnforSelectedUsers');
+
+        // Ensure we're filtering users based on both `email` and `website_id`
+        const usersToDisable = selectedUsers
+            .map(selected =>
+                users.find(user =>
+                    (user.username) == selected.username &&
+                    user.website_id == selected.website_id
+                )
+            )
+            .filter(user => user !== undefined); // Filter out any undefined results
+
+
+        if (usersToDisable.length === 0) {
+            console.error('No valid users found');
+            return;
+        }
+
+        // Set the message in the modal to list the selected users
+        modalMessage.innerHTML = `Are you sure you want to disable 2FA settings for the selected users?`;
+
+        // Set dynamic form values for all selected users
+        const form = document.querySelector('#userManagementforAllUsers');
+
+        // Convert usersToReset to a JSON string and set it in the hidden "users" input
+        form.querySelector('input[name="users"]').value = JSON.stringify(usersToDisable.map(user => {
+            return {email: user.username, website_id: user.website_id};
+        }));
+
+        // You can also pass the 'all users' data as a hidden field if needed for backend processing
+        const usersData = JSON.stringify(usersToDisable.map(user => {
+            return {email: user.username, website_id: user.website_id};
+        }));
+        form.querySelector('input[name="all users,website id"]').value = usersData;
+        // Also set the underscore version for compatibility
+        const underscoreField = form.querySelector('input[name="all_users,website_id"]');
+        if (underscoreField) {
+            underscoreField.value = usersData;
+        }
+
+
+        // Show the modal
+        modal.classList.remove('hidden');
+
+        // When user clicks 'Confirm'
+        confirmBtn.onclick = function () {
+            // Submit the form after confirmation
+
+            // Hide the disable div after submission
+            confirmBtn.setAttribute('name', 'disable_selected_users');
+
+            form.submit();
+
+            // Hide the modal after submission
+            modal.classList.add('hidden');
+
+            // Re-enable scrolling
+            document.body.style.overflow = 'auto';
+        };
+
+        // When user clicks 'Cancel'
+        cancelBtn.onclick = function () {
+            // Close the modal without submitting the form
+            modal.classList.add('hidden');
+
+            // Re-enable scrolling
+            document.body.style.overflow = 'auto';
+            // Reset the dropdown to "Action" (the default option)
+            const actionDropdown = document.getElementById('actionDropdown');
+            actionDropdown.value = ''; // This sets the dropdown back to its default value (empty)
+
+        };
+
+    }
+
+
+    window.onload = renderTable;
+</script>

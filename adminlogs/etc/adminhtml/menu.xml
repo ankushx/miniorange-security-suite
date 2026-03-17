@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <!-- Main Menu -->
+        <add id="MiniOrange_AdminLogs::main_menu" title="miniOrange Admin Activity Log" module="MiniOrange_AdminLogs" sortOrder="52" resource="MiniOrange_AdminLogs::main_menu"/>
+        <!-- Activity Monitor Settings -->
+        <add id="MiniOrange_AdminLogs::configuration" title="Activity Monitor Settings" module="MiniOrange_AdminLogs" sortOrder="10" parent="MiniOrange_AdminLogs::main_menu" action="adminlogs/configuration/index" resource="MiniOrange_AdminLogs::configuration"/>
+        <!-- Admin Logs View -->
+        <add id="MiniOrange_AdminLogs::logs_view" title="Admin Logs View" module="MiniOrange_AdminLogs" sortOrder="20" parent="MiniOrange_AdminLogs::main_menu" action="adminlogs/logsview/index" resource="MiniOrange_AdminLogs::logs_view"/>
+        <!-- Upgrade -->
+        <add id="MiniOrange_AdminLogs::upgrade" title="Upgrade" module="MiniOrange_AdminLogs" sortOrder="30" parent="MiniOrange_AdminLogs::main_menu" action="adminlogs/upgrade/index" resource="MiniOrange_AdminLogs::upgrade"/>
+
+    </menu>
+</config>

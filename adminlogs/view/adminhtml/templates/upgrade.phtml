@@ -1,0 +1,169 @@
+<?php
+/** @var \MiniOrange\AdminLogs\Block\Adminhtml\Configuration $block */
+
+// Upgrade tab data
+$viewModel = null;
+if (method_exists($block, 'getViewModel')) {
+    $viewModel = $block->getViewModel();
+}
+
+// Helper function to get view file URL
+$getViewFileUrl = function($file) use ($viewModel, $block) {
+    // Try viewModel first if available
+    if ($viewModel && method_exists($viewModel, 'getViewFileUrl')) {
+        try {
+            $url = $viewModel->getViewFileUrl($file);
+            if (!empty($url)) {
+                return $url;
+            }
+        } catch (\Exception $e) {
+            // Fall through to block method
+        }
+    }
+    // Use block's getViewFileUrl method (standard Magento way)
+    return $block->getViewFileUrl($file);
+};
+
+$products = [
+    [
+        'image' => $getViewFileUrl('MiniOrange_AdminLogs::images/idp_upgrade.png'),
+        'alt' => '',
+        'title' => 'SAML IDP',
+        'description' => 'Login into any third party applications using Magento credentials.',
+        'link' => 'https://commercemarketplace.adobe.com/miniorange-inc-idpsaml.html'
+    ],
+    [
+        'image' => $getViewFileUrl('MiniOrange_AdminLogs::images/twofa_upgrade.png'),
+        'alt' => 'Two-Factor Authentication',
+        'title' => 'Two-Factor Authentication',
+        'description' => 'Add a second layer of authentication to secure your Magento store frontend & backend accounts.',
+        'link' => 'https://commercemarketplace.adobe.com/miniorange-inc-miniorange-2fa.html'
+    ],
+    [
+        'image' => $getViewFileUrl('MiniOrange_AdminLogs::images/scim_upgrade.png'),
+        'alt' => 'Scim User Provisioning',
+        'title' => 'User Provisioning & Sync',
+        'description' => 'Automate real-time two-way user sync, including creation, updates, and deletions, between your applications and Magento.',
+        'link' => 'https://commercemarketplace.adobe.com/miniorange-inc-scim.html'
+    ],
+    [
+        'image' => $getViewFileUrl('MiniOrange_AdminLogs::images/otp_upgrade.png'),
+        'alt' => 'Mobile Login',
+        'title' => 'Mobile Login',
+        'description' => 'Log in to Magento store using mobile number/email — no password required.',
+        'link' => 'https://commercemarketplace.adobe.com/miniorange-inc-otp-verification.html'
+    ],
+    [
+        'image' => $getViewFileUrl('MiniOrange_AdminLogs::images/ldap_upgrade.png'),
+        'alt' => 'LDAP Login',
+        'title' => 'LDAP / Active Directory Login Integration',
+        'description' => 'Log in to Magento using LDAP/AD credentials from Active Directory, OpenLDAP, OpenDS, FreeIPA, Synology, and more.',
+        'link' => 'https://commercemarketplace.adobe.com/miniorange-inc-miniorange-ldap.html'
+    ],
+    [
+        'image' => $getViewFileUrl('MiniOrange_AdminLogs::images/google_upgrade.png'),
+        'alt' => 'Google One Tap Login',
+        'title' => 'Google One Tap Login',
+        'description' => 'One Click sign in or register on your Magento store using Google Account credentials.',
+        'link' => 'https://commercemarketplace.adobe.com/miniorange-inc-google-one-tap-login.html'
+    ],
+    [
+        'image' => $getViewFileUrl('MiniOrange_AdminLogs::images/security_upgrade.png'),
+        'alt' => 'Security Suite',
+        'title' => 'Security Suite',
+        'description' => 'Secure your Magento store with robust security tools.',
+        'link' => 'https://plugins.miniorange.com/magento-2-security-suite-extension'
+    ],
+    [
+        'image' => $getViewFileUrl('MiniOrange_AdminLogs::images/social_upgrade.png'),
+        'alt' => 'Social Login & Share',
+        'title' => 'Social Login & Share',
+        'description' => 'Log in to Magento using social login credentials, including Facebook, Instagram, Google, Twitter, LinkedIn, and more.',
+        'link' => 'https://commercemarketplace.adobe.com/miniorange-inc-miniorange-social-login.html'
+    ],
+];
+
+// Get plan level and name
+$get_plan_level = null;
+if ($viewModel && method_exists($viewModel, 'get_versi')) {
+    $get_plan_level = $viewModel->get_versi();
+}
+if($get_plan_level == 4){
+    $plan_name = 'Admin Activity Logs Trial Extension';
+}elseif($get_plan_level == 3){
+    $plan_name = 'Admin Activity Logs Enterprise Extension';
+}else{ 
+    $plan_name = 'Admin Activity Logs Extension';
+}
+
+// Get current version
+$currentVersion = '';
+if ($viewModel && method_exists($viewModel, 'getCurrentVersion')) {
+    $currentVersion = $viewModel->getCurrentVersion();
+} else {
+    $currentVersion = 'v1.0.0';
+}
+?>
+
+<!-- Upgrade Tab Content -->
+<div class="main-content-upgrade">
+        <div class="container">
+            <div class="main-panel_upgrade background_gray">
+                <div class="panel-content">
+                    <!-- Ultra Simple Upgrade Banner -->
+                    <div class="upgrade-banner">
+                        <div class="plan-info">
+                            <div class="plan-status">Current Plan</div>
+                            <div class="panel-title_report"><?php echo $block->escapeHtml($plan_name); ?> <span
+                                    class="plan-version">Version <?php echo $block->escapeHtml($currentVersion); ?></span>
+                            </div>
+                        </div>
+                        <span>
+                            <a href="https://plugins.miniorange.com/magento-admin-logs-activity-monitor"
+                               target="_blank" class="btn btn-primary" style="float: right;font-size:1.4rem">
+                                <i class="fas fa-arrow-circle-up"></i>
+                                Click Here to Upgrade
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Products -->
+            <div class="main-panel_upgrade">
+                <div class="panel-header">
+                    <div class="panel-title-container">
+                        <h2 class="panel-title">Related Products</h2>
+                        <p class="panel-subtitle">Enhance your Magento store with our complementary extensions</p>
+                    </div>
+                    <div class="panel-actions">
+                        <a href="https://plugins.miniorange.com/magento" target="_blank" class="btn btn-outline">
+                            <i class="fas fa-th-large"></i>
+                            View All Products
+                        </a>
+                    </div>
+                </div>
+
+                <div class="panel-content">
+                    <div class="products-grid">
+                        <?php foreach ($products as $product): ?>
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <img src="<?php echo $block->escapeUrl($product['image']); ?>" loading="lazy" alt="<?php echo $block->escapeHtmlAttr($product['alt']); ?>">
+                                </div>
+                                <div class="product-details">
+                                    <h3 class="product-title"><?php echo $block->escapeHtml($product['title']); ?></h3>
+                                    <p class="product-description"><?php echo $block->escapeHtml($product['description']); ?></p>
+                                    <div class="product-actions">
+                                        <a href="<?php echo $block->escapeUrl($product['link']); ?>" target="_blank"
+                                           class="btn btn-primary position">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

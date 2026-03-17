@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <!-- Defines the Access Control for the Settings and Modules -->
+    <acl>
+        <resources>
+            <!-- Magento Admin ACL -->
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Backend::content">
+                    <!-- TwoFA Client ACL Settings Definition -->
+                    <resource id="MiniOrange_TwoFA::TwoFA" title="Two Factor Authentication" sortOrder="55" >
+                        <!-- Account Settings -->
+                        <resource id="MiniOrange_TwoFA::account_settings" title="Account" sortOrder="0"/>
+                        <!-- Sign In Settings ACL definition -->
+                        <resource id="MiniOrange_TwoFA::signin_settings" title="2FA Settings" sortOrder="1"/>
+                        <!-- 2FA Settings Configuration Table -->
+                        <resource id="MiniOrange_TwoFA::tfa_settings_configuration_table" title="2FA Settings Configuration Table" sortOrder="2"/>
+                        <!-- user management -->
+                        <resource id="MiniOrange_TwoFA::user_management" title="User management" sortOrder="3"/>
+                        <!-- Custom gateway -->
+                        <resource id="MiniOrange_TwoFA::custom_gateway" title="Custom Gateway" sortOrder="4"/>
+                        <!-- upgrade tab -->
+                        <resource id="MiniOrange_TwoFA::upgrade" title="Upgrade" sortOrder="5"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

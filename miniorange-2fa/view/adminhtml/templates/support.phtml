@@ -1,0 +1,104 @@
+<?php
+
+$formKey = $block->getBlockHtml('formkey');
+$supportUrl = $block->getUrl('motwofa/support/index');
+$enabledebuglog = $block->isDebugLogEnable() ? 'checked' : '';
+
+// Check if we're on signinsettings page with cards view (no type parameter)
+$request = $block->getRequest();
+$params = $request ? $request->getParams() : [];
+$routeName = $request ? $request->getRouteName() : '';
+$controllerName = $request ? $request->getControllerName() : '';
+
+// Check if we're on signinsettings page (cards view has no 'type' parameter)
+$isSignInSettingsPage = ($routeName === 'motwofa' && $controllerName === 'signinsettings');
+$isCardsView = $isSignInSettingsPage && !isset($params['type']);
+
+// Hide Debug Logs on cards view, show on rules configuration view
+$show_debug_log_section = $isCardsView ? 'style="display:none"' : 'style="display:block"';
+
+
+echo '
+<div class="panel-heading">
+    <div class="pull-right">
+        <div class="page bg-gray-50 py-6 rounded-lg shadow" id="minisupport" style="margin-top:11px;width:100%">
+            <div class="mosp_table_layout">
+                <div class="p-2" style="font-weight:bold;margin-left:0rem;font-size:1.8rem;padding-left: 1.3rem;"> Contact Us</div>
+                <hr>
+                <div class="flex">
+                    <form name="submit_form" method="post" action="' . $block->escapeUrl($supportUrl) . '">
+                        <input type="hidden" name="form_key" value="' . $block->escapeHtmlAttr($block->getFormKey()) . '" />
+                        <h3 style="font-size:1.3rem;margin-left:1.5rem;margin-bottom:3rem;margin-top:2rem;font-weight:normal;">
+                            Need any help? Just send us a query so we can assist you.
+                        </h3>
+                        <input type="hidden" name="option" value="supportQuery">
+                        <div>
+                            <table>
+                                <tr class="my-4">
+                                    <td class="mo-input-wrapper group my-6">
+                                        <label class="mo-input-label_support">Email</label>
+                                        <input class="w-full mo-input border border-gray-300 rounded-lg p-2" id="query_email" type="email" name="email" value="" required placeholder="Enter your Email" >
+                                    </td>
+                                </tr>
+                                <tr class="my-4">
+                                    <td class="mo-input-wrapper group my-6">
+                                        <label class="mo-input-label_support">Phone</label>
+                                        <input id="query_phone" class="w-full mo-input border border-gray-300 rounded-lg p-2" type="text" name="phone" required title="Phone with country code eg. +1xxxxxxxxxx" placeholder="Phone with country code eg. +1xxxxxxxxxx" value="" pattern="[\+]?[0-9]{1,4}\s?[0-9]{10}" >
+                                    </td>
+                                </tr>
+                                <tr class="my-4">
+                                    <td class="mo-input-wrapper group my-6">
+                                        <textarea id="query" name="query"
+                                            class="resize-y h-28 w-full p-2 border border-gray-300 rounded-lg mo-input mo-input border border-gray-300"
+                                            style="height:100px;padding-left:1rem"
+                                            placeholder="Write your query here"></textarea>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <input type="submit" class="rounded-lg font-semibold bg-blue-500 text-white py-2 px-4"
+                               name="send_query" id="send_query" value="Submit Query" style="margin-left:3%;">
+                    </form>
+                </div>
+                <br>
+            </div>
+            <br>
+        </div>
+
+           <div style="' . ($isCardsView ? 'display:none' : 'display:block') . '" class="mosp_table_layout bg-gray-50 my-12 rounded-lg shadow">
+            <h3 class="p-6" style="font-size:1.8rem;font-weight:bold">Debug Logs</h3>
+            <hr>
+            <div class="bg-gray-50 py-5" style="display: flex;
+                                                flex-direction: column;
+                                                align-items: flex-start;
+                                                justify-content: center;padding-bottom:4rem">
+                <form id="enable_debug_log" class="ml-12" method="post" action="' . $block->escapeUrl($supportUrl) . '" style="margin: 0 0 0 30px;">
+                    <input type="hidden" name="form_key" value="' . $block->escapeHtmlAttr($block->getFormKey()) . '" />
+                    <input type="hidden" name="option" value="enable_debug_log">
+                    <br>
+                    <input type="checkbox" style="margin:0.5rem;" name="debug_log_on"' . ($block->isDebugLogEnable() ? ' checked' : '') . ' value="true">Enable Debug Log
+                    <input type="button" class="btn-round font-semibold" name="enable_debug_log" onclick="document.getElementById(\'enable_debug_log\').submit();" value="Submit" style="width:110px; margin-left:30px">
+                </form>
+
+                    <form id="clear_download_logs" method="post" action="' . $block->escapeUrl($supportUrl) . '">
+                        <input type="hidden" name="form_key" value="' . $block->escapeHtmlAttr($block->getFormKey()) . '" />
+                        <input type="hidden" name="option" value="clear_download_logs">
+                    <div style="display: flex; justify-content: center; align-items: center; margin-top:2.5rem;margin-left:1.5rem; flex-direction: column;">
+                        <p style="margin: 0; text-align: center; font-size: 1.3rem;">
+                            The error logs will be cleared automatically on a weekly basis.
+                        </p>
+                        <div style="width: 100%; text-align: center;"> <!-- Adjust div styles here -->
+                            <!-- Add content inside the div -->
+                        </div>
+                        </div>
+
+                            <br>
+                            <input type="submit" class="btn-round font-semibold" name="download_logs" value="Download Logs" style="width:150px; margin-left:10px">
+                            <input type="submit" class="btn-round font-semibold" name="clear_logs" value="Clear Logs" style="width:150px; margin-left:10px">
+                        </div>
+                    </form>
+            </div>
+            <br>
+        </div>
+    </div>
+';

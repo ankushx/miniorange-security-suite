@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+<acl>
+	<resources>
+		<resource id="Magento_Backend::admin">
+			<resource id="MiniOrange_AdminLogs::main_menu" title="Admin Logs &amp; Activity Monitor" sortOrder="52">
+				<resource id="MiniOrange_AdminLogs::configuration" title="Activity Monitor Settings"/>
+				<resource id="MiniOrange_AdminLogs::logs_view" title="Admin Logs View"/>
+				<resource id="MiniOrange_AdminLogs::upgrade" title="Upgrade"/>
+			</resource>
+		</resource>
+	</resources>
+</acl>
+</config>

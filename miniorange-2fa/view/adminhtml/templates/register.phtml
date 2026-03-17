@@ -1,0 +1,151 @@
+<!--
+    This template shows a registration page to the user.
+    This page is only shown if the registration status is
+    not set in the system.
+-->
+
+<?php
+$currentAdminUser = $block->getCurrentAdminUser()->getData();
+$userEmail = $currentAdminUser['email'] ?? '';
+$firstName = $currentAdminUser['firstname'] ?? '';
+$lastName = $currentAdminUser['lastname'] ?? '';
+$formKey = $block->getBlockHtml('formkey');
+
+?>
+
+<div class="p-8" style="width:70%;">
+    <div class="bg-white rounded-lg p-6">
+
+        <!-- Register Page -->
+        <div id="registerPage" class="page-section" style="display: none;">
+            <h1 class="text-3xl font-bold mb-6 text-black my-4"
+                style="font-size: 2.5rem; text-align: center; margin: 0 auto; display: block;">Create New Account</h1>
+
+            <div class="bg-white rounded-lg px-32 my-12" style="width: 100%;">
+                <form id="register-form" method="post" action="">
+                    <?php print_r($formKey); ?>
+
+                    <input type="hidden" name="option" value="registerNewUser">
+
+                    <div class="bg-white rounded-xl flex px-mo-32 flex-col gap-mo-4">
+                        <div class="w-full mo-input-wrapper group my-6">
+                            <label class="mo-input-label">Email</label>
+                            <input class="w-full mo-input" type="email" name="email" style="height: 5rem;"
+                                value="<?= $escaper->escapeHtmlAttr($userEmail) ?>" required>
+                        </div>
+
+                        <div class="w-full mo-input-wrapper group my-4">
+                            <label class="mo-input-label">Website or Company Name</label>
+                            <input class="w-full mo-input" type="text" name="companyName" style="height: 5rem;" required
+                                   placeholder="Enter your Company Name" value="">
+                        </div>
+
+                        <div class="flex items-center gap-mo-4 my-4">
+                            <div class="w-full mo-input-wrapper group">
+                                <label class="mo-input-label">First Name</label>
+                                <input class="w-full mo-input" type="text" name="firstName" placeholder="<?= $escaper->escapeHtmlAttr(__('First Name')) ?>"
+                                    style="height: 5rem;" value="<?= $escaper->escapeHtmlAttr($firstName) ?>"> ?>">
+                            </div>
+
+                            <div class="w-full mo-input-wrapper group">
+                                <label class="mo-input-label">Last Name</label>
+                                <input class="w-full mo-input" type="text" name="lastName" placeholder="<?= $escaper->escapeHtmlAttr(__('Last Name')) ?>"
+                                    style="height: 5rem;" value="<?= $escaper->escapeHtmlAttr($lastName) ?>">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-mo-4 my-4">
+                            <div class="w-full mo-input-wrapper group">
+                                <label class="mo-input-label">Password (Min. Length 6)</label>
+                                <input class="w-full mo-input" type="password" name="password" style="height: 5rem;"
+                                       placeholder="Choose your password (Min. length 6)" required>
+                            </div>
+
+                            <div class="w-full mo-input-wrapper group">
+                                <label class="mo-input-label">Confirm Password</label>
+                                <input class="w-full mo-input" type="password" name="confirmPassword"
+                                       style="height: 5rem;" placeholder="Choose your password (Min. length 6)"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-mo-2 my-4">
+                            <input type="checkbox" class="form_options" style="margin-top: 0.1rem;"
+                                   id="mo_agree_plugin_policy" name="mo_customer_validation_agree_plugin_policy"
+                                   value="1" required>
+                            <span class="my-2">
+                                    I have read and agree to the
+                                    <u><i><a target="_blank"
+                                             href="https://plugins.miniorange.com/end-user-license-agreement"
+                                             style="cursor:pointer;">End User Agreement</a></i></u>
+                                    and
+                                    <u><i><a target="_blank"
+                                             href="https://plugins.miniorange.com/wp-content/uploads/2023/08/Plugins-Privacy-Policy.pdf"
+                                             style="cursor:pointer;">Plugin Privacy Policy</a></i></u>.
+                                </span>
+                        </div>
+
+                        <div class="flex flex-col gap-4 my-6">
+                            <input type="submit" class="mo-button inverted"
+                                   style="background-color:#eb5202;height: 5rem;" name="submit" value="Register">
+                            <a href="javascript:void(0);" class="mo-button secondary" style="height: 5rem;"
+                               onclick="switchToLoginPage()">Already Have an Account? Sign In</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div id="loginPage" class="page-section">
+
+            <h1 class="text-3xl font-bold mb-6 text-black my-4"
+                style="font-size: 2.5rem; text-align: center; margin: 0 auto; display: block;">Login with
+                miniOrange</h1>
+
+            <div class="bg-white rounded-lg px-32 my-12" style="width: 100%;">
+                <form id="advance_saveSettings" method="post" action="">
+                    <?php print_r($formKey); ?>
+                    <input type="hidden" name="option" value="loginExistingUser">
+
+                    <div class="bg-white rounded-xl flex px-mo-32 flex-col gap-mo-4">
+                        <div class="w-full mo-input-wrapper group my-6">
+                            <label class="mo-input-label">Email</label>
+                            <input class="w-full mo-input" type="email" name="email" style="height: 5rem;"
+                                value="<?= $escaper->escapeHtmlAttr($userEmail) ?>" required>
+                        </div>
+
+                        <div class="w-full mo-input-wrapper group my-6">
+                            <label class="mo-input-label">Password</label>
+                            <input class="w-full mo-input" type="password" style="height: 5rem;" name="password"
+                                   required placeholder="Enter your Password">
+                        </div>
+
+                        <div class="my-2" style="text-align: right;">
+                            <a href="https://login.xecurify.com/moas/idp/resetpassword" target="_blank"
+                               class="text-right font-bold hover:underline float-right forgot-password-link">Forgot Password</a>
+                        </div>
+
+                        <input type="submit" class="mo-button inverted my-6"
+                               style="background-color:#eb5202;height: 5rem;" name="submit" value="Login">
+                        <a href="https://www.miniorange.com/businessfreetrial" target="blank" class="mo-button secondary" style="height: 5rem;"
+                           >Register</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function switchToLoginPage() {
+        document.getElementById('registerPage').style.display = 'none';
+        document.getElementById('loginPage').style.display = 'block';
+    }
+
+    function switchToRegisterPage() {
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('registerPage').style.display = 'block';
+    }
+</script>

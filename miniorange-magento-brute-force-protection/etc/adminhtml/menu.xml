@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!-- This XML is used to add a menu item to our Magento Admin Backend Settings Page -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+
+        <!-- Adding a BruteForce Protection menu item in admin backend for access to other sub settings -->
+        <add id="MiniOrange_BruteForceProtection::BruteForceProtection"
+             title="miniOrange BruteForce Protection"
+             module="MiniOrange_BruteForceProtection"
+             sortOrder="60"
+             resource="MiniOrange_BruteForceProtection::BruteForceProtection"/>
+
+        <!--
+        Adding a BruteForce Settings sub menu item to show basic protection settings
+        Parent Menu Item is the miniOrange BruteForce Protection menu item mentioned above.
+        Action is the controllerAction to be called when menu item is clicked.
+        -->
+        <add id="MiniOrange_BruteForceProtection::bruteforce_settings"
+             title="BruteForce Settings"
+             module="MiniOrange_BruteForceProtection"
+             sortOrder="1"
+             parent="MiniOrange_BruteForceProtection::BruteForceProtection"
+             action="mobruteforce/bruteforcesettings"
+             resource="MiniOrange_BruteForceProtection::bruteforce_settings"/>
+
+        <!--
+        Adding a Customer Login Logs sub menu item to show customer login logs
+        Parent Menu Item is the miniOrange BruteForce Protection menu item mentioned above.
+        Action is the controllerAction to be called when menu item is clicked.
+        -->
+        <add id="MiniOrange_BruteForceProtection::customer_login_logs"
+             title="Customer Logs"
+             module="MiniOrange_BruteForceProtection"
+             sortOrder="3"
+             parent="MiniOrange_BruteForceProtection::BruteForceProtection"
+             action="mobruteforce/customerloginlogs"
+             resource="MiniOrange_BruteForceProtection::customer_login_logs"/>
+
+        <!--
+        Adding a Blocked Users sub menu item to show user blocking/unblocking
+        Parent Menu Item is the miniOrange BruteForce Protection menu item mentioned above.
+        Action is the controllerAction to be called when menu item is clicked.
+        -->
+        <add id="MiniOrange_BruteForceProtection::blocked_users"
+             title="Blocked Users"
+             module="MiniOrange_BruteForceProtection"
+             sortOrder="4"
+             parent="MiniOrange_BruteForceProtection::BruteForceProtection"
+             action="mobruteforce/blockedusers"
+             resource="MiniOrange_BruteForceProtection::blocked_users"/>
+
+        <!--
+        Adding an Upgrade sub menu item to show upgrade options
+        Parent Menu Item is the miniOrange BruteForce Protection menu item mentioned above.
+        Action is the controllerAction to be called when menu item is clicked.
+        -->
+        <add id="MiniOrange_BruteForceProtection::upgrade"
+             title="Upgrade"
+             module="MiniOrange_BruteForceProtection"
+             sortOrder="6"
+             parent="MiniOrange_BruteForceProtection::BruteForceProtection"
+             action="mobruteforce/upgrade"
+             resource="MiniOrange_BruteForceProtection::upgrade"/>
+    </menu>
+</config>

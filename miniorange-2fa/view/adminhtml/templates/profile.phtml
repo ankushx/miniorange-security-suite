@@ -1,0 +1,72 @@
+<?php
+// initialize all variables
+$TwoFAsettings = $block->getExtensionPageUrl('TwoFAsettings');
+$signinsettings = $block->getExtensionPageUrl('signinsettings');
+$attrsettings = $block->getExtensionPageUrl('attrsettings');
+$support = $block->getExtensionPageUrl('support');
+$formKey = $block->getBlockHtml('formkey');
+$sms_email_detail = $block->get_sms_email_detail();
+$user_left = $block->no_of_user_left();
+
+?>
+
+<div id="userprofile" class="twofa-container-width">
+
+
+    <div class="px-mo-32 my-8 pt-8">
+        <div class="flex my-2" style="justify-content:space-between;align-items: center;">
+            <h1 class="text-3xl font-bold text-black mb-6 text-black my-4 text-black"
+                style="font-size: 2.5rem; display: block;">
+                miniOrange Account Information
+            </h1>
+
+            <span class="flex-2">
+                        <form name="f" method="post" action="">
+                            <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+                            <input type="hidden" name="option" value="removeAccount">
+                            <input type="submit" style="float:right;" class="rounded-lg font-semibold" name="submit"
+                                   id="remove_plugin" value="Remove Account">
+
+                            </input >
+                        </form>
+            </span>
+
+        </div>
+
+
+        <div class="bg-white rounded-lg my-14" style="width: 100%;">
+            <p class="my-4">Thanks for using the TwoFA Free plan.</p>
+
+            <table class="table-auto w-full border-collapse border border-gray-300 rounded-lg shadow-md bg-white" style="width: 100%;">
+
+                <tbody>
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-gray-700 font-medium">miniOrange Account Email</td>
+                    <td class="px-6 py-4 text-gray-700"><?php print_r($block->getCustomerEmail()); ?></td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-gray-700 font-medium">Customer ID</td>
+                    <td class="px-6 py-4 text-gray-700"><?php print_r($block->getCustomerKey()); ?></td>
+                </tr>
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-gray-700 font-medium">Remaining Users</td>
+                    <td class="px-6 py-4 text-gray-700"><?php print_r($user_left); ?></td>
+                </tr>
+                <?php if (isset($sms_email_detail->status) && $sms_email_detail->status == 'SUCCESS' && isset($sms_email_detail->smsRemaining) && isset($sms_email_detail->emailRemaining)) { ?>
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 text-gray-700 font-medium">Remaining SMS</td>
+                        <td class="px-6 py-4 text-gray-700"><?php print_r($sms_email_detail->smsRemaining); ?></td>
+                    </tr>
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 text-gray-700 font-medium">Remaining Emails</td>
+                        <td class="px-6 py-4 text-gray-700"><?php print_r($sms_email_detail->emailRemaining); ?></td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+            <br>
+
+        </div>
+
+    </div>
+

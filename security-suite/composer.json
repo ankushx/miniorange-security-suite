@@ -1,0 +1,37 @@
+{
+    "name": "miniorange_inc/security-suite",
+    "description": "Complete Security Suite Bundle Extension for Magento 2",
+    "keywords": [
+        "Security", "2FA", "SSO", "Single Sign On", "Authentication", "Magento security",
+        "Magento 2 security", "Magento 2FA", "Magento SSO", "magento security suite",
+        "magento two factor", "magento oauth sso", "magento azure sso", "magento brute force", "magento rate limiting", "magento admin activity"
+    ],
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": [
+        "Commercial"
+    ],
+    "autoload": {
+        "files": [ "registration.php" ],
+        "psr-4": {
+            "MiniOrange\\SecuritySuite\\": ""
+        }
+    },
+    "authors": [
+        {
+            "name": "miniOrange Team",
+            "homepage": "http://www.miniorange.com/",
+            "email": "info@xecurify.com"
+        }
+    ],
+    "support": {
+        "email": "info@xecurify.com"
+    },
+    "require": {
+        "php": "~5|~6|~7|~8",
+        "miniorange_inc/miniorange-2fa": "*",
+        "miniorange_inc/miniorange-magento-ip-restriction": "*",
+        "miniorange_inc/miniorange-magento-brute-force-protection": "*",
+        "miniorange_inc/adminlogs": "*"
+    }
+}

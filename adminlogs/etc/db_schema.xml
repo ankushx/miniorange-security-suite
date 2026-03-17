@@ -1,0 +1,29 @@
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="miniorange_admin_login_logs" resource="default" engine="innodb" comment="MiniOrange Admin Login Logs">
+        <column xsi:type="int" name="log_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Log ID"/>
+        <column xsi:type="timestamp" name="logged_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Logged At"/>
+        <column xsi:type="varchar" name="username" nullable="false" length="255" comment="Username"/>
+        <column xsi:type="varchar" name="full_name" nullable="true" length="255" comment="Full Name"/>
+        <column xsi:type="varchar" name="action" nullable="false" length="50" comment="Action"/>
+        <column xsi:type="varchar" name="ip_address" nullable="false" length="255" comment="IP Address"/>
+        <column xsi:type="text" name="user_agent" nullable="true" comment="User Agent"/>
+        <column xsi:type="varchar" name="location" nullable="true" length="255" comment="Location"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="50" comment="Status"/>
+        <column xsi:type="varchar" name="type" nullable="true" length="255" comment="Type"/>
+        <column xsi:type="varchar" name="session_id" nullable="true" length="255" comment="Session ID"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="log_id"/>
+        </constraint>
+    </table>
+    <table name="mo_unique_admin_users" resource="default" engine="innodb" comment="MiniOrange Unique Admin Users - First 10 Users">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="varchar" name="username" nullable="false" length="255" comment="Username"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="UNIQUE_USERNAME">
+            <column name="username"/>
+        </constraint>
+    </table>
+</schema>

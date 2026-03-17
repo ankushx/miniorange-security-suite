@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <!-- Defines the Access Control for the Settings and Modules -->
+    <acl>
+        <resources>
+            <!-- Magento Admin ACL -->
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Backend::content">
+                    <!-- Security Suite ACL Settings Definition -->
+                    <resource id="MiniOrange_SecuritySuite::SecuritySuite" title="Security Suite" sortOrder="50">
+                        <!-- Two-Factor Authentication ACL definition -->
+                        <resource id="MiniOrange_SecuritySuite::twofactor" title="Two-Factor Authentication" sortOrder="10"/>
+                        <!-- IP Restriction ACL definition -->
+                        <resource id="MiniOrange_SecuritySuite::ip_restriction" title="IP Restriction" sortOrder="20"/>
+                        <!-- Brute Force Protection ACL definition -->
+                        <resource id="MiniOrange_SecuritySuite::brute_force_protection" title="Brute Force Protection" sortOrder="30"/>
+                        <!-- Admin Logs ACL definition -->
+                        <resource id="MiniOrange_SecuritySuite::admin_logs" title="Admin Logs" sortOrder="40"/>
+                        <!-- Account ACL definition -->
+                        <resource id="MiniOrange_SecuritySuite::account" title="Account" sortOrder="50"/>
+                        <!-- Upgrade ACL definition -->
+                        <resource id="MiniOrange_SecuritySuite::upgrade" title="Upgrade" sortOrder="60"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

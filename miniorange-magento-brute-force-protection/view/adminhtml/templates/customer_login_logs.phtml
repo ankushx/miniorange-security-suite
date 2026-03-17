@@ -1,0 +1,451 @@
+
+<?php
+/**
+ * @var \MiniOrange\BruteForceProtection\Block\BruteForce $block
+ */
+$isEnabled = $block->isCustomerLoginLogsEnabled();
+$formKey = $block->getFormKey();
+$retentionDays = $block->getCustomerLoginLogsRetentionDays() ?: 90;
+$upgradeUrl = $block->getUrl('mobruteforce/upgrade');
+?>
+<div style="width:97%; margin:0 auto;">
+<div class="custlogs">
+   
+       
+    
+
+    <!-- Log Settings Section -->
+    <div class="form-section" style="background: white; border-radius: 8px; padding:  0px; margin-bottom: 20px;">
+        <h1 class="text-3xl font-bold text-black" style="font-size: 2.5rem; margin-bottom: 5px; padding-bottom: 10px; margin-top: 5rem;">
+        <?= $block->escapeHtml(__('Customer Login Logs')) ?> <a href="<?= $block->escapeUrl($upgradeUrl) ?>" style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold; text-decoration: none; cursor: pointer;">[Premium]</a>
+        </h1>
+        <p style="font-size: 1.4rem; color: #6c757d; margin-bottom: 20px;">View and manage customer login logs to track login attempts, failures, and lockouts.</p>
+        <div class="custlogs-content" style="padding: 0 0 10px 0; background: white; border-radius: 8px; padding: 20px 30px 40px 30px; margin-bottom: 20px; border: 1px solid #e9ecef; width: 100%;">
+            <h3 style="font-size: 1.9rem; font-weight: 700; color: #1F2937; background: #f5f5f5; padding: 15px 20px; border-radius: 6px 6px 0 0; display: flex; align-items: center; gap: 12px; margin: -20px -30px 20px -30px; border-bottom: 2px solid #e9ecef;">
+                <i class="fas fa-sign-in-alt" style="color:rgb(0, 0, 0); font-size: 1.8rem;"></i>
+                <span>Log Settings</span>
+            </h3>
+        <div class="form-group" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; width: 100%; margin-top:30px;">
+            <label style="width: 40%; font-weight: 500; color: #495057; font-size: 1.5rem; margin: 0;">Enable Logs</label>
+            <select id="customerLoginLogsEnabled" name="customer_login_logs_enabled" 
+                    disabled style="width: 50%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; background-color: #f5f5f5; opacity: 0.6; color: #999; cursor: not-allowed;">
+                <option value="0" <?= !$isEnabled ? 'selected' : '' ?>>Disable</option>
+                <option value="1" <?= $isEnabled ? 'selected' : '' ?>>Enable</option>
+            </select>
+        </div>
+        
+        <div id="retentionDaysGroup" class="form-group" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; <?= !$isEnabled ? 'display: none;' : '' ?>">
+            <label style="width: 40%; font-weight: 500; color: #495057; font-size: 1.5rem; margin: 0;">Log Retention Period</label>
+            <select id="retentionDays" name="customer_login_logs_retention_days" 
+                    style="width: 50%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                <option value="7" <?= $retentionDays == 7 ? 'selected' : '' ?>>7 days</option>
+                <option value="15" <?= $retentionDays == 15 ? 'selected' : '' ?>>15 days</option>
+                <option value="30" <?= $retentionDays == 30 ? 'selected' : '' ?>>30 days</option>
+                <option value="60" <?= $retentionDays == 60 ? 'selected' : '' ?>>60 days</option>
+                <option value="90" <?= ($retentionDays == 90 || !$retentionDays) ? 'selected' : '' ?>>90 days</option>
+                <option value="180" <?= $retentionDays == 180 ? 'selected' : '' ?>>180 days</option>
+                <option value="365" <?= $retentionDays == 365 ? 'selected' : '' ?>>365 days</option>
+            </select>
+        </div>
+        
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button type="button" id="downloadLogs" class="btn-download-logs" 
+                    style="padding: 8px 16px; background: #eb5202; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 600; white-space: nowrap; transition: background-color 0.2s; <?= !$isEnabled ? 'opacity: 0.6; cursor: not-allowed;' : '' ?>" 
+                    <?= !$isEnabled ? 'disabled' : '' ?>>
+                Download Logs
+            </button>
+            <button type="button" id="clearLogs" class="btn-clear-logs" 
+                    style="padding: 8px 35px; background: #eb5202; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 600; white-space: nowrap; transition: background-color 0.2s; <?= !$isEnabled ? 'opacity: 0.6; cursor: not-allowed;' : '' ?>" 
+                    <?= !$isEnabled ? 'disabled' : '' ?>>
+                Clear Logs
+            </button>
+        </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    /* Button styles for Download and Clear Logs */
+    .btn-download-logs:active,
+    .btn-clear-logs:active {
+        background: #d04a02 !important;
+    }
+
+    .btn-download-logs:hover:not(:disabled),
+    .btn-clear-logs:hover:not(:disabled) {
+        background: #d04a02;
+    }
+
+    /* Form Section Styles */
+    .form-section {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .form-section h3 {
+        color: #495057;
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #495057;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        max-width: 30%;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: 0;
+        border-color: #eb5202;
+        box-shadow: 0 0 0 2px rgba(235, 82, 2, 0.25);
+    }
+
+    /* Premium link styling - only within customer logs content, not navbar */
+    .custlogs a[href*="upgrade"],
+    .form-section a[href*="upgrade"],
+    .custlogs-content a[href*="upgrade"] {
+        transition: opacity 0.2s ease;
+    }
+    
+    .custlogs a[href*="upgrade"]:hover,
+    .form-section a[href*="upgrade"]:hover,
+    .custlogs-content a[href*="upgrade"]:hover {
+        opacity: 0.8;
+        text-decoration: underline !important;
+    }
+    
+    /* Ensure navbar Upgrade tab is not affected */
+    .topnav a[href*="upgrade"],
+    .nav-tab[href*="upgrade"] {
+        opacity: 1 !important;
+        text-decoration: none !important;
+    }
+    
+    .topnav a[href*="upgrade"]:hover,
+    .nav-tab[href*="upgrade"]:hover {
+        opacity: 1 !important;
+        text-decoration: none !important;
+    }
+</style>
+
+<script>
+require(['jquery'], function($) {
+    $(document).ready(function() {
+        // Handle Customer Login Logs dropdown change - Auto-save
+        // NOTE: Dropdown is disabled, so this event won't fire, but keeping for compatibility
+        $('#customerLoginLogsEnabled').on('change', function() {
+            // Dropdown is disabled - prevent any changes
+            if ($(this).prop('disabled')) {
+                return;
+            }
+            var isEnabled = $(this).val() === '1';
+            var retentionDaysGroup = $('#retentionDaysGroup');
+            var downloadBtn = $('#downloadLogs');
+            var clearBtn = $('#clearLogs');
+            
+            // Show/hide retention days field and enable/disable buttons
+            if (isEnabled) {
+                // Set display to flex first, then animate
+                retentionDaysGroup.css('display', 'flex').css('opacity', '0');
+                retentionDaysGroup.animate({
+                    'opacity': '1'
+                }, 300);
+                downloadBtn.prop('disabled', false).css('opacity', '1').css('cursor', 'pointer');
+                clearBtn.prop('disabled', false).css('opacity', '1').css('cursor', 'pointer');
+            } else {
+                retentionDaysGroup.animate({
+                    'opacity': '0'
+                }, 300, function() {
+                    $(this).css('display', 'none');
+                });
+                downloadBtn.prop('disabled', true).css('opacity', '0.6').css('cursor', 'not-allowed');
+                clearBtn.prop('disabled', true).css('opacity', '0.6').css('cursor', 'not-allowed');
+            }
+            
+            // Auto-save via AJAX
+            var formData = new FormData();
+            formData.append('form_key', '<?= $block->escapeJs($formKey) ?>');
+            formData.append('customer_login_logs_enabled', isEnabled ? '1' : '0');
+            formData.append('customer_login_logs_retention_days', $('#retentionDays').val() || '90');
+            formData.append('isAjax', '1');
+            
+            $.ajax({
+                url: '<?= $block->escapeUrl($block->getUrl('mobruteforce/customerloginlogs/index')) ?>',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Reload page to show success message and ensure everything is properly initialized
+                        location.reload();
+                    }
+                },
+                error: function() {
+                    console.error('Failed to save Customer Login Logs setting');
+                }
+            });
+        });
+        
+        // Handle Retention Period dropdown change - Auto-save
+        $('#retentionDays').on('change', function() {
+            var retentionDays = $(this).val();
+            
+            // Auto-save via AJAX
+            var formData = new FormData();
+            formData.append('form_key', '<?= $block->escapeJs($formKey) ?>');
+            formData.append('customer_login_logs_enabled', $('#customerLoginLogsEnabled').val() || '0');
+            formData.append('customer_login_logs_retention_days', retentionDays);
+            formData.append('isAjax', '1');
+            
+            $.ajax({
+                url: '<?= $block->escapeUrl($block->getUrl('mobruteforce/customerloginlogs/index')) ?>',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Show immediate success message using Magento's message system
+                        // The message is already stored in session by the controller
+                        // We'll trigger a message display without full page reload
+                        showMagentoSuccessMessage(response.message || 'Customer Login Logs setting saved successfully.');
+                    }
+                },
+                error: function() {
+                    console.error('Failed to save retention period');
+                }
+            });
+        });
+        
+        // Handle Download Logs button
+        $('#downloadLogs').on('click', function() {
+            var $button = $(this);
+            
+            if ($button.prop('disabled')) {
+                return;
+            }
+            
+            // Make button dark orange when clicked
+            $button.css('background', '#d04a02');
+            
+            // Create a hidden iframe for the download
+            var iframeId = 'downloadFrame_' + Date.now();
+            var iframe = $('<iframe>', {
+                'name': iframeId,
+                'id': iframeId,
+                'style': 'display: none; width: 0; height: 0;'
+            });
+            $('body').append(iframe);
+            
+            // Create form to submit to download endpoint
+            var form = $('<form>', {
+                'method': 'POST',
+                'action': '<?= $block->escapeUrl($block->getUrl('mobruteforce/customerloginlogs/download')) ?>',
+                'target': iframeId
+            });
+            
+            form.append($('<input>', {
+                'type': 'hidden',
+                'name': 'form_key',
+                'value': '<?= $block->escapeJs($formKey) ?>'
+            }));
+            
+            $('body').append(form);
+            form.submit();
+            
+            // Monitor iframe for error redirects
+            var errorDetected = false;
+            var checkInterval = setInterval(function() {
+                try {
+                    var iframeWindow = iframe[0].contentWindow;
+                    if (iframeWindow && iframeWindow.location) {
+                        var iframeUrl = iframeWindow.location.href;
+                        // If iframe navigated to index page (not download), it means error redirect happened
+                        if (iframeUrl && iframeUrl.indexOf('customerloginlogs') !== -1 && iframeUrl.indexOf('download') === -1) {
+                            errorDetected = true;
+                            clearInterval(checkInterval);
+                            // Error occurred - reload page to show error message
+                            $button.css('background', '#eb5202');
+                            form.remove();
+                            iframe.remove();
+                            setTimeout(function() {
+                                location.reload();
+                            }, 300);
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    // Cross-origin restriction or still loading - this is normal for file downloads
+                    // Continue checking
+                }
+            }, 200);
+            
+            // Reset button and clean up after download starts (if no error detected)
+            setTimeout(function() {
+                clearInterval(checkInterval);
+                if (!errorDetected) {
+                    $button.css('background', '#eb5202');
+                    form.remove();
+                    // Remove iframe after a delay to allow download to complete
+                    setTimeout(function() {
+                        iframe.remove();
+                    }, 2000);
+                    
+                    // Show success message (download started successfully)
+                    showMagentoSuccessMessage('Logs downloaded successfully.');
+                }
+            }, 1500);
+        });
+        
+        // Handle Clear Logs button
+        $('#clearLogs').on('click', function() {
+            var $button = $(this);
+            
+            if ($button.prop('disabled')) {
+                return;
+            }
+            
+            // Make button dark orange when clicked
+            $button.css('background', '#d04a02');
+            
+            var formData = new FormData();
+            formData.append('form_key', '<?= $block->escapeJs($formKey) ?>');
+            formData.append('action', 'clear_logs');
+            
+            $.ajax({
+                url: '<?= $block->escapeUrl($block->getUrl('mobruteforce/customerloginlogs/clear')) ?>',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        // Keep button dark for success state
+                        setTimeout(function() {
+                            $button.css('background', '#eb5202');
+                            // Reload page to show Magento messages
+                            location.reload();
+                        }, 1000);
+                    } else {
+                        $button.css('background', '#eb5202');
+                        // Reload page to show Magento error messages
+                        location.reload();
+                    }
+                },
+                error: function() {
+                    $button.css('background', '#eb5202');
+                    // Reload page to show Magento error messages
+                    location.reload();
+                }
+            });
+        });
+    });
+
+    // Function to show Magento-style success message
+    function showMagentoSuccessMessage(message) {
+        // Find or create messages container at the very top of the page content
+        var messagesContainer = jQuery('.messages');
+        if (messagesContainer.length === 0) {
+            // Place message at the very top, before the navbar
+            // The navbar is the first element in content, so place message before it
+            var navbar = jQuery('.topnav').first().parent(); // Get the parent div that contains navbar
+            if (navbar.length === 0) {
+                navbar = jQuery('div[style*="padding: 0 1%"]').first(); // Fallback to navbar container
+            }
+            
+            // Create messages container
+            messagesContainer = jQuery('<div class="messages" style="margin-bottom: 20px;"></div>');
+            
+            if (navbar.length > 0) {
+                // Place before navbar
+                navbar.before(messagesContainer);
+            } else {
+                // Fallback: try to find content container
+                var contentContainer = jQuery('.page-content').first();
+                if (contentContainer.length === 0) {
+                    contentContainer = jQuery('.content').first();
+                }
+                if (contentContainer.length === 0) {
+                    contentContainer = jQuery('#anchor-content').first();
+                }
+                
+                if (contentContainer.length > 0) {
+                    contentContainer.prepend(messagesContainer);
+                } else {
+                    // Last resort: place before the first .p-6 div
+                    var firstContent = jQuery('.p-6').first();
+                    if (firstContent.length > 0) {
+                        firstContent.before(messagesContainer);
+                    } else {
+                        jQuery('body').prepend(messagesContainer);
+                    }
+                }
+            }
+        }
+        
+        // Remove any existing success messages
+        messagesContainer.find('.message-success').remove();
+        
+        // Create success message with proper Magento admin styling
+        var successMessage = jQuery('<div class="message message-success success" data-ui-id="messages-message-success">' +
+            '<div>' + 
+            jQuery('<span>').text(message).html() + 
+            '</div>' +
+            '</div>');
+        
+        messagesContainer.append(successMessage);
+        
+        // Scroll to top to show message
+        jQuery('html, body').animate({
+            scrollTop: 0
+        }, 300);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(function() {
+            successMessage.fadeOut(300, function() {
+                jQuery(this).remove();
+                // Remove messages container if empty
+                if (messagesContainer.children().length === 0) {
+                    messagesContainer.remove();
+                }
+            });
+        }, 5000);
+    }
+});
+</script>
+</div>
+

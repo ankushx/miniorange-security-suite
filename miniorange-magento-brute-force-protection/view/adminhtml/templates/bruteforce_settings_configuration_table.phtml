@@ -1,0 +1,1846 @@
+
+
+<style>
+    .form-section {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .form-section h3 {
+        color: #495057;
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #495057;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 14px;
+        box-sizing: border-box;
+        box-shadow: 0 0 0 2px transparent;
+        will-change: auto;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: 0;
+        border-color: #eb5202;
+        box-shadow: 0 0 0 2px rgba(235, 82, 2, 0.25);
+    }
+    
+    .form-group input:hover,
+    .form-group select:hover,
+    .form-group textarea:hover {
+        box-shadow: 0 0 0 2px transparent;
+    }
+
+    .form-group input:disabled,
+    .form-group select:disabled,
+    .form-group textarea:disabled {
+        background-color: #f5f5f5;
+        color: #999;
+        opacity: 0.6;
+        cursor: not-allowed;
+        border-color: #e0e0e0;
+    }
+
+    .form-group input:disabled::placeholder {
+        color: #999;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .form-row .form-group {
+        flex: 1;
+        min-height: 120px;
+        padding-bottom: 20px;
+    }
+
+    .help-text {
+        font-size: 12px;
+        color: #6c757d;
+        margin-top: 5px;
+        transition: none !important;
+        transform: none !important;
+        will-change: auto;
+        pointer-events: none;
+    }
+
+    .btn-save {
+        background: #eb5202;
+        color: white;
+        padding: 10px 30px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .btn-save:hover {
+        background: #d04a02;
+    }
+
+    .btn-save:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
+    }
+
+    /* Dropdown Styles */
+    .dropdown-container {
+        margin-bottom: 20px;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .dropdown-header {
+        background: #f8f9fa;
+        padding: 15px 20px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e9ecef;
+        transition: background-color 0.3s ease;
+    }
+
+    .dropdown-header:hover {
+        background: #e9ecef;
+    }
+
+    .dropdown-header.active {
+        background: #e9ecef;
+        color: black;
+    }
+
+    .dropdown-title {
+        font-size: 18px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .dropdown-icon {
+        transition: transform 0.3s ease;
+    }
+
+    .dropdown-header.active .dropdown-icon {
+        transform: rotate(180deg);
+    }
+
+    .dropdown-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        background: white;
+    }
+
+    .dropdown-content.active {
+        max-height: 2000px;
+    }
+
+    .dropdown-inner {
+        padding: 20px;
+    }
+
+    /* Toggle Switch Styles - Same as TwoFA */
+    .toggle-slider {
+        position: relative;
+        width: 4.5rem;
+        height: 2.3rem;
+        background-color: #e5e7eb;
+        border-radius: 9999px;
+        transition: background-color 0.3s ease-in-out;
+        display: flex;
+        align-items: center;
+        padding: 0 5px;
+    }
+
+    .toggle-slider::after {
+        content: '';
+        position: absolute;
+        top: 5px;
+        left: 0.8rem;
+        width: 1.25rem;
+        height: 1.25rem;
+        background-color: white;
+        border-radius: 9999px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .peer:checked + .toggle-slider {
+        background-color: #eb5202;
+    }
+
+    .peer:checked + .toggle-slider::after {
+        transform: translateX(1.5rem);
+        border-color: white;
+    }
+
+    /* Toggle container styling */
+    .toggle-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: #f9fafb;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .toggle-container:hover {
+        background-color: #f3f4f6;
+    }
+
+    .toggle-label {
+        font-size: 1.4rem;
+        font-weight: 500;
+        color: #374151;
+    }
+
+    .toggle-description {
+        font-size: 1.2rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+    }
+
+    td,
+    th {
+        padding: 10px 20px 10px 10px;
+    }
+
+    /* Scope Selector Styles */
+    .scope-selector-container {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 25px 20px;
+        margin-bottom: 20px;
+    }
+    
+    /* For customer settings, ensure form sections are visually part of scope container */
+    .scope-selector-container form {
+        margin-top: 20px;
+    }
+    
+    .scope-selector-container .dropdown-container {
+        margin-top: 15px;
+    }
+    
+    .scope-selector-container .dropdown-container:first-of-type {
+        margin-top: 0;
+    }
+    
+    /* Customer settings: Make dropdown header background white instead of grey */
+    .scope-selector-container .dropdown-header {
+        background: white !important;
+    }
+    
+    .scope-selector-container .dropdown-header:hover {
+        background: #e9ecef !important;
+    }
+    
+    .scope-selector-container .dropdown-header.active {
+        background: #e9ecef !important;
+    }
+
+    .scope-selector-row {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 12px;
+    }
+
+    .scope-label {
+        font-weight: 600;
+        color: #495057;
+        font-size: 14px;
+    }
+
+    .scope-dropdown-wrapper {
+        position: relative;
+        flex: 1;
+        max-width: 400px;
+    }
+
+    .scope-dropdown {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        background: white;
+        font-size: 14px;
+        color: #495057;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23495057' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 35px;
+    }
+
+    .scope-dropdown:focus {
+        outline: 0;
+        border-color: #eb5202;
+        box-shadow: 0 0 0 2px rgba(235, 82, 2, 0.25);
+    }
+
+    .scope-dropdown option[disabled] {
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    .scope-dropdown option {
+        padding: 8px 12px;
+    }
+
+    .scope-description {
+        font-size: 12px;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+
+    .scope-help-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #6c757d;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+        cursor: help;
+        position: relative;
+    }
+
+    .scope-help-icon:hover {
+        background: #5a6268;
+    }
+
+    .scope-help-icon[data-title]:hover::after {
+        content: attr(data-title);
+        position: absolute;
+        left: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #333;
+        color: white;
+        padding: 10px 14px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: normal;
+        white-space: normal;
+        width: 280px;
+        z-index: 1000;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        pointer-events: none;
+        line-height: 1.4;
+    }
+
+    .scope-help-icon[data-title]:hover::before {
+        content: '';
+        position: absolute;
+        left: 25px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: 5px solid transparent;
+        border-right-color: #333;
+        z-index: 1001;
+        pointer-events: none;
+    }
+
+    /* Header with buttons styling */
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 35px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .header-title {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .btn-back,
+    .btn-setup-guide {
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.3s ease;
+        border: 1px solid;
+        white-space: nowrap;
+    }
+
+    .btn-back {
+        background: white;
+        color: #eb5202;
+        border-color: #eb5202;
+    }
+
+    .btn-back:hover {
+        background: #fff5f2;
+        color: #eb5202;
+        text-decoration: none;
+        border-color: #eb5202;
+    }
+
+    .btn-setup-guide {
+        background: #eb5202;
+        color: white;
+        border-color: #eb5202;
+    }
+
+    .btn-setup-guide:hover {
+        background: #d04a02;
+        color: white;
+        text-decoration: none;
+        border-color: #d04a02;
+    }
+
+    .btn-back:disabled,
+    .btn-setup-guide:disabled {
+        background: #e0e0e0;
+        color: #999;
+        border-color: #e0e0e0;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    /* Premium link styling - only apply to links within form sections, not banner */
+    .form-section a[href*="upgrade"],
+    .dropdown-inner a[href*="upgrade"],
+    .scope-selector-container a[href*="upgrade"] {
+        transition: opacity 0.2s ease;
+    }
+    
+    .form-section a[href*="upgrade"]:hover,
+    .dropdown-inner a[href*="upgrade"]:hover,
+    .scope-selector-container a[href*="upgrade"]:hover {
+        opacity: 0.8;
+        text-decoration: underline !important;
+    }
+    
+</style>
+
+<?php
+$formKey = $this->getFormKey();
+$type = $this->getRequest()->getParam('type', 'admin');
+$isCustomer = ($type === 'customer');
+$hasTwoFa = $block->isTwoFaAvailable();
+
+// Get current scope from request or default to global
+// For admin settings, always use default scope (no website/store configuration)
+// For customer settings, use scope from request
+$currentScope = '';
+$currentWebsiteId = null;
+$currentStoreId = null;
+
+if ($isCustomer) {
+    // Only parse scope for customer settings
+    $currentScope = $this->getRequest()->getParam('scope', '');
+    if (strpos($currentScope, 'store_') === 0) {
+        $currentStoreId = (int)str_replace('store_', '', $currentScope);
+        $currentWebsiteId = $this->getWebsiteIdByStoreId($currentStoreId);
+    } elseif (strpos($currentScope, 'website_') === 0) {
+        $currentWebsiteId = (int)str_replace('website_', '', $currentScope);
+    }
+}
+
+// Get settings for current scope
+// Admin settings always use default scope (no website/store parameters)
+$settings = $isCustomer ? $this->getCustomerBruteForceSettings($currentWebsiteId, $currentStoreId) : $this->getAdminBruteForceSettings();
+$scopeOptions = $this->getScopeOptions();
+$emailTemplates = $this->getAvailableEmailTemplates();
+$upgradeUrl = $block->getUrl('mobruteforce/upgrade');
+$isEnabled = true;
+$disabled = "";
+?>
+
+<div style="width:97%; margin:0 auto;">
+    <div class="bg-white rounded-lg p-6" style="width: 100%;">
+
+        <!-- Header with Title and Action Buttons -->
+        <div class="header-container">
+            <div class="header-title">
+                <h1 class="text-3xl font-bold text-black" style="font-size: 2.5rem; margin: 0;">
+                    <?= $isCustomer ? 'Customer' : 'Admin' ?> BruteForce Protection Settings
+                </h1>
+            </div>
+            <div class="header-actions">
+                <a href="<?= $block->escapeUrl($block->getUrl('mobruteforce/bruteforcesettings/index')) ?>" class="btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+                </a>
+                <a href="javascript:void(0);" onclick="openSetupGuide();" class="btn-setup-guide">
+                    <i class="fas fa-book"></i>
+                    Setup Guide
+                </a>
+            </div>
+        </div>
+        
+        <!-- Divider line below header -->
+        <div style="margin-bottom: 20px; margin-top: 20px;"></div>
+        
+        <!-- Scope Selector Bar - Only show for Customer settings, not Admin -->
+        <?php if ($isCustomer): ?>
+        <div class="scope-selector-container">
+            <div class="scope-selector-row">
+            <span class="scope-label">Scope:</span>
+            <div class="scope-dropdown-wrapper">
+                <select id="scopeSelector" class="scope-dropdown" disabled style="opacity: 0.6; cursor: not-allowed;">
+                    <?php foreach ($scopeOptions as $option): ?>
+                        <?php
+                        $selected = '';
+                        $optionValue = $option['value'];
+                        $isDefault = ($option['type'] === 'default');
+                        if (empty($currentScope) && $isDefault) {
+                            $selected = 'selected';
+                        } elseif ($currentScope === $optionValue) {
+                            $selected = 'selected';
+                        }
+                        // Only default is enabled, all others are disabled and greyed out
+                        $disabledAttr = $isDefault ? '' : 'disabled';
+                        $premiumText = $isDefault ? '' : ' [Premium]';
+                        ?>
+                        <option value="<?= $block->escapeHtmlAttr($optionValue) ?>" <?= $block->escapeHtmlAttr($selected) ?> <?= $block->escapeHtmlAttr($disabledAttr) ?> style="<?= $block->escapeHtmlAttr($isDefault ? '' : 'color: #999; background-color: #f5f5f5;') ?>">
+                            <?= $block->escapeHtml($option['label'] . $premiumText) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+               
+                <a href="<?= $block->escapeUrl($upgradeUrl) ?>" style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold; text-decoration: none; cursor: pointer;">[Premium]</a>
+        </div>
+            <div class="scope-description" style="opacity: 0.7;">
+                <i class="fas fa-info-circle" style="margin-right: 8px; color:rgb(58, 59, 59);"></i>
+                Only Default Config scope is available. Settings are configured globally for all websites and stores.
+            </div>
+            
+            <!-- Form sections inside scope container for customer settings -->
+            <form id="bruteforceSettingsForm" method="post" action="<?= $block->escapeUrl($this->getUrl('mobruteforce/bruteforcesettings/index')) ?>" style="margin-top: 20px;">
+            <input type="hidden" name="form_key" value="<?= $block->escapeHtmlAttr($formKey) ?>">
+            <input type="hidden" name="option" value="saveBruteForceSettings">
+            <input type="hidden" name="type" value="<?= $block->escapeHtmlAttr($type) ?>">
+            <input type="hidden" name="scope" id="hiddenScope" value="<?= $block->escapeHtmlAttr($currentScope) ?>">
+
+            <!-- Login Forms Dropdown -->
+            <div class="dropdown-container">
+                <div class="dropdown-header" onclick="toggleDropdown('loginForms')">
+                    <div class="dropdown-title">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                        Login Forms
+                    </div>
+                    <i class="fas fa-chevron-down dropdown-icon"></i>
+                </div>
+                <div class="dropdown-content" id="loginForms">
+                    <div class="dropdown-inner">
+                        <!-- General Settings -->
+            <div class="form-section">
+                <h3>
+                    <i class="fas fa-cog"></i> General Settings
+                </h3>
+                
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Enable BruteForce Protection</div>
+                                    <div class="toggle-description">Enable BruteForce protection for <?= $block->escapeHtml($isCustomer ? 'customer' : 'admin') ?> login attempts</div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="enabled" value="1" class="peer sr-only" <?= $block->escapeHtmlAttr($settings['enabled'] ? 'checked' : '') ?> <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+            </div>
+
+                        <!-- Custom Threshold for Delay on Successive Logins -->
+            <div class="form-section">
+                <h3>
+                                <i class="fas fa-clock"></i> Custom Threshold for Delay on Successive Logins
+                </h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                                    <label>Custom Threshold for Delay <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 10 unique users]</span></label>
+                        <input type="number" name="max_attempts_delay" value="<?= (int)$settings['max_attempts_delay'] ?>" 
+                               min="0" max="10" <?= $block->escapeHtmlAttr($disabled) ?>>
+                        <div class="help-text">Number of failed attempts before delay is applied</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Delay in Seconds</label>
+                        <input type="number" name="delay_seconds" value="<?= (int)$settings['delay_seconds'] ?>" 
+                               min="5" max="300" <?= $block->escapeHtmlAttr($disabled) ?>>
+                        <div class="help-text">Delay duration in seconds (5-300 seconds)</div>
+                    </div>
+                </div>
+            </div>
+
+                        <!-- Account Lockout Settings -->
+            <div class="form-section">
+                <h3>
+                                <i class="fas fa-lock"></i> Account Lockout Settings
+                </h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                                    <label>Custom Threshold for Account Lockout (Temporary) <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 10 unique users]</span></label>
+                                    <input type="number" name="max_attempts_lockout" value="<?= (int)$settings['max_attempts_lockout'] ?>" 
+                                           min="0" max="20" <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <div class="help-text">Number of failed attempts before temporary account lockout.</div>
+                    </div>
+                                <div class="form-group">
+                                    <label>Time in Minutes</label>
+                                    <input type="number" name="lockout_duration_minutes" value="<?= (int)$settings['lockout_duration_minutes'] ?>" 
+                                           min="5" max="1440" <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <div class="help-text">Temporary lockout duration in minutes (5-1440 minutes)</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <label>Custom Threshold for Account Lockout (Permanent) <a href="<?= $block->escapeUrl($upgradeUrl) ?>" style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold; text-decoration: none; cursor: pointer;">[Premium]</a></label>
+                                <input type="number" name="max_attempts_permanent_lockout" value="<?= (int)$settings['max_attempts_permanent_lockout'] ?>" 
+                                       min="0" max="50" disabled style="background-color: #f5f5f5; opacity: 0.6; color: #999; cursor: not-allowed;">
+                                <div class="help-text" style="color: #999;">Number of failed attempts before permanent account lockout</div>
+                            </div>
+                        </div>
+
+                       
+                        
+                       
+                        <!-- Email Notifications -->
+                        <div class="form-section">
+                            <h3>
+                                <i class="fas fa-envelope"></i> Email Notifications
+                            </h3>
+                            
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Admin Alert (After Account Lockout threshold is hit) <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 10 Alerts in Free]</span></div>
+                                    <div class="toggle-description">Send admin alert emails when account lockout threshold is reached</div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="admin_alert_enabled" value="1" class="peer sr-only" <?= $block->escapeHtmlAttr($settings['admin_alert_enabled'] ? 'checked' : '') ?> <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Email Notifications (After Account Lockout threshold is hit) <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 10 Emails in Free]</span></div>
+                                    <div class="toggle-description">Send email notifications when account lockout threshold is reached</div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="email_notifications_enabled" value="1" class="peer sr-only" <?= $block->escapeHtmlAttr($settings['email_notifications_enabled'] ? 'checked' : '') ?> <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="form-group" id="emailNotificationTimingGroup" style="display: none;">
+                                <label>When to Send Email Notifications</label>
+                                <select name="email_notification_timing" id="emailNotificationTiming" <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <option value="temporary" <?= $block->escapeHtmlAttr(($settings['email_notification_timing'] ?? 'both') == 'temporary' ? 'selected' : '') ?>>Temporary Lockout Only</option>
+                                    <option value="permanent" disabled style="color: #999; background-color: #f5f5f5;" <?= $block->escapeHtmlAttr(($settings['email_notification_timing'] ?? 'both') == 'permanent' ? 'selected' : '') ?>>Permanent Lockout Only [Premium]</option>
+                                    <option value="both" disabled style="color: #999; background-color: #f5f5f5;" <?= $block->escapeHtmlAttr(($settings['email_notification_timing'] ?? 'both') == 'both' ? 'selected' : '') ?>>Both Temporary and Permanent [Premium]</option>
+                                </select>
+                                <div class="help-text">Select when to send email notifications<?= $block->escapeHtml($isCustomer ? ' to customers' : ' to admins') ?> (Only Temporary Lockout Only is available in free)</div>
+                            </div>
+
+                           
+
+                            <div id="emailTemplatesSection" style="display: none;">
+                <?php if ($isCustomer): ?>
+                <div id="customerEmailTemplateTemporary" class="form-group" style="display: none;">
+                    <label>Customer Email Template for Temporary Lockout</label>
+                    <select name="customer_email_template_temporary" <?= $block->escapeHtmlAttr($disabled) ?>>
+                        <option value="">-- Please Select --</option>
+                            <?php foreach ($emailTemplates as $key => $name): ?>
+                            <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= $block->escapeHtmlAttr(($settings['customer_email_template_temporary'] ?? '') == $key ? 'selected' : '') ?>>
+                                    <?= $block->escapeHtml($name) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    <div class="help-text">Email template for customer notifications on temporary lockout</div>
+                </div>
+                <div id="customerEmailTemplatePermanent" class="form-group" style="display: none;">
+                    <label>Customer Email Template for Permanent Lockout <a href="<?= $block->escapeUrl($upgradeUrl) ?>" style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold; text-decoration: none; cursor: pointer;">[Premium]</a></label>
+                    <select name="customer_email_template_permanent" disabled style="background-color: #f5f5f5; opacity: 0.6; color: #999; cursor: not-allowed;">
+                        <option value="">-- Please Select --</option>
+                        <?php foreach ($emailTemplates as $key => $name): ?>
+                            <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= $block->escapeHtmlAttr(($settings['customer_email_template_permanent'] ?? '') == $key ? 'selected' : '') ?>>
+                                <?= $block->escapeHtml($name) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <div class="help-text" style="color: #999;">Email template for customer notifications on permanent lockout</div>
+                </div>
+                <?php else: ?>
+                <div id="adminEmailTemplateTemporary" class="form-group" style="display: none;">
+                    <label>Admin Email Template for Temporary Lockout</label>
+                    <select name="admin_email_template_temporary" <?= $block->escapeHtmlAttr($disabled) ?>>
+                        <option value="">-- Please Select --</option>
+                        <?php foreach ($emailTemplates as $key => $name): ?>
+                            <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= $block->escapeHtmlAttr(($settings['admin_email_template_temporary'] ?? '') == $key ? 'selected' : '') ?>>
+                                <?= $block->escapeHtml($name) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <div class="help-text">Email template for admin notifications on temporary lockout</div>
+                </div>
+                <div id="adminEmailTemplatePermanent" class="form-group" style="display: none;">
+                    <label>Admin Email Template for Permanent Lockout <a href="<?= $block->escapeUrl($upgradeUrl) ?>" style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold; text-decoration: none; cursor: pointer;">[Premium]</a></label>
+                    <select name="admin_email_template_permanent" disabled style="background-color: #f5f5f5; opacity: 0.6; color: #999; cursor: not-allowed;">
+                        <option value="">-- Please Select --</option>
+                        <?php foreach ($emailTemplates as $key => $name): ?>
+                            <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= $block->escapeHtmlAttr(($settings['admin_email_template_permanent'] ?? '') == $key ? 'selected' : '') ?>>
+                                <?= $block->escapeHtml($name) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <div class="help-text" style="color: #999;">Email template for admin notifications on permanent lockout</div>
+            </div>
+            <?php endif; ?>
+            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forgot Password Form Dropdown -->
+            <div class="dropdown-container">
+                <div class="dropdown-header" onclick="toggleDropdown('forgotPasswordForm')">
+                    <div class="dropdown-title">
+                        <i class="fas fa-key"></i>
+                        Forgot Password Form
+                    </div>
+                    <i class="fas fa-chevron-down dropdown-icon"></i>
+                </div>
+                <div class="dropdown-content" id="forgotPasswordForm">
+                    <div class="dropdown-inner">
+            <!-- Forgot Password Protection -->
+            <div class="form-section">
+                <h3>
+                                <i class="fas fa-cog"></i> General Settings
+                </h3>
+                
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Enable Forgot Password Protection</div>
+                                    <div class="toggle-description">Enable BruteForce protection for forgot password form</div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="forgot_password_enabled" value="1" class="peer sr-only" <?= $block->escapeHtmlAttr($settings['forgot_password_enabled'] ? 'checked' : '') ?> <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <span class="toggle-slider"></span>
+                    </label>
+                            </div>
+                </div>
+
+                        <!-- Custom Threshold for Delay on Successive Forgot Password Attempts -->
+                        <div class="form-section">
+                            <h3>
+                                <i class="fas fa-clock"></i> Custom Threshold for Delay on Successive Forgot Password Attempts
+                            </h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                                    <label>Custom Threshold for Delay <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 10 unique users]</span></label>
+                                    <input type="number" name="forgot_password_max_attempts_delay" value="<?= (int)$settings['forgot_password_max_attempts_delay'] ?>" 
+                               min="0" max="10" <?= $block->escapeHtmlAttr($disabled) ?>>
+                        <div class="help-text">Number of failed attempts before delay is applied</div>
+                    </div>
+                    <div class="form-group">
+                                    <label>Delay in Seconds</label>
+                                    <input type="number" name="forgot_password_delay_seconds" value="<?= (int)$settings['forgot_password_delay_seconds'] ?>" 
+                               min="5" max="300" <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <div class="help-text">Delay duration in seconds (5-300 seconds)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Forgot Password Account Lockout Settings -->
+                        <div class="form-section">
+                            <h3>
+                                <i class="fas fa-lock"></i> Forgot Password Account Lockout Settings
+                            </h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Custom Threshold for Account Lockout (Temporary) <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 10 unique users]</span></label>
+                                    <input type="number" name="forgot_password_max_attempts_lockout" value="<?= (int)$settings['forgot_password_max_attempts_lockout'] ?>" 
+                                           min="0" max="20" <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <div class="help-text">Number of failed attempts before temporary account lockout.</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Time in Minutes</label>
+                                    <input type="number" name="forgot_password_lockout_duration_minutes" value="<?= (int)$settings['forgot_password_lockout_duration_minutes'] ?>" 
+                                           min="5" max="1440" <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <div class="help-text">Temporary lockout duration in minutes (5-1440 minutes)</div>
+                                </div>
+                            </div>
+                        </div>
+                       
+
+                        <!-- Forgot Password Email Notifications -->
+                        <div class="form-section">
+                            <h3>
+                                <i class="fas fa-envelope"></i> Forgot Password Email Notifications
+                            </h3>
+                            
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Admin Alert (After Account Lockout threshold is hit) <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 10 Alerts in Free]</span></div>
+                                    <div class="toggle-description">Send admin alert emails when account lockout threshold is reached</div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="forgot_password_admin_alert_enabled" value="1" class="peer sr-only" <?= $block->escapeHtmlAttr($settings['forgot_password_admin_alert_enabled'] ? 'checked' : '') ?> <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Email Notifications (After Account Lockout threshold is hit) <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 10 Emails in Free]</span></div>
+                                    <div class="toggle-description">Send email notifications when account lockout threshold is reached</div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="forgot_password_email_notifications_enabled" value="1" class="peer sr-only" <?= $block->escapeHtmlAttr($settings['forgot_password_email_notifications_enabled'] ? 'checked' : '') ?> <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                          
+
+                            <div id="forgotPasswordEmailTemplatesSection" style="display: none;">
+                                <?php if ($isCustomer): ?>
+                                <div class="form-group">
+                                    <label>Customer Email Template</label>
+                                    <select name="forgot_password_customer_email_template" <?= $block->escapeHtmlAttr($disabled) ?>>
+                                        <option value="">-- Please Select --</option>
+                                        <?php foreach ($emailTemplates as $key => $name): ?>
+                                            <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= $block->escapeHtmlAttr($settings['forgot_password_customer_email_template'] == $key ? 'selected' : '') ?>>
+                                                <?= $block->escapeHtml($name) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <div class="help-text">Email template for customer notifications</div>
+                                </div>
+                                <?php else: ?>
+                                <div class="form-group">
+                                    <label>Admin Email Template</label>
+                                    <select name="forgot_password_admin_email_template" <?= $block->escapeHtmlAttr($disabled) ?>>
+                                        <option value="">-- Please Select --</option>
+                                        <?php foreach ($emailTemplates as $key => $name): ?>
+                                            <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= $block->escapeHtmlAttr($settings['forgot_password_admin_email_template'] == $key ? 'selected' : '') ?>>
+                                                <?= $block->escapeHtml($name) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <div class="help-text">Email template for admin notifications</div>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                <div style=" margin-top: 30px;">
+                    <button type="submit" class="btn-save" <?= $block->escapeHtmlAttr($disabled) ?>>
+                        <i class="fas fa-save"></i> Save Settings
+                    </button>
+                </div>
+            </form>
+        </div>
+        <?php else: ?>
+        <!-- For admin settings, form is outside scope container -->
+        <form id="bruteforceSettingsForm" method="post" action="<?= $block->escapeUrl($this->getUrl('mobruteforce/bruteforcesettings/index')) ?>">
+            <input type="hidden" name="form_key" value="<?= $block->escapeHtmlAttr($formKey) ?>">
+            <input type="hidden" name="option" value="saveBruteForceSettings">
+            <input type="hidden" name="type" value="<?= $block->escapeHtmlAttr($type) ?>">
+            <input type="hidden" name="scope" id="hiddenScope" value="<?= $block->escapeHtmlAttr($currentScope) ?>">
+
+            <!-- Login Forms Dropdown -->
+            <div class="dropdown-container">
+                <div class="dropdown-header" onclick="toggleDropdown('loginForms')">
+                    <div class="dropdown-title">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login Forms
+                    </div>
+                    <i class="fas fa-chevron-down dropdown-icon"></i>
+                </div>
+                <div class="dropdown-content" id="loginForms">
+                    <div class="dropdown-inner">
+                        <!-- General Settings -->
+            <div class="form-section">
+                <h3>
+                    <i class="fas fa-cog"></i> General Settings
+                </h3>
+                
+                <div class="toggle-container">
+                    <div>
+                                    <div class="toggle-label">Enable BruteForce Protection</div>
+                                    <div class="toggle-description">Enable BruteForce protection for <?= $block->escapeHtml($isCustomer ? 'customer' : 'admin') ?> login attempts</div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="enabled" value="1" class="peer sr-only" <?= $block->escapeHtmlAttr($settings['enabled'] ? 'checked' : '') ?> <?= $block->escapeHtmlAttr($disabled) ?>>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+            </div>
+
+                        <!-- Custom Threshold for Delay on Successive Logins -->
+            <div class="form-section">
+                <h3>
+                                <i class="fas fa-clock"></i> Custom Threshold for Delay on Successive Logins
+                </h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                                    <label>Custom Threshold for Delay <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 10 unique users]</span></label>
+                        <input type="number" name="max_attempts_delay" value="<?= (int)$settings['max_attempts_delay'] ?>" 
+                               min="0" max="10" <?= $block->escapeHtmlAttr($disabled) ?>>
+                        <div class="help-text">Number of failed attempts before delay is applied</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Delay in Seconds</label>
+                        <input type="number" name="delay_seconds" value="<?= (int)$settings['delay_seconds'] ?>" 
+                               min="5" max="300" <?= $block->escapeHtmlAttr($disabled) ?>>
+                        <div class="help-text">Delay duration in seconds (5-300 seconds)</div>
+                    </div>
+                </div>
+            </div>
+
+                        <!-- Account Lockout Settings -->
+            <div class="form-section">
+                <h3>
+                                <i class="fas fa-lock"></i> Account Lockout Settings
+                </h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                                    <label>Custom Threshold for Account Lockout (Temporary) <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 10 unique users]</span></label>
+                                    <input type="number" name="max_attempts_lockout" value="<?= (int)$settings['max_attempts_lockout'] ?>" 
+                                           min="0" max="20" <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <div class="help-text">Number of failed attempts before temporary account lockout.</div>
+                    </div>
+                                <div class="form-group">
+                                    <label>Time in Minutes</label>
+                                    <input type="number" name="lockout_duration_minutes" value="<?= (int)$settings['lockout_duration_minutes'] ?>" 
+                                           min="5" max="1440" <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <div class="help-text">Temporary lockout duration in minutes (5-1440 minutes)</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Custom Threshold for Account Lockout (Permanent) <a href="<?= $block->escapeUrl($upgradeUrl) ?>" style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold; text-decoration: none; cursor: pointer;">[Premium]</a></label>
+                                <input type="number" name="max_attempts_permanent_lockout" value="<?= (int)$settings['max_attempts_permanent_lockout'] ?>" 
+                                       min="0" max="50" disabled style="background-color: #f5f5f5; opacity: 0.6; color: #999; cursor: not-allowed;">
+                                <div class="help-text" style="color: #999;">Number of failed attempts before permanent account lockout</div>
+                            </div>
+                        </div>
+                       
+                        <!-- Email Notifications -->
+                        <div class="form-section">
+                            <h3>
+                                <i class="fas fa-envelope"></i> Email Notifications
+                            </h3>
+
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Admin Alert (After Account Lockout threshold is hit) <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 10 Alerts in Free]</span></div>
+                                    <div class="toggle-description">Send admin alert emails when account lockout threshold is reached</div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="admin_alert_enabled" value="1" class="peer sr-only" <?= $block->escapeHtmlAttr($settings['admin_alert_enabled'] ? 'checked' : '') ?> <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Email Notifications (After Account Lockout threshold is hit) <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 10 Emails in Free]</span></div>
+                                    <div class="toggle-description">Send email notifications when account lockout threshold is reached</div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="email_notifications_enabled" value="1" class="peer sr-only" <?= $block->escapeHtmlAttr($settings['email_notifications_enabled'] ? 'checked' : '') ?> <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="form-group" id="emailNotificationTimingGroup" style="display: none;">
+                                <label>When to Send Email Notifications</label>
+                                <select name="email_notification_timing" id="emailNotificationTiming" <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <option value="temporary" <?= $block->escapeHtmlAttr(($settings['email_notification_timing'] ?? 'both') == 'temporary' ? 'selected' : '') ?>>Temporary Lockout Only</option>
+                                    <option value="permanent" disabled style="color: #999; background-color: #f5f5f5;" <?= $block->escapeHtmlAttr(($settings['email_notification_timing'] ?? 'both') == 'permanent' ? 'selected' : '') ?>>Permanent Lockout Only [Premium]</option>
+                                    <option value="both" disabled style="color: #999; background-color: #f5f5f5;" <?= $block->escapeHtmlAttr(($settings['email_notification_timing'] ?? 'both') == 'both' ? 'selected' : '') ?>>Both Temporary and Permanent [Premium]</option>
+                                </select>
+                                <div class="help-text">Select when to send email notifications<?= $block->escapeHtml($isCustomer ? ' to customers' : ' to admins') ?> (Only Temporary Lockout Only is available in free)</div>
+                            </div>
+
+                           
+
+                            <div id="emailTemplatesSection" style="display: none;">
+                <?php if ($isCustomer): ?>
+                <div id="customerEmailTemplateTemporary" class="form-group" style="display: none;">
+                    <label>Customer Email Template for Temporary Lockout</label>
+                    <select name="customer_email_template_temporary" <?= $block->escapeHtmlAttr($disabled) ?>>
+                        <option value="">-- Please Select --</option>
+                        <?php foreach ($emailTemplates as $key => $name): ?>
+                            <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= $block->escapeHtmlAttr(($settings['customer_email_template_temporary'] ?? '') == $key ? 'selected' : '') ?>>
+                                <?= $block->escapeHtml($name) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <div class="help-text">Email template for customer notifications on temporary lockout</div>
+                </div>
+                <?php else: ?>
+                <div id="adminEmailTemplateTemporary" class="form-group" style="display: none;">
+                    <label>Admin Email Template for Temporary Lockout</label>
+                    <select name="admin_email_template_temporary" <?= $block->escapeHtmlAttr($disabled) ?>>
+                        <option value="">-- Please Select --</option>
+                        <?php foreach ($emailTemplates as $key => $name): ?>
+                            <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= $block->escapeHtmlAttr(($settings['admin_email_template_temporary'] ?? '') == $key ? 'selected' : '') ?>>
+                                <?= $block->escapeHtml($name) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <div class="help-text">Email template for admin notifications on temporary lockout</div>
+                </div>
+                <div id="adminEmailTemplatePermanent" class="form-group" style="display: none;">
+                    <label>Admin Email Template for Permanent Lockout <a href="<?= $block->escapeUrl($upgradeUrl) ?>" style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold; text-decoration: none; cursor: pointer;">[Premium]</a></label>
+                    <select name="admin_email_template_permanent" disabled style="background-color: #f5f5f5; opacity: 0.6; color: #999; cursor: not-allowed;">
+                        <option value="">-- Please Select --</option>
+                        <?php foreach ($emailTemplates as $key => $name): ?>
+                            <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= $block->escapeHtmlAttr(($settings['admin_email_template_permanent'] ?? '') == $key ? 'selected' : '') ?>>
+                                <?= $block->escapeHtml($name) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <div class="help-text" style="color: #999;">Email template for admin notifications on permanent lockout</div>
+                </div>
+            <?php endif; ?>
+            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forgot Password Form Dropdown -->
+            <div class="dropdown-container">
+                <div class="dropdown-header" onclick="toggleDropdown('forgotPasswordForm')">
+                    <div class="dropdown-title">
+                        <i class="fas fa-key"></i>
+                        Forgot Password Form
+                    </div>
+                    <i class="fas fa-chevron-down dropdown-icon"></i>
+                </div>
+                <div class="dropdown-content" id="forgotPasswordForm">
+                    <div class="dropdown-inner">
+            <!-- Forgot Password Protection -->
+            <div class="form-section">
+                <h3>
+                                <i class="fas fa-cog"></i> General Settings
+                </h3>
+                
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Enable Forgot Password Protection</div>
+                                    <div class="toggle-description">Enable BruteForce protection for forgot password form</div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="forgot_password_enabled" value="1" class="peer sr-only" <?= $block->escapeHtmlAttr($settings['forgot_password_enabled'] ? 'checked' : '') ?> <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <span class="toggle-slider"></span>
+                    </label>
+                            </div>
+                </div>
+
+                        <!-- Custom Threshold for Delay on Successive Forgot Password Attempts -->
+                        <div class="form-section">
+                            <h3>
+                                <i class="fas fa-clock"></i> Custom Threshold for Delay on Successive Forgot Password Attempts
+                            </h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                                    <label>Custom Threshold for Delay <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 10 unique users]</span></label>
+                                    <input type="number" name="forgot_password_max_attempts_delay" value="<?= (int)$settings['forgot_password_max_attempts_delay'] ?>" 
+                               min="0" max="10" <?= $block->escapeHtmlAttr($disabled) ?>>
+                        <div class="help-text">Number of failed attempts before delay is applied</div>
+                    </div>
+                    <div class="form-group">
+                                    <label>Delay in Seconds</label>
+                                    <input type="number" name="forgot_password_delay_seconds" value="<?= (int)$settings['forgot_password_delay_seconds'] ?>" 
+                               min="5" max="300" <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <div class="help-text">Delay duration in seconds (5-300 seconds)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Forgot Password Account Lockout Settings -->
+                        <div class="form-section">
+                            <h3>
+                                <i class="fas fa-lock"></i> Forgot Password Account Lockout Settings
+                            </h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Custom Threshold for Account Lockout (Temporary) <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 10 unique users]</span></label>
+                                    <input type="number" name="forgot_password_max_attempts_lockout" value="<?= (int)$settings['forgot_password_max_attempts_lockout'] ?>" 
+                                           min="0" max="20" <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <div class="help-text">Number of failed attempts before temporary account lockout.</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Time in Minutes</label>
+                                    <input type="number" name="forgot_password_lockout_duration_minutes" value="<?= (int)$settings['forgot_password_lockout_duration_minutes'] ?>" 
+                                           min="5" max="1440" <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <div class="help-text">Temporary lockout duration in minutes (5-1440 minutes)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                       
+                        <!-- Forgot Password Email Notifications -->
+                        <div class="form-section">
+                            <h3>
+                                <i class="fas fa-envelope"></i> Forgot Password Email Notifications
+                            </h3>
+
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Admin Alert (After Account Lockout threshold is hit) <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 10 Alerts in Free]</span></div>
+                                    <div class="toggle-description">Send admin alert emails when account lockout threshold is reached</div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="forgot_password_admin_alert_enabled" value="1" class="peer sr-only" <?= $block->escapeHtmlAttr($settings['forgot_password_admin_alert_enabled'] ? 'checked' : '') ?> <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="toggle-container">
+                                <div>
+                                    <div class="toggle-label">Email Notifications (After Account Lockout threshold is hit) <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 10 Emails in Free]</span></div>
+                                    <div class="toggle-description">Send email notifications when account lockout threshold is reached</div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="forgot_password_email_notifications_enabled" value="1" class="peer sr-only" <?= $block->escapeHtmlAttr($settings['forgot_password_email_notifications_enabled'] ? 'checked' : '') ?> <?= $block->escapeHtmlAttr($disabled) ?>>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                          
+
+                            <div id="forgotPasswordEmailTemplatesSection" style="display: none;">
+                                <?php if ($isCustomer): ?>
+                                <div class="form-group">
+                                    <label>Customer Email Template</label>
+                                    <select name="forgot_password_customer_email_template" <?= $block->escapeHtmlAttr($disabled) ?>>
+                                        <option value="">-- Please Select --</option>
+                                        <?php foreach ($emailTemplates as $key => $name): ?>
+                                            <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= $block->escapeHtmlAttr($settings['forgot_password_customer_email_template'] == $key ? 'selected' : '') ?>>
+                                                <?= $block->escapeHtml($name) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <div class="help-text">Email template for customer notifications</div>
+                                </div>
+                                <?php else: ?>
+                                <div class="form-group">
+                                    <label>Admin Email Template</label>
+                                    <select name="forgot_password_admin_email_template" <?= $block->escapeHtmlAttr($disabled) ?>>
+                                        <option value="">-- Please Select --</option>
+                                        <?php foreach ($emailTemplates as $key => $name): ?>
+                                            <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= $block->escapeHtmlAttr($settings['forgot_password_admin_email_template'] == $key ? 'selected' : '') ?>>
+                                                <?= $block->escapeHtml($name) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <div class="help-text">Email template for admin notifications</div>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style=" margin-top: 30px;">
+                <button type="submit" class="btn-save" <?= $block->escapeHtmlAttr($disabled) ?>>
+                    <i class="fas fa-save"></i> Save Settings
+                </button>
+            </div>
+        </form>
+        <?php endif; ?>
+    </div>
+</div>
+
+<script>
+// Back button should always go to the main settings selection page
+// This ensures consistent navigation: Configuration Page → Settings Selection Page
+(function() {
+    const mainSettingsUrl = '<?= $block->escapeUrl($block->getUrl('mobruteforce/bruteforcesettings/index')) ?>';
+    
+    // Update back button href on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const backButton = document.querySelector('.btn-back');
+        if (backButton) {
+            backButton.href = mainSettingsUrl;
+        }
+    });
+})();
+
+function toggleDropdown(dropdownId) {
+    const dropdown = document.getElementById(dropdownId);
+    const header = dropdown.previousElementSibling;
+    
+    // Toggle active class on header
+    header.classList.toggle('active');
+    
+    // Toggle active class on content
+    dropdown.classList.toggle('active');
+}
+
+// Function to show validation error message
+function showValidationError(field, message) {
+    if (!field || !field.parentElement) {
+        return; // Safety check
+    }
+    
+    // Remove existing error message
+    const existingError = field.parentElement.querySelector('.validation-error');
+    if (existingError) {
+        existingError.remove();
+    }
+    
+    // Add error message
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'validation-error';
+    errorDiv.style.color = '#e02b27';
+    errorDiv.style.fontSize = '12px';
+    errorDiv.style.marginTop = '5px';
+    errorDiv.style.display = 'block'; // Ensure it's visible
+    errorDiv.textContent = message;
+    field.parentElement.appendChild(errorDiv);
+    
+    // Add error styling to input
+    field.style.borderColor = '#e02b27';
+    
+    // Force a reflow to ensure the error message is rendered
+    field.offsetHeight;
+}
+
+// Function to clear validation error
+function clearValidationError(field) {
+    const existingError = field.parentElement.querySelector('.validation-error');
+    if (existingError) {
+        existingError.remove();
+    }
+    field.style.borderColor = '';
+}
+
+// Function to validate threshold fields
+function validateThresholds() {
+    let isValid = true;
+    let firstErrorField = null;
+    
+    // Validate Login Forms thresholds
+    const maxAttemptsDelay = document.querySelector('input[name="max_attempts_delay"]');
+    const maxAttemptsLockout = document.querySelector('input[name="max_attempts_lockout"]');
+    
+    if (maxAttemptsDelay && maxAttemptsLockout) {
+        const delayValue = parseInt(maxAttemptsDelay.value) || 0;
+        const lockoutValue = parseInt(maxAttemptsLockout.value) || 0;
+        
+        // Only validate if both values are > 0 (features are enabled)
+        // If either is 0, the feature is disabled and validation is skipped
+        if (delayValue > 0 && lockoutValue > 0) {
+            if (delayValue >= lockoutValue) {
+                showValidationError(maxAttemptsDelay, 'Custom Threshold for Delay must be less than Custom Threshold for Account Lockout (Temporary)');
+                showValidationError(maxAttemptsLockout, 'Custom Threshold for Account Lockout (Temporary) must be greater than Custom Threshold for Delay');
+                if (!firstErrorField) firstErrorField = maxAttemptsDelay;
+                isValid = false;
+            } else {
+                clearValidationError(maxAttemptsDelay);
+                clearValidationError(maxAttemptsLockout);
+            }
+        } else {
+            // Clear errors if either feature is disabled (0)
+            clearValidationError(maxAttemptsDelay);
+            clearValidationError(maxAttemptsLockout);
+        }
+    }
+    
+    // Validate Forgot Password Forms thresholds
+    const forgotPasswordMaxAttemptsDelay = document.querySelector('input[name="forgot_password_max_attempts_delay"]');
+    const forgotPasswordMaxAttemptsLockout = document.querySelector('input[name="forgot_password_max_attempts_lockout"]');
+    
+    if (forgotPasswordMaxAttemptsDelay && forgotPasswordMaxAttemptsLockout) {
+        const delayValue = parseInt(forgotPasswordMaxAttemptsDelay.value) || 0;
+        const lockoutValue = parseInt(forgotPasswordMaxAttemptsLockout.value) || 0;
+        
+        // Only validate if both values are > 0 (features are enabled)
+        // If either is 0, the feature is disabled and validation is skipped
+        if (delayValue > 0 && lockoutValue > 0) {
+            if (delayValue >= lockoutValue) {
+                showValidationError(forgotPasswordMaxAttemptsDelay, 'Custom Threshold for Delay must be less than Custom Threshold for Account Lockout (Temporary)');
+                showValidationError(forgotPasswordMaxAttemptsLockout, 'Custom Threshold for Account Lockout (Temporary) must be greater than Custom Threshold for Delay');
+                if (!firstErrorField) firstErrorField = forgotPasswordMaxAttemptsDelay;
+                isValid = false;
+            } else {
+                clearValidationError(forgotPasswordMaxAttemptsDelay);
+                clearValidationError(forgotPasswordMaxAttemptsLockout);
+            }
+        } else {
+            // Clear errors if either feature is disabled (0)
+            clearValidationError(forgotPasswordMaxAttemptsDelay);
+            clearValidationError(forgotPasswordMaxAttemptsLockout);
+        }
+    }
+    
+    // Store first error field for scrolling
+    if (!isValid && firstErrorField) {
+        validateThresholds.firstErrorField = firstErrorField;
+    }
+    
+    return isValid;
+}
+
+// Form validation and scope sync
+document.getElementById('bruteforceSettingsForm').addEventListener('submit', function(e) {
+    console.log('Form submission started');
+    
+    // Sync scope from dropdown to hidden field before submission
+    const scopeSelector = document.getElementById('scopeSelector');
+    const hiddenScope = document.getElementById('hiddenScope');
+    if (scopeSelector && hiddenScope) {
+        hiddenScope.value = scopeSelector.value;
+        console.log('Scope synced for form submission:', hiddenScope.value);
+    }
+    
+    // Validate thresholds - run validation first to ensure all error messages are displayed
+    const validationResult = validateThresholds();
+    
+    if (!validationResult) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Force re-validation to ensure all error messages are shown
+        validateThresholds();
+        
+        // Scroll to first error field
+        if (validateThresholds.firstErrorField) {
+            const errorField = validateThresholds.firstErrorField;
+            
+            // Small delay to ensure DOM is updated with error messages
+            setTimeout(function() {
+                const fieldPosition = errorField.getBoundingClientRect().top + window.pageYOffset;
+                const offset = 100; // Offset from top of page
+                
+                window.scrollTo({
+                    top: fieldPosition - offset,
+                    behavior: 'smooth'
+                });
+                
+                // Focus on the field and ensure error message is visible
+                errorField.focus();
+                
+                // Ensure error message is visible by scrolling to it
+                const errorDiv = errorField.parentElement.querySelector('.validation-error');
+                if (errorDiv) {
+                    errorDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }, 100);
+        }
+        
+        return false;
+    }
+    
+    console.log('Form validation passed, submitting with scope:', hiddenScope ? hiddenScope.value : 'default');
+    // Allow form to submit normally if validation passes
+    return true;
+});
+
+// Function to toggle email template sections based on notification toggles
+function toggleEmailTemplates() {
+    const emailNotifications = document.querySelector('input[name="email_notifications_enabled"]');
+    const emailTemplatesSection = document.getElementById('emailTemplatesSection');
+    const emailNotificationTimingGroup = document.getElementById('emailNotificationTimingGroup');
+    
+    if (emailNotifications && emailTemplatesSection) {
+        if (emailNotifications.checked) {
+            emailTemplatesSection.style.display = 'block';
+            if (emailNotificationTimingGroup) {
+                emailNotificationTimingGroup.style.display = 'block';
+            }
+            updateEmailTemplateVisibility();
+        } else {
+            emailTemplatesSection.style.display = 'none';
+            if (emailNotificationTimingGroup) {
+                emailNotificationTimingGroup.style.display = 'none';
+            }
+        }
+    }
+}
+
+// Function to update email template visibility based on timing selection
+function updateEmailTemplateVisibility() {
+    const timingSelect = document.getElementById('emailNotificationTiming');
+    const customerTempTemplate = document.getElementById('customerEmailTemplateTemporary');
+    const customerPermTemplate = document.getElementById('customerEmailTemplatePermanent');
+    const adminTempTemplate = document.getElementById('adminEmailTemplateTemporary');
+    const adminPermTemplate = document.getElementById('adminEmailTemplatePermanent');
+    
+    if (timingSelect) {
+        const value = timingSelect.value;
+        
+        // Handle customer templates
+        if (customerTempTemplate && customerPermTemplate) {
+            if (value === 'temporary') {
+                customerTempTemplate.style.display = 'block';
+                customerPermTemplate.style.display = 'none';
+            } else if (value === 'permanent') {
+                customerTempTemplate.style.display = 'none';
+                customerPermTemplate.style.display = 'block';
+            } else if (value === 'both') {
+                customerTempTemplate.style.display = 'block';
+                customerPermTemplate.style.display = 'block';
+            }
+        }
+        
+        // Handle admin templates
+        if (adminTempTemplate && adminPermTemplate) {
+            if (value === 'temporary') {
+                adminTempTemplate.style.display = 'block';
+                adminPermTemplate.style.display = 'none';
+            } else if (value === 'permanent') {
+                adminTempTemplate.style.display = 'none';
+                adminPermTemplate.style.display = 'block';
+            } else if (value === 'both') {
+                adminTempTemplate.style.display = 'block';
+                adminPermTemplate.style.display = 'block';
+            }
+        }
+    }
+}
+
+// Function to auto-save toggle changes
+function autoSaveToggle(toggleName, value) {
+    const formData = new FormData();
+    formData.append('form_key', document.querySelector('input[name="form_key"]').value);
+    formData.append('option', 'saveBruteForceSettings');
+    formData.append('type', document.querySelector('input[name="type"]').value);
+    formData.append(toggleName, value);
+    
+    fetch(window.location.href, {
+        method: 'POST',
+        body: formData
+    }).then(response => {
+        console.log('Auto-saved toggle:', toggleName, '=', value);
+    }).catch(error => {
+        console.error('Auto-save failed:', error);
+    });
+}
+
+// Function to toggle forgot password email template sections
+function toggleForgotPasswordEmailTemplates() {
+    const forgotPasswordEmailNotifications = document.querySelector('input[name="forgot_password_email_notifications_enabled"]');
+    const forgotPasswordEmailTemplatesSection = document.getElementById('forgotPasswordEmailTemplatesSection');
+    
+    if (forgotPasswordEmailNotifications && forgotPasswordEmailTemplatesSection) {
+        if (forgotPasswordEmailNotifications.checked) {
+            forgotPasswordEmailTemplatesSection.style.display = 'block';
+        } else {
+            forgotPasswordEmailTemplatesSection.style.display = 'none';
+        }
+    }
+}
+
+// Function to load settings for selected scope (only for customer settings)
+function loadSettingsForScope(scopeValue) {
+    const isCustomer = document.querySelector('input[name="type"]').value === 'customer';
+    
+    // Admin settings don't have scope, so skip this for admin
+    if (!isCustomer) {
+        console.log('loadSettingsForScope skipped - admin settings are always global');
+        return;
+    }
+    
+    console.log('loadSettingsForScope called with scopeValue:', scopeValue);
+    
+    // Create a fresh FormData to avoid any form field conflicts
+    const formData = new FormData();
+    formData.append('form_key', document.querySelector('input[name="form_key"]').value);
+    formData.append('option', 'loadSettingsForScope');
+    formData.append('type', document.querySelector('input[name="type"]').value);
+    formData.append('scope', scopeValue || ''); // Ensure we always send scope, even if empty
+    
+    // Log what we're sending
+    console.log('Sending AJAX request with scope:', scopeValue || '(empty/default)');
+    console.log('FormData scope value:', formData.get('scope'));
+    
+    // Show loading indicator
+    const form = document.getElementById('bruteforceSettingsForm');
+    const originalOpacity = form.style.opacity;
+    form.style.opacity = '0.5';
+    form.style.pointerEvents = 'none';
+    
+    fetch(window.location.href, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest' // Required for Magento to detect AJAX request
+        },
+        body: formData
+    })
+    .then(response => {
+        console.log('Response received, status:', response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log('Settings loaded for scope:', scopeValue, 'Settings:', data);
+        if (data.success && data.settings) {
+            // Update all form fields with loaded settings
+            updateFormFields(data.settings);
+            console.log('Form fields updated with new scope settings');
+        } else {
+            console.error('Failed to load settings - no data.settings:', data);
+        }
+        form.style.opacity = originalOpacity;
+        form.style.pointerEvents = 'auto';
+    })
+    .catch(error => {
+        console.error('Failed to load settings:', error);
+        form.style.opacity = originalOpacity;
+        form.style.pointerEvents = 'auto';
+    });
+}
+
+// Function to update form fields with loaded settings
+function updateFormFields(settings) {
+    // Update checkboxes
+    const checkboxes = {
+        'enabled': settings.enabled,
+        // COMMENTED OUT: TwoFA Invoking settings
+        // 'only_invoke_twofa_on_failed_attempts': settings.only_invoke_twofa_on_failed_attempts,
+        'email_notifications_enabled': settings.email_notifications_enabled,
+        'admin_alert_enabled': settings.admin_alert_enabled,
+        'forgot_password_enabled': settings.forgot_password_enabled,
+        // 'forgot_password_invoke_twofa_logged_in': settings.forgot_password_invoke_twofa_logged_in,
+        'forgot_password_email_notifications_enabled': settings.forgot_password_email_notifications_enabled,
+        'forgot_password_admin_alert_enabled': settings.forgot_password_admin_alert_enabled
+    };
+    
+    Object.keys(checkboxes).forEach(name => {
+        const checkbox = document.querySelector('input[name="' + name + '"]');
+        if (checkbox) {
+            checkbox.checked = checkboxes[name];
+        }
+    });
+    
+    // Update number inputs
+    const numberInputs = {
+        'max_attempts_delay': settings.max_attempts_delay,
+        'delay_seconds': settings.delay_seconds,
+        'max_attempts_lockout': settings.max_attempts_lockout,
+        'lockout_duration_minutes': settings.lockout_duration_minutes,
+        'max_attempts_permanent_lockout': settings.max_attempts_permanent_lockout,
+        // COMMENTED OUT: TwoFA Invoking settings
+        // 'max_attempts_twofa': settings.max_attempts_twofa,
+        'forgot_password_max_attempts_delay': settings.forgot_password_max_attempts_delay,
+        'forgot_password_delay_seconds': settings.forgot_password_delay_seconds,
+        'forgot_password_max_attempts_lockout': settings.forgot_password_max_attempts_lockout,
+        'forgot_password_lockout_duration_minutes': settings.forgot_password_lockout_duration_minutes,
+        // 'forgot_password_max_attempts_twofa': settings.forgot_password_max_attempts_twofa
+    };
+    
+    Object.keys(numberInputs).forEach(name => {
+        const input = document.querySelector('input[name="' + name + '"]');
+        if (input) {
+            input.value = numberInputs[name];
+        }
+    });
+    
+    // Update select dropdowns
+    const selects = {
+        'customer_email_template_temporary': settings.customer_email_template_temporary,
+        'customer_email_template_permanent': settings.customer_email_template_permanent,
+        'email_notification_timing': settings.email_notification_timing || 'both',
+        'forgot_password_customer_email_template': settings.forgot_password_customer_email_template
+    };
+    
+    // Add admin email templates only for admin type
+    <?php if (!$isCustomer): ?>
+    selects['admin_email_template_temporary'] = settings.admin_email_template_temporary;
+    selects['admin_email_template_permanent'] = settings.admin_email_template_permanent;
+    selects['email_notification_timing'] = settings.email_notification_timing || 'both';
+    selects['forgot_password_admin_email_template'] = settings.forgot_password_admin_email_template;
+    <?php endif; ?>
+    
+    Object.keys(selects).forEach(name => {
+        const select = document.querySelector('select[name="' + name + '"]');
+        if (select && selects[name]) {
+            select.value = selects[name];
+        }
+    });
+    
+    // Trigger toggle visibility updates
+    toggleEmailTemplates();
+    toggleForgotPasswordEmailTemplates();
+    updateEmailTemplateVisibility();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Set initial state based on current toggle values
+    toggleEmailTemplates();
+    toggleForgotPasswordEmailTemplates();
+    updateEmailTemplateVisibility();
+    
+    // Add real-time validation on input change
+    // Login Forms thresholds
+    const maxAttemptsDelay = document.querySelector('input[name="max_attempts_delay"]');
+    const maxAttemptsLockout = document.querySelector('input[name="max_attempts_lockout"]');
+    
+    if (maxAttemptsDelay) {
+        maxAttemptsDelay.addEventListener('input', validateThresholds);
+        maxAttemptsDelay.addEventListener('blur', validateThresholds);
+    }
+    if (maxAttemptsLockout) {
+        maxAttemptsLockout.addEventListener('input', validateThresholds);
+        maxAttemptsLockout.addEventListener('blur', validateThresholds);
+    }
+    
+    // Forgot Password Forms thresholds
+    const forgotPasswordMaxAttemptsDelay = document.querySelector('input[name="forgot_password_max_attempts_delay"]');
+    const forgotPasswordMaxAttemptsLockout = document.querySelector('input[name="forgot_password_max_attempts_lockout"]');
+    
+    if (forgotPasswordMaxAttemptsDelay) {
+        forgotPasswordMaxAttemptsDelay.addEventListener('input', validateThresholds);
+        forgotPasswordMaxAttemptsDelay.addEventListener('blur', validateThresholds);
+    }
+    if (forgotPasswordMaxAttemptsLockout) {
+        forgotPasswordMaxAttemptsLockout.addEventListener('input', validateThresholds);
+        forgotPasswordMaxAttemptsLockout.addEventListener('blur', validateThresholds);
+    }
+    
+    // Handle scope selector change - auto-save current values before switching scope
+    const scopeSelector = document.getElementById('scopeSelector'); // Only exists for customer settings
+    const hiddenScope = document.getElementById('hiddenScope');
+    const isCustomer = document.querySelector('input[name="type"]').value === 'customer';
+    let previousScope = hiddenScope ? hiddenScope.value : '';
+    
+    // Scope selector only exists for customer settings, not admin
+    if (scopeSelector && hiddenScope && isCustomer) {
+        // Sync initial value to ensure they match
+        if (hiddenScope.value !== scopeSelector.value) {
+            hiddenScope.value = scopeSelector.value;
+        }
+        previousScope = hiddenScope.value;
+        
+        scopeSelector.addEventListener('change', function() {
+            const newScope = this.value;
+            const oldScope = previousScope;
+            
+            console.log('Scope changing from:', oldScope, 'to:', newScope);
+            
+            // Just update scope and load new scope settings
+            // DO NOT auto-save - only save when user explicitly clicks "Save Settings"
+            hiddenScope.value = newScope;
+            previousScope = newScope;
+            loadSettingsForScope(newScope);
+        });
+    }
+    
+    // Add event listeners for toggle changes with auto-save
+    const emailNotificationsToggle = document.querySelector('input[name="email_notifications_enabled"]');
+    const adminAlertToggle = document.querySelector('input[name="admin_alert_enabled"]');
+    const forgotPasswordEmailNotificationsToggle = document.querySelector('input[name="forgot_password_email_notifications_enabled"]');
+    const forgotPasswordAdminAlertToggle = document.querySelector('input[name="forgot_password_admin_alert_enabled"]');
+    
+    if (emailNotificationsToggle) {
+        emailNotificationsToggle.addEventListener('change', function() {
+            toggleEmailTemplates();
+            const scope = hiddenScope.value || '';
+            autoSaveToggle('email_notifications_enabled', this.checked ? '1' : '0', scope);
+        });
+    }
+    
+    // Add event listener for email notification timing dropdown
+    const emailNotificationTiming = document.getElementById('emailNotificationTiming');
+    if (emailNotificationTiming) {
+        emailNotificationTiming.addEventListener('change', function() {
+            updateEmailTemplateVisibility();
+        });
+    }
+    
+    if (adminAlertToggle) {
+        adminAlertToggle.addEventListener('change', function() {
+            // Note: Email templates section is only controlled by email notifications toggle, not admin alert
+            const scope = hiddenScope.value || '';
+            autoSaveToggle('admin_alert_enabled', this.checked ? '1' : '0', scope);
+        });
+    }
+    if (forgotPasswordEmailNotificationsToggle) {
+        forgotPasswordEmailNotificationsToggle.addEventListener('change', function() {
+            toggleForgotPasswordEmailTemplates();
+            const scope = hiddenScope.value || '';
+            autoSaveToggle('forgot_password_email_notifications_enabled', this.checked ? '1' : '0', scope);
+        });
+    }
+    if (forgotPasswordAdminAlertToggle) {
+        forgotPasswordAdminAlertToggle.addEventListener('change', function() {
+            // Note: Email templates section is only controlled by email notifications toggle, not admin alert
+            const scope = hiddenScope.value || '';
+            autoSaveToggle('forgot_password_admin_alert_enabled', this.checked ? '1' : '0', scope);
+        });
+    }
+
+    // COMMENTED OUT: Away Mode toggle - Moved to separate file
+    // const awayModeToggle = document.querySelector('input[name="away_mode_enabled"]');
+    // const awayModeSettings = document.getElementById('awayModeSettings');
+    // if (awayModeToggle && awayModeSettings) {
+    //     awayModeToggle.addEventListener('change', function() {
+    //         awayModeSettings.style.display = this.checked ? 'block' : 'none';
+    //         const scope = hiddenScope.value || '';
+    //         autoSaveToggle('away_mode_enabled', this.checked ? '1' : '0', scope);
+    //     });
+    // }
+});
+
+// Function to auto-save all current form values to a specific scope
+function autoSaveCurrentFormValues(scope, callback) {
+    const form = document.getElementById('bruteforceSettingsForm');
+    if (!form) {
+        if (callback) callback();
+        return;
+    }
+    
+    const formData = new FormData(form);
+    formData.append('option', 'saveBruteForceSettings');
+    // IMPORTANT: Explicitly set scope to override any hidden scope field
+    formData.delete('scope'); // Remove any existing scope entries
+    if (scope) {
+        formData.append('scope', scope); // Add the correct scope parameter
+    }
+    
+    console.log('Auto-saving form values to scope:', scope);
+    
+    // Show loading indicator
+    const originalOpacity = form.style.opacity;
+    form.style.opacity = '0.7';
+    form.style.pointerEvents = 'none';
+    
+    fetch(window.location.href, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest' // Required for Magento to detect AJAX request
+        },
+        body: formData
+    })
+    .then(async response => {
+        // IMPORTANT: ALWAYS consume the response body to prevent it from being displayed on page
+        // Even if there's an error, we must read the response
+        const text = await response.text();
+        try {
+            const data = JSON.parse(text);
+            console.log('Auto-saved form values to scope:', scope, 'Response:', data);
+            return data;
+        } catch (e) {
+            console.warn('Auto-save response was not JSON:', text);
+            return { success: false };
+        }
+    })
+    .then(data => {
+        form.style.opacity = originalOpacity;
+        form.style.pointerEvents = 'auto';
+        if (callback) callback();
+    })
+    .catch(error => {
+        console.error('Auto-save failed:', error);
+        form.style.opacity = originalOpacity;
+        form.style.pointerEvents = 'auto';
+        if (callback) callback(); // Still continue even if save fails
+    });
+}
+
+// Update autoSaveToggle to include scope
+function autoSaveToggle(toggleName, value, scope = '') {
+    const formData = new FormData();
+    formData.append('form_key', document.querySelector('input[name="form_key"]').value);
+    formData.append('option', 'saveBruteForceSettings');
+    formData.append('type', document.querySelector('input[name="type"]').value);
+    formData.append(toggleName, value);
+    if (scope) {
+        formData.append('scope', scope);
+    }
+    
+    fetch(window.location.href, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest' // Required for Magento to detect AJAX request
+        },
+        body: formData
+    })
+    .then(async response => {
+        // IMPORTANT: ALWAYS consume the response body to prevent it from being displayed on page
+        const text = await response.text();
+        try {
+            const data = JSON.parse(text);
+            console.log('Auto-saved toggle:', toggleName, '=', value, 'for scope:', scope, 'Response:', data);
+            return data;
+        } catch (e) {
+            console.warn('Auto-save toggle response was not JSON:', text);
+            return { success: false };
+        }
+    })
+    .catch(error => {
+        console.error('Auto-save failed:', error);
+    });
+}
+
+// Function to open Setup Guide
+function openSetupGuide() {
+    // You can replace this URL with your actual setup guide URL
+    const setupGuideUrl = 'https://plugins.miniorange.com/magento-brute-force-protection'; // Replace with actual URL
+    window.open(setupGuideUrl, '_blank');
+}
+</script>

@@ -1,0 +1,156 @@
+<?php
+// PHP Initialization
+$customerRules = $block->getCustomerExistingRules() ?: [];
+$adminRules = $block->getExistingRules() ?: [];
+
+// Get base website name for display
+$websites = $block->getWebsiteCollection();
+$baseWebsiteName = 'base';
+foreach($websites as $website) {
+    if ($website->getCode() == "base") {
+        $baseWebsiteName = $website->getName();
+        break;
+    }
+}
+
+// Combine customer and admin rules
+$existingRules = array_merge(
+    array_map(function ($rule) use ($baseWebsiteName) {
+        $rule['type'] = 'Customer';
+        if (isset($rule['site']) && ($rule['site'] === 'base' || $rule['site'] === '')) {
+            $rule['site'] = $baseWebsiteName;
+        }
+        return $rule;
+    }, $customerRules),
+    array_map(function ($rule) {
+        $rule['type'] = 'Admin';
+        return $rule;
+    }, $adminRules)
+);
+
+$formKey = $block->getFormKey();
+$create_account_first = ($block->checkcustomerID() == null) ? 'disabled' : '';
+$pricing = $block->getExtensionPageUrl('upgrade');
+$account = $block->getExtensionPageUrl('account');
+$signinsettings_url = $block->getExtensionPageUrl('signinsettings');
+$tfasettingsconfigurationtable_url = $block->getUrl('motwofa/tfasettingsconfigurationtable/index');
+$new_rule_url = $signinsettings_url . '?new_rule=1';
+?>
+
+<div class="p-6 tfa-config-table-container" 
+     data-signinsettings-url="<?= $escaper->escapeHtmlAttr($signinsettings_url) ?>"
+     data-disabled="<?= $create_account_first == 'disabled' ? 'true' : 'false' ?>">
+    <div class="bg-white rounded-lg shadow p-6" style="width: 100%;">
+        <!-- Existing Rules Section -->
+        <div class="flex items-center justify-between tfa-header-section" style="margin-bottom: 4rem;">
+            <h1 class="text-3xl font-bold mb-6 text-black" style="font-size: 2.5rem; padding-top:1rem">Existing 2FA
+                Settings</h1>
+            <a href="<?= $escaper->escapeUrl($new_rule_url) ?>"
+               class="addRule"
+               <?php if ($create_account_first == 'disabled'): ?>
+                   onclick="return false;"
+                   style="cursor: not-allowed; pointer-events: none; opacity: 0.5;"
+               <?php else: ?>
+                   onclick="return true;"
+                   style="cursor: pointer; pointer-events: auto !important;"
+               <?php endif; ?>>
+                + New Rules
+            </a>
+        </div>
+
+        <div class="table-responsive-wrapper">
+        <table class="min-w-full table-auto table_2fa">
+            <thead>
+            <tr>
+                <th class="border px-4 py-4 text-left">Type</th>
+                <th class="border px-4 py-4 text-left">Website</th>
+                <th class="border px-4 py-4 text-left">Group/Role</th>
+                <th class="border px-4 py-4 text-center">Methods</th>
+                <th class="border px-4 py-4 text-left">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($existingRules as $index => $rule): ?>
+                    <?php $formId = 'saveSignInSettings_' . $index; ?>
+                    <tr>
+                        <td class="border px-4 py-2">
+                            <?= $escaper->escapeHtml($rule['type']) ?>
+                        </td>
+                        <td class="border px-4 py-2">
+                            <?= $escaper->escapeHtml($rule['site'] ?? 'N/A') ?>
+                        </td>
+                        <td class="border px-4 py-2">
+                            <?= $escaper->escapeHtml($rule['group'] ?? $rule['role'] ?? 'N/A') ?>
+                        </td>
+                        <td class="border px-4 py-2">
+                            <div class="mt-3 flex flex-wrap gap-4 justify-center">
+                                <?php foreach ($rule['methods'] as $method): ?>
+                                    <div class="otp-method py-2 px-2" style="background-color: #eeeeee;border-radius: 4px;">
+                                        <i class="<?= $escaper->escapeHtmlAttr($method['icon']) ?>"></i> <?= $escaper->escapeHtml($method['label']) ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </td>
+                        <td class="border px-4 py-2 text-center relative" 
+                            style="position: relative; overflow: visible;">
+                            <div style="position: relative; display: inline-block;">
+                                <button
+                                    type="button"
+                                    class="text-orange-500 hover:text-orange-700 cursor-pointer three-dots-btn"
+                                    <?php if ($create_account_first == 'disabled'): ?>
+                                        disabled
+                                        style="font-size: 2rem; border:none;background-color:white;color:black; cursor: not-allowed; opacity: 0.5; pointer-events: none;"
+                                    <?php else: ?>
+                                        style="font-size: 2rem; border:none;background-color:white;color:black; cursor: pointer; pointer-events: auto;"
+                                    <?php endif; ?>
+                                    onclick="toggleOptions(this)">
+                                    &#8942;
+                                </button>
+                                <div class="options-box hidden absolute bg-white shadow-lg rounded-lg border p-2 z-50"
+                                     style="min-width: 150px; top: 100%; left: 50%; transform: translateX(-50%); position: absolute;"
+                                     data-mobile-position="auto">
+                                    <form id="<?= $escaper->escapeHtmlAttr($formId) ?>" method="post"
+                                          action="<?= $escaper->escapeUrl($tfasettingsconfigurationtable_url) ?>">
+                                        <input type="hidden" name="form_key" 
+                                               value="<?= $escaper->escapeHtmlAttr($formKey) ?>" />
+
+                                        <div
+                                            class="flex items-center <?= $create_account_first == 'disabled' ? 'cursor-not-allowed opacity-50' : 'cursor-pointer' ?> p-2 <?= $create_account_first == 'disabled' ? '' : 'hover:bg-gray-100' ?> transition rounded"
+                                            <?php if ($create_account_first == 'disabled'): ?>
+                                                onclick="return false;"
+                                                style="pointer-events: none;"
+                                            <?php else: ?>
+                                                onclick="editRule('<?= $escaper->escapeJs($rule['group'] ?? $rule['role'] ?? '') ?>',
+                                                    '<?= $escaper->escapeJs($rule['site'] ?? '') ?>',
+                                                    '<?= $escaper->escapeJs($rule['type']) ?>')"
+                                            <?php endif; ?>>
+                                            <i class="fas fa-edit text-black mr-2" style="width: 16px; text-align: center;"></i>
+                                            <span class="text-black">Edit</span>
+                                        </div>
+
+                                        <div
+                                            class="flex items-center <?= $create_account_first == 'disabled' ? 'cursor-not-allowed opacity-50' : 'cursor-pointer' ?> p-2 <?= $create_account_first == 'disabled' ? '' : 'hover:bg-gray-100' ?> transition rounded"
+                                            <?php if ($create_account_first == 'disabled'): ?>
+                                                onclick="return false;"
+                                                style="pointer-events: none;"
+                                            <?php else: ?>
+                                                onclick="deleteRule('<?= $escaper->escapeJs($formId) ?>', 
+                                                    '<?= $escaper->escapeJs($rule['group'] ?? $rule['role'] ?? '') ?>', 
+                                                    '<?= $escaper->escapeJs($rule['site'] ?? '') ?>', 
+                                                    '<?= $escaper->escapeJs($rule['type']) ?>')"
+                                            <?php endif; ?>>
+                                            <i class="fas fa-trash text-black mr-2" style="width: 16px; text-align: center;"></i>
+                                            <span class="text-black">Delete</span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+

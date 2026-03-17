@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\Customer\Controller\Account\LoginPost" type="MiniOrange\TwoFA\Controller\Account\LoginPost" />
+    <preference for="Magento\Customer\Controller\Account\CreatePost" type="MiniOrange\TwoFA\Controller\Account\CreatePost" />
+    <preference for="MiniOrange\TwoFA\Api\HeadlessApiInterface" type="MiniOrange\TwoFA\Model\HeadlessApi" />
+
+    <!-- Define a type for the 'MiniOrange\TwoFA\Logger\Handler' class -->
+    <type name="MiniOrange\TwoFA\Logger\Handler">
+        <arguments>
+            <!-- Inject the 'Magento\Framework\Filesystem\Driver\File' class into the handler's constructor -->
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+
+    <!-- Define a type for the 'MiniOrange\TwoFA\Logger\Logger' class -->
+    <type name="MiniOrange\TwoFA\Logger\Logger">
+        <arguments>
+            <!-- Set the logger's name to 'MiniOrange' -->
+            <argument name="name" xsi:type="string">MiniOrange</argument>
+            <argument name="handlers" xsi:type="array">
+                <!-- Specify the logger's handler, which is 'MiniOrange\TwoFA\Logger\Handler' -->
+                <item name="system" xsi:type="object">MiniOrange\TwoFA\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

@@ -1,0 +1,65 @@
+<?php
+use MiniOrange\AdminLogs\Helper\Curl;
+use MiniOrange\AdminLogs\Helper\AdminLogsConstants;
+/** @var \MiniOrange\AdminLogs\Block\Adminhtml\Configuration $this */
+// Get current page to determine active tab
+$currentUrl = $this->getRequest()->getPathInfo();
+$isUpgradePage = (strpos($currentUrl, 'adminlogs/upgrade') !== false);
+$isLogsViewPage = (strpos($currentUrl, 'adminlogs/logsview') !== false);
+$isConfigurationPage = (strpos($currentUrl, 'adminlogs/configuration') !== false);
+$activeTab = $this->getRequest()->getParam('active_tab', 'configuration');
+$checkDataAdded = $this->checkDataAdded();
+?>
+<?php 
+if($checkDataAdded == null)
+{ 
+    $timeStamp = $this->getTimeStamp();
+    $currentAdminUser = $this->getCurrentAdminUser();  
+    $adminEmail = ($currentAdminUser && isset($currentAdminUser['email'])) ? $currentAdminUser['email'] : '';
+    $domain = $this->getBaseUrl();
+    $miniorangeAccountEmail = $this->getCustomerEmail();
+    $pluginFirstPageVisit = $activeTab;
+    $environmentName = $this->getEdition();
+    $environmentVersion = $this->getProductVersion();
+    $freeInstalledDate = $this->getCurrentDate();
+    $spp_name = '';
+    $autoCreateLimit = '';
+
+    if ($adminEmail) {
+        Curl::submit_to_magento_team(
+            $timeStamp,
+            $adminEmail,
+            $domain,
+            $miniorangeAccountEmail,
+            $pluginFirstPageVisit,
+            $environmentName,
+            $environmentVersion,
+            $freeInstalledDate,
+            $spp_name,
+            $autoCreateLimit
+        );
+    }
+
+    $this->dataAdded();
+}
+?>
+<div class="config-tabs-nav">
+    <a href="<?= $this->escapeUrl($this->getUrl('adminlogs/configuration/index')) ?>" 
+       class="config-tab-button <?= $isConfigurationPage ? 'active' : '' ?>" 
+       data-tab="configuration">
+        <i class="fas fa-cog"></i>
+        Activity Monitor Settings
+    </a>
+    <a href="<?= $this->escapeUrl($this->getUrl('adminlogs/logsview/index')) ?>" 
+       class="config-tab-button <?= $isLogsViewPage ? 'active' : '' ?>" 
+       data-tab="logs_view">
+        <i class="fas fa-list"></i>
+        Admin Logs View
+    </a>
+    <a href="<?= $this->escapeUrl($this->getUrl('adminlogs/upgrade/index')) ?>" 
+       class="config-tab-button <?= $isUpgradePage ? 'active' : '' ?>"
+       data-tab="upgrade">
+       <i class="fa fa-external-link"></i>
+        Upgrade
+    </a>
+</div>

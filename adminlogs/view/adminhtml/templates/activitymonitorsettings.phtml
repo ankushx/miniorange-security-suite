@@ -1,0 +1,280 @@
+<?php
+/** @var \MiniOrange\AdminLogs\Block\Adminhtml\Configuration $block */
+?>
+<!-- Configuration Tab Content -->
+<form action="<?= $block->escapeUrl($block->getFormAction()) ?>" method="post" id="config-form">
+    <?= $block->getBlockHtml('formkey') ?>
+    <input type="hidden" name="active_tab" id="active_tab_config" value="">
+    
+    <!-- White Container for Activity Monitor Settings -->
+        <div class="activity-monitor-container">
+            <!-- Main Page Header -->
+            <div class="page-header">
+                <div class="page-header-top">
+                    <h2 class="page-title-settings">Activity Monitor Settings</h2>
+                    <button type="button" class="setup-guide-button" onclick="window.open('<?= $block->escapeUrl('https://plugins.miniorange.com/magento-admin-logs-activity-monitor') ?>', '_blank')">
+                        <span class="setup-guide-icon"><i class="fas fa-book"></i></span>
+                        <span class="setup-guide-text"> Setup Guide</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Configuration Section Block -->
+            <div class="settings-block">
+            <h2 class="block-title">
+            <i class="fas fa-cog"></i><?= $block->escapeHtml(__('Configuration')) ?>
+            </h2>
+            
+            <div class="config-field-group">
+                <div class="config-field-label">
+                    <label for="admin_action_log">
+                        <span class="main-label"><?= $block->escapeHtml(__('Record Login/Logout Actions')) ?></span>
+                    </label>
+                </div>
+                <div class="config-field-input">
+                    <?php
+                        $adminActionLogValue = $block->getConfigValue('miniorange/adminlogs/configuration/admin_action_log');
+                        if ($adminActionLogValue === null || $adminActionLogValue === '') {
+                            $adminActionLogValue = 1;
+                        }
+                    ?>
+                    <select id="admin_action_log" name="config[admin_action_log]" class="filter-select">
+                        <option value="1" <?= ($adminActionLogValue == 1) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Enabled')) ?></option>
+                        <option value="0" <?= ($adminActionLogValue == 0) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Disabled')) ?></option>
+                    </select>
+                </div>
+            </div>
+
+    <div class="config-field-group">
+        <div class="config-field-label">
+            <label for="objects_to_log">
+                <span class="main-label"><?= $block->escapeHtml(__('Select Objects to Log')) ?></span>
+            </label>
+        </div>
+        <div class="config-field-input">
+        <?php
+            // Force "All Objects" to be selected and disable the field
+            $selectedObjects = ['all'];
+        ?>
+        <div class="custom-multiselect-wrapper">
+            <div class="custom-multiselect-display" id="objects_to_log_display" style="background-color: #f5f5f5; color: #999; cursor: not-allowed; opacity: 0.6; pointer-events: none;">
+                <div class="selected-tags-container" id="objects_to_log_tags"></div>
+                <input type="text" class="multiselect-search-input" id="objects_to_log_search" placeholder="Select Objects to Log" autocomplete="off" disabled>
+                <span class="multiselect-arrow"></span>
+            </div>
+            <div class="custom-multiselect-dropdown" id="objects_to_log_dropdown" style="display: none;">
+                <div class="multiselect-options" id="objects_to_log_options">
+                    <label class="multiselect-option">
+                        <input type="checkbox" value="all" checked disabled>
+                        <span><?= $block->escapeHtml(__('All Objects')) ?></span>
+                    </label>
+                    <label class="multiselect-option">
+                        <input type="checkbox" value="product" disabled>
+                        <span><?= $block->escapeHtml(__('Product')) ?></span>
+                    </label>
+                    <label class="multiselect-option">
+                        <input type="checkbox" value="customer" disabled>
+                        <span><?= $block->escapeHtml(__('Customer')) ?></span>
+                    </label>
+                    <label class="multiselect-option">
+                        <input type="checkbox" value="order" disabled>
+                        <span><?= $block->escapeHtml(__('Order')) ?></span>
+                    </label>
+                    <label class="multiselect-option">
+                        <input type="checkbox" value="invoice" disabled>
+                        <span><?= $block->escapeHtml(__('Invoice')) ?></span>
+                    </label>
+                    <label class="multiselect-option">
+                        <input type="checkbox" value="shipment" disabled>
+                        <span><?= $block->escapeHtml(__('Shipment')) ?></span>
+                    </label>
+                    <label class="multiselect-option">
+                        <input type="checkbox" value="creditmemo" disabled>
+                        <span><?= $block->escapeHtml(__('Credit Memo')) ?></span>
+                    </label>
+                    <label class="multiselect-option">
+                        <input type="checkbox" value="category" disabled>
+                        <span><?= $block->escapeHtml(__('Category')) ?></span>
+                    </label>
+                    <label class="multiselect-option">
+                        <input type="checkbox" value="cms_page" disabled>
+                        <span><?= $block->escapeHtml(__('CMS Page')) ?></span>
+                    </label>
+                    <label class="multiselect-option">
+                        <input type="checkbox" value="cms_block" disabled>
+                        <span><?= $block->escapeHtml(__('CMS Block')) ?></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <!-- Hidden select for form submission -->
+        <select id="objects_to_log" name="config[objects_to_log][]" multiple="multiple" style="display: none;" disabled>
+            <option value="all" selected><?= $block->escapeHtml(__('All Objects')) ?></option>
+            <option value="product" <?= in_array('product', $selectedObjects) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Product')) ?></option>
+            <option value="customer" <?= in_array('customer', $selectedObjects) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Customer')) ?></option>
+            <option value="order" <?= in_array('order', $selectedObjects) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Order')) ?></option>
+            <option value="invoice" <?= in_array('invoice', $selectedObjects) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Invoice')) ?></option>
+            <option value="shipment" <?= in_array('shipment', $selectedObjects) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Shipment')) ?></option>
+            <option value="creditmemo" <?= in_array('creditmemo', $selectedObjects) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Credit Memo')) ?></option>
+            <option value="category" <?= in_array('category', $selectedObjects) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Category')) ?></option>
+            <option value="cms_page" <?= in_array('cms_page', $selectedObjects) ? 'selected' : '' ?>><?= $block->escapeHtml(__('CMS Page')) ?></option>
+            <option value="cms_block" <?= in_array('cms_block', $selectedObjects) ? 'selected' : '' ?>><?= $block->escapeHtml(__('CMS Block')) ?></option>
+            <option value="tax_rule" <?= in_array('tax_rule', $selectedObjects) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Tax Rule')) ?></option>
+            <option value="tax_rate" <?= in_array('tax_rate', $selectedObjects) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Tax Zone & Rate')) ?></option>
+        </select>
+    </div>
+</div>
+</div>
+                <!-- Logs Auto-Cleaning Section Block -->
+                <div class="settings-block">
+                    <h3 class="block-title">
+                        <span class="block-title-left">
+                            <i class="fas fa-trash-alt"></i><?= $block->escapeHtml(__('Logs Auto-Cleaning')) ?>
+                        </span>
+                        <span class="premium-badge-message">
+                            <a href="<?= $block->escapeUrl('https://plugins.miniorange.com/magento-admin-logs-activity-monitor#Pricing') ?>" target="_blank" class="premium-text" style="text-decoration: none; color: #e02b27;"><?= $block->escapeHtml(__('[Premium]')) ?></a>
+                        </span>
+                    </h3>
+                    
+                    <div class="config-field-group">
+                        <div class="config-field-label">
+                            <label for="login_attempts_auto_cleaning">
+                                <span class="main-label"><?= $block->escapeHtml(__('Login Attempts Auto-Cleaning')) ?></span>
+                            </label>
+                        </div>
+                        <div class="config-field-input">
+                            <select id="login_attempts_auto_cleaning" name="config[login_attempts_auto_cleaning]" class="filter-select" disabled>
+                                <option value="1" <?= ($block->getConfigValue('miniorange/adminlogs/cleanup/login_attempts_auto_cleaning') == 1) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Yes')) ?></option>
+                                <option value="0" <?= ($block->getConfigValue('miniorange/adminlogs/cleanup/login_attempts_auto_cleaning') == 0) ? 'selected' : '' ?>><?= $block->escapeHtml(__('No')) ?></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="config-field-group hidden" id="login_attempts_period_group">
+                        <div class="config-field-label">
+                            <label for="login_attempts_period" disabled>
+                                <span class="main-label"><?= $block->escapeHtml(__('Auto-Cleaning Period (in Days)')) ?> <span class="required">*</span></span>
+                            </label>
+                        </div>
+                        <div class="config-field-input">
+                            <input id="login_attempts_period" name="config[login_days]" value="<?= $block->escapeHtml($block->getConfigValue('miniorange/adminlogs/cleanup/login_days')) ?>" class="admin__control-text" type="text" placeholder="Enter number of days" data-validate="{'required-entry':true, 'validate-number':true, 'validate-greater-than-zero':true}">
+                            <div class="field-error" id="login_attempts_period_error" style="display:none; color:#e02b27; font-size:1.2rem; margin-top:5px;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="config-field-group">
+                        <div class="config-field-label">
+                            <label for="actions_log_auto_cleaning">
+                                <span class="main-label"><?= $block->escapeHtml(__('Actions Log Auto-Cleaning')) ?></span>
+                            </label>
+                        </div>
+                        <div class="config-field-input">
+                            <select id="actions_log_auto_cleaning" name="config[actions_log_auto_cleaning]" class="filter-select" disabled>
+                                <option value="1" <?= ($block->getConfigValue('miniorange/adminlogs/cleanup/actions_log_auto_cleaning') == 1) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Yes')) ?></option>
+                                <option value="0" <?= ($block->getConfigValue('miniorange/adminlogs/cleanup/actions_log_auto_cleaning') == 0) ? 'selected' : '' ?>><?= $block->escapeHtml(__('No')) ?></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="config-field-group hidden" id="actions_log_period_group">
+                        <div class="config-field-label">
+                            <label for="actions_log_period">
+                                <span class="main-label"><?= $block->escapeHtml(__('Auto-Cleaning Period (in Days)')) ?> <span class="required">*</span></span>
+                            </label>
+                        </div>
+                        <div class="config-field-input">
+                            <input id="actions_log_period" name="config[crud_days]" value="<?= $block->escapeHtml($block->getConfigValue('miniorange/adminlogs/cleanup/crud_days')) ?>" class="admin__control-text" type="text" placeholder="Enter number of days" data-validate="{'required-entry':true, 'validate-number':true, 'validate-greater-than-zero':true}">
+                            <div class="field-error" id="actions_log_period_error" style="display:none; color:#e02b27; font-size:1.2rem; margin-top:5px;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="config-field-group">
+                        <div class="config-field-label">
+                            <label for="role_user_log_auto_cleaning">
+                                <span class="main-label"><?= $block->escapeHtml(__('Roles & User Management Log Auto-Cleaning')) ?></span>
+                            </label>
+                        </div>
+                        <div class="config-field-input">
+                            <select id="role_user_log_auto_cleaning" name="config[role_user_log_auto_cleaning]" class="filter-select" disabled>
+                                <option value="1" <?= ($block->getConfigValue('miniorange/adminlogs/cleanup/role_user_log_auto_cleaning') == 1) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Yes')) ?></option>
+                                <option value="0" <?= ($block->getConfigValue('miniorange/adminlogs/cleanup/role_user_log_auto_cleaning') == 0) ? 'selected' : '' ?>><?= $block->escapeHtml(__('No')) ?></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="config-field-group hidden" id="role_user_log_period_group">
+                        <div class="config-field-label">
+                            <label for="role_user_log_period">
+                                <span class="main-label"><?= $block->escapeHtml(__('Auto-Cleaning Period (in Days)')) ?> <span class="required">*</span></span>
+                            </label>
+                        </div>
+                        <div class="config-field-input">
+                            <input id="role_user_log_period" name="config[role_days]" value="<?= $block->escapeHtml($block->getConfigValue('miniorange/adminlogs/cleanup/role_days')) ?>" class="admin__control-text" type="text" placeholder="Enter number of days" data-validate="{'required-entry':true, 'validate-number':true, 'validate-greater-than-zero':true}">
+                            <div class="field-error" id="role_user_log_period_error" style="display:none; color:#e02b27; font-size:1.2rem; margin-top:5px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Role & User Logging Section Block -->
+                <div class="settings-block">
+                    <h3 class="block-title">
+                        <span class="block-title-left">
+                            <i class="fas fa-users"></i><?= $block->escapeHtml(__('Role & User Logging')) ?>
+                        </span>
+                        <span class="premium-badge-message">
+                            <a href="<?= $block->escapeUrl('https://plugins.miniorange.com/magento-admin-logs-activity-monitor#Pricing') ?>" target="_blank" class="premium-text" style="text-decoration: none; color: #e02b27;"><?= $block->escapeHtml(__('[Premium]')) ?></a>
+                        </span>
+                    </h3>
+
+                    <div class="config-field-group">
+                        <div class="config-field-label">
+                            <label for="log_admin_user_changes">
+                                <span class="main-label"><?= $block->escapeHtml(__('Record Admin User Creation')) ?></span>
+                            </label>
+                        </div>
+                        <div class="config-field-input">
+                            <select id="log_admin_user_changes" name="config[log_admin_user_changes]" class="filter-select" disabled>
+                                <option value="1" <?= ($block->getConfigValue('miniorange/adminlogs/role_user_logging/log_admin_user_changes') == 1) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Enabled')) ?></option>
+                                <option value="0" <?= ($block->getConfigValue('miniorange/adminlogs/role_user_logging/log_admin_user_changes') == 0) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Disabled')) ?></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="config-field-group">
+                        <div class="config-field-label">
+                            <label for="log_role_changes">
+                                <span class="main-label"><?= $block->escapeHtml(__('Record Role Changes')) ?></span>
+                            </label>
+                        </div>
+                        <div class="config-field-input">
+                            <select id="log_role_changes" name="config[log_role_changes]" class="filter-select" disabled>
+                                <option value="1" <?= ($block->getConfigValue('miniorange/adminlogs/role_user_logging/log_role_changes') == 1) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Enabled')) ?></option>
+                                <option value="0" <?= ($block->getConfigValue('miniorange/adminlogs/role_user_logging/log_role_changes') == 0) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Disabled')) ?></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="config-field-group">
+                        <div class="config-field-label">
+                            <label for="log_permission_changes">
+                                <span class="main-label"><?= $block->escapeHtml(__('Record Permission Changes')) ?></span>
+                            </label>
+                        </div>
+                        <div class="config-field-input">
+                            <select id="log_permission_changes" name="config[log_permission_changes]" class="filter-select" disabled>
+                                <option value="1" <?= ($block->getConfigValue('miniorange/adminlogs/role_user_logging/log_permission_changes') == 1) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Enabled')) ?></option>
+                                <option value="0" <?= ($block->getConfigValue('miniorange/adminlogs/role_user_logging/log_permission_changes') == 0) ? 'selected' : '' ?>><?= $block->escapeHtml(__('Disabled')) ?></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                    <div class="tab-save-button">
+                        <button type="submit" class="save-config-btn">
+                            <span>Save Configuration</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+

@@ -1,0 +1,41 @@
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$customerSession = $objectManager->create('Magento\Customer\Model\Session');
+if ($customerSession->isLoggedIn()) {
+    $fullname = $customerSession->getCustomer()->getName();
+    $fname = $customerSession->getCustomer()->getFirstname();
+    if (!empty($fullname)) {
+        ?>
+        <script>
+            require(['Magento_Customer/js/customer-data', 'jquery'], function (customerData, $) {
+                // Function to update customer UI elements
+                function mo_invalidate($, fullname, fistname) {
+                    $('.greet.welcome').html('<span data-bind="text: new String(\'Welcome, %1!\').replace(\'%1\', customer().firstname)">Welcome, ' + fullname + '!</span>');
+                    $('.customer-name span').html(fullname);
+                }
+
+                // Reload customer data sections
+                try {
+                    if (customerData && typeof customerData.reload === 'function') {
+                        customerData.reload('*');
+                    }
+                } catch (e) {
+                    console.log('Customer data reload failed:', e);
+                }
+                
+                // Update UI elements
+                $(window).on("load", function () {
+                    var delay = 0;
+                    while (delay < 5000) {
+                        setTimeout(function () {
+                            mo_invalidate($, "<?php print_r($fullname);?>", "<?php print_r($fname);?>");
+                        }, delay);
+                        delay += 100;
+                    }
+                });
+            });
+        </script>
+        <?php
+    }
+}
+?>

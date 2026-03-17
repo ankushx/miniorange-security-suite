@@ -1,0 +1,158 @@
+<?php
+$block = $this;
+$products = [
+    [
+        'image' => $this->getViewFileUrl('MiniOrange_BruteForceProtection::images/sso.png'),
+        'alt' => 'Single Sign On',
+        //'badge' => 'POPULAR',
+        'title' => 'Single Sign On',
+        'description' => 'Login into Magento/Adobe Commerce using any Third Party Identity Provider User credentials',
+        'link' => 'https://commercemarketplace.adobe.com/miniorange-inc-miniorange-2fa.html'
+    ],
+    [
+        'image' => $this->getViewFileUrl('MiniOrange_BruteForceProtection::images/idp_upgrade.png'),
+        'alt' => '',
+        // 'badge' => 'NEW',
+        'title' => 'SAML IDP',
+        'description' => 'Login into any third party applications using Magento credentials.',
+        'link' => 'https://commercemarketplace.adobe.com/miniorange-inc-idpsaml.html'
+    ],
+    [
+        'image' => $this->getViewFileUrl('MiniOrange_BruteForceProtection::images/scim_upgrade.png'),
+        'alt' => 'Scim User Provisioning',
+        //'badge' => 'POPULAR',
+        'title' => 'User Provisioning & Sync',
+        'description' => 'Automate real-time two-way user sync, including creation, updates, and deletions, between your applications and Magento.',
+        'link' => 'https://commercemarketplace.adobe.com/miniorange-inc-scim.html'
+    ],
+    [
+        'image' => $this->getViewFileUrl('MiniOrange_BruteForceProtection::images/otp_upgrade.png'),
+        'alt' => 'Mobile Login',
+        //'badge' => 'POPULAR',
+        'title' => 'Mobile Login',
+        'description' => 'Log in to Magento store using mobile number/email — no password required.',
+        'link' => 'https://commercemarketplace.adobe.com/miniorange-inc-otp-verification.html'
+    ],
+    [
+        'image' => $this->getViewFileUrl('MiniOrange_BruteForceProtection::images/ldap_upgrade.png'),
+        'alt' => 'LDAP Login',
+        //'badge' => 'POPULAR',
+        'title' => 'LDAP / Active Directory Login Integration',
+        'description' => 'Log in to Magento using LDAP/AD credentials from Active Directory, OpenLDAP, OpenDS, FreeIPA, Synology, and more.',
+        'link' => 'https://commercemarketplace.adobe.com/miniorange-inc-miniorange-ldap.html'
+    ],
+    [
+        'image' => $this->getViewFileUrl('MiniOrange_BruteForceProtection::images/google_upgrade.png'),
+        'alt' => 'Google One Tap Login',
+        //'badge' => 'POPULAR',
+        'title' => 'Google One Tap Login',
+        'description' => 'One Click sign in or register on your Magento store using Google Account credentials.',
+        'link' => 'https://commercemarketplace.adobe.com/miniorange-inc-google-one-tap-login.html'
+    ],
+    [
+        'image' => $this->getViewFileUrl('MiniOrange_BruteForceProtection::images/security_upgrade.png'),
+        'alt' => 'Security Suite',
+        //'badge' => 'POPULAR',
+        'title' => 'Security Suite',
+        'description' => 'Secure your Magento store with robust security tools.',
+        'link' => 'https://plugins.miniorange.com/magento-2-security-suite-extension'
+    ],
+    [
+        'image' => $this->getViewFileUrl('MiniOrange_BruteForceProtection::images/social_upgrade.png'),
+        'alt' => 'Social Login & Share',
+        //'badge' => 'POPULAR',
+        'title' => 'Social Login & Share',
+        'description' => 'Log in to Magento using social login credentials, including Facebook, Instagram, Google, Twitter, LinkedIn, and more.',
+        'link' => 'https://commercemarketplace.adobe.com/miniorange-inc-miniorange-social-login.html'
+    ],
+];
+$get_plan_level = $this->get_license_plan();
+if($get_plan_level == 4){
+    $plan_name = 'BruteForce Protection Trial Extension';
+}elseif($get_plan_level == 1){
+    $plan_name = 'BruteForce Protection Premium Extension';
+}elseif($get_plan_level == 3){
+    $plan_name = 'BruteForce Protection Frontend Extension';
+}else{ 
+    $plan_name = 'BruteForce Protection Extension';
+}
+?>
+<!-- Breadcrumb -->
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="container">
+        <div class="main-panel_upgrade background_gray">
+            <div class="panel-content">
+                <!-- Ultra Simple Upgrade Banner -->
+                <div class="upgrade-banner">
+                    <div class="plan-info">
+                        <div class="plan-status">Current Plan</div>
+                        <div class="panel-title_report">BruteForce Protection Free <span
+                                class="plan-version">Version <?= $block->escapeHtml($this->getCurrentVersion()) ?></span>
+                        </div>
+
+                    </div>
+                    <span>
+                            <a href="https://plugins.miniorange.com/magento-brute-force-protection#pricing"
+                               target="_blank" class="btn btn-primary" style="float: right;font-size:1.4rem; text-decoration: none !important;">
+                                <i class="fas fa-arrow-circle-up"></i>
+                                Click Here to Upgrade
+                            </a>
+
+                        </span>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Related Products -->
+        <div class="main-panel_upgrade">
+            <div class="panel-header">
+                <div class="panel-title-container">
+                    <h2 class="panel-title">Related Products</h2>
+                    <p class="panel-subtitle">Enhance your Magento store with our complementary extensions</p>
+                </div>
+                <div class="panel-actions">
+                    <div class="btn btn-outline" onclick="openAllProducts()">
+                        <i class="fas fa-th-large"></i>
+                        View All Products
+                    </div>
+                    <!-- <a href="#" class="btn btn-outline">
+                        <i class="fas fa-th-large"></i>
+                        View All Products
+                    </a> -->
+                </div>
+            </div>
+
+            <div class="panel-content">
+                <div class="products-grid">
+                    <?php foreach ($products as $product): ?>
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="<?= $block->escapeUrl($product['image']) ?>" loading="lazy" alt="<?= $block->escapeHtmlAttr($product['alt']) ?>">
+                            </div>
+                            <div class="product-details">
+                                <h3 class="product-title"><?= $block->escapeHtml($product['title']) ?></h3>
+                                <p class="product-description"><?= $block->escapeHtml($product['description']) ?></p>
+                                <div class="product-actions">
+                                    <a href="<?= $block->escapeUrl($product['link']) ?>" target="_blank"
+                                       class="btn btn-primary position">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function openAllProducts() {
+    window.open('https://plugins.miniorange.com/magento', '_blank');
+}
+</script>
+

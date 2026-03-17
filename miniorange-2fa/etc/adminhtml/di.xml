@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="Magento\Backend\Model\Auth" type="MiniOrange\TwoFA\Model\Auth"/>
+    <preference for="Magento\Backend\App\Action\Plugin\Authentication" type="MiniOrange\TwoFA\App\Action\Plugin\Authentication"/>
+</config>

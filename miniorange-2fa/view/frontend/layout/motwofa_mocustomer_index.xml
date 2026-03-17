@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="MiniOrange_TwoFA::css/motwofa-customer.css"/>
+        <css src="MiniOrange_TwoFA::css/all.min.css"/>
+    </head>
+    <body>
+        <referenceBlock name="columns" display="false"/>
+        <referenceBlock name="main.content" display="false"/>
+        <referenceContainer name="page.wrapper">
+            <block class="MiniOrange\TwoFA\Block\TwoFA" template="customer.phtml"
+                   name="miniorange.2fa.frontend.customer"/>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,767 @@
+<?php
+/**
+ * @var \MiniOrange\BruteForceProtection\Block\BruteForce $block
+ */
+$lockedAccounts = $block->getLockedAccounts();
+$totalAccounts = count($lockedAccounts);
+$perPage = 10;
+$currentPage = 1;
+$totalPages = ceil($totalAccounts / $perPage);
+?>
+
+<div style="width:97%; margin:0 auto;">
+    <h1 class="text-3xl font-bold text-black" style="font-size: 2.5rem; margin-bottom: 5px; padding-bottom: 10px; margin-top: 5rem;">
+        <?= $block->escapeHtml(__('Blocked Users')) ?>
+    </h1>
+
+<?php if (empty($lockedAccounts)): ?>
+    <div class="blocked-users-message blocked-users-message-info">
+        <div><?= $block->escapeHtml(__('No locked accounts found.')) ?></div>
+    </div>
+<?php else: ?>
+    <!-- Top Controls -->
+    <div class="table-controls">
+        <div class="controls-left">
+            <div class="show-entries">
+                <label>Show</label>
+                <select id="entriesPerPage" class="entries-select">
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                <label>entries</label>
+            </div>
+            <br>
+            <div class="bulk-actions">
+                <select id="bulkAction" class="action-select">
+                    <option value="">Action</option>
+                    <option value="unblock">Unblock</option>
+                </select>
+            </div>
+        </div>
+        <div class="controls-right">
+            <div class="search-box">
+                <input type="text" id="searchUsers" class="search-input" placeholder="Search users...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <table class="data-table" id="locked-accounts-grid">
+                <thead>
+                    <tr>
+                        <th class="checkbox-column">
+                            <div class="checkbox-header-wrapper">
+                                <input type="checkbox" id="selectAll" class="select-all-checkbox">
+                                <i class="fas fa-sort-down checkbox-dropdown-icon"></i>
+                            </div>
+                        </th>
+                        <th class="data-table-th">
+                            <span><?= $block->escapeHtml(__('Email')) ?></span>
+                        </th>
+                        <th class="data-table-th">
+                            <span><?= $block->escapeHtml(__('Website')) ?></span>
+                        </th>
+                        <th class="data-table-th">
+                            <span><?= $block->escapeHtml(__('User Type')) ?></span>
+                        </th>
+                        <th class="data-table-th">
+                            <span><?= $block->escapeHtml(__('Lock Type')) ?></span>
+                        </th>
+                        <th class="data-table-th">
+                            <span><?= $block->escapeHtml(__('Failed Attempts')) ?></span>
+                        </th>
+                        <th class="data-table-th">
+                            <span><?= $block->escapeHtml(__('Email Sent')) ?></span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($lockedAccounts as $account): ?>
+                        <tr class="data-table-row" data-email="<?= $block->escapeHtmlAttr($account['email']) ?>" data-customer-id="<?= $block->escapeHtmlAttr($account['customer_id']) ?>" data-user-type="<?= $block->escapeHtmlAttr($account['user_type']) ?>">
+                            <td class="checkbox-column">
+                                <input type="checkbox" class="row-checkbox" value="<?= $block->escapeHtmlAttr($account['customer_id']) ?>" data-email="<?= $block->escapeHtmlAttr($account['email']) ?>" data-user-type="<?= $block->escapeHtmlAttr($account['user_type']) ?>">
+                            </td>
+                            <td class="data-table-cell">
+                                <?= $block->escapeHtml($account['email']) ?>
+                            </td>
+                            <td class="data-table-cell"><?= $block->escapeHtml($account['website'] ?? 'N/A') ?></td>
+                            <td class="data-table-cell">
+                                <span class="user-type-badge user-type-<?= $block->escapeHtml($account['user_type']) ?>">
+                                    <?= $block->escapeHtml($block->formatUserType($account['user_type'])) ?>
+                                </span>
+                            </td>
+                            <td class="data-table-cell">
+                                <?php
+                                $lockTypeClass = '';
+                                if ($account['lock_type'] === 'permanent') {
+                                    $lockTypeClass = 'lock-type-permanent';
+                                } elseif ($account['lock_type'] === 'temporary' || $account['lock_type'] === 'temp') {
+                                    $lockTypeClass = 'lock-type-temporary';
+                                }
+                                ?>
+                                <span class="lock-type-badge <?= $block->escapeHtmlAttr($lockTypeClass) ?>">
+                                    <?= $block->escapeHtml($block->formatLockType($account['lock_type'])) ?>
+                                </span>
+                            </td>
+                            <td class="data-table-cell"><?= $block->escapeHtml($account['failed_attempts']) ?></td>
+                            <td class="data-table-cell">
+                                <?php if ($account['sent_email'] == 1): ?>
+                                    <span class="email-sent-yes"><?= $block->escapeHtml(__('Yes')) ?></span>
+                                <?php else: ?>
+                                    <span class="email-sent-no"><?= $block->escapeHtml(__('No')) ?></span>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+    
+    <!-- Pagination -->
+    <div class="table-footer">
+        <div class="footer-left">
+            <span class="entries-info">Showing <span id="showingFrom">1</span> to <span id="showingTo"><?= $block->escapeHtml(min($perPage, $totalAccounts)) ?></span> of <span id="totalEntries"><?= $block->escapeHtml($totalAccounts) ?></span> entries</span>
+        </div>
+        <div class="footer-right">
+            <button type="button" id="prevPage" class="pagination-btn" disabled>Previous</button>
+            <button type="button" id="nextPage" class="pagination-btn">Next</button>
+        </div>
+    </div>
+<?php endif; ?>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="unblockConfirmationModal">
+    <div>
+        <h3><?= $block->escapeHtml(__('Confirm Unblock')) ?></h3>
+        <p id="unblockConfirmationText"><?= $block->escapeHtml(__('Are you sure you want to unblock these users?')) ?></p>
+        <div class="modal-button-container">
+            <button type="button" id="confirmUnblockBtn"><?= $block->escapeHtml(__('Confirm')) ?></button>
+            <button type="button" id="cancelUnblockBtn"><?= $block->escapeHtml(__('Cancel')) ?></button>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Header with title styling - matching BruteForce Protection Settings */
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .header-title {
+        flex: 1;
+        min-width: 300px;
+    }
+
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    margin-bottom: 15px;
+
+}
+
+.controls-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0px;
+}
+
+.show-entries {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #333;
+}
+
+.show-entries label {
+    margin: 0;
+    font-weight: normal;
+}
+
+.entries-select {
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    background: white;
+    cursor: pointer;
+    width: 60px;
+}
+
+.bulk-actions {
+    display: flex;
+    align-items: center;
+}
+
+.action-select {
+    padding: 9px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+    width: 220px;
+}
+
+.controls-right {
+    display: flex;
+    align-items: center;
+}
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    padding: 8px 40px 8px 42px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 250px;
+    box-sizing: border-box;
+}
+
+.search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    pointer-events: none;
+    font-size: 14px;
+    text-align: right;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    background: white;
+    border: 1px solid #ddd;
+}
+
+.data-table th.data-table-th {
+    background: #f8f8f8;
+    border-bottom: 2px solid #e3e3e3;
+    padding: 12px 15px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 15px;
+    color: #666;
+    white-space: nowrap;
+}
+
+.checkbox-column {
+    width: 120px;
+    text-align: center;
+    padding: 12px 15px;
+    background: #f8f8f8;
+    border-bottom: 2px solid #e3e3e3;
+}
+
+.data-table td.checkbox-column {
+    background: white;
+}
+
+/* Apply hover effect to checkbox column when row is hovered */
+.data-table-row:hover td.checkbox-column {
+    background-color: #f8f8f8;
+}
+
+.checkbox-header-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.checkbox-dropdown-icon {
+    font-size: 15px;
+    color: #999;
+    cursor: pointer;
+    margin-left: 0px;
+    vertical-align: middle;
+    margin-bottom: 5px;
+}
+
+.select-all-checkbox {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    accent-color: #eb5202;
+}
+
+.row-checkbox {
+    width: 12px;
+    height: 12px;
+    cursor: pointer;
+    accent-color: #eb5202;
+}
+
+.data-table td.data-table-cell {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e3e3e3;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.data-table-row:hover {
+    background-color: #f8f8f8;
+}
+
+/* Ensure all cells in the row get hover effect */
+.data-table-row:hover td {
+    background-color: #f8f8f8;
+}
+
+.data-table-row._odd-row {
+    background-color: #fef7f0;
+}
+
+.user-type-badge,
+.lock-type-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.user-type-admin {
+    background: #e8f4fd;
+    color: #006bb3;
+}
+
+.user-type-customer {
+    background: #e8f5e9;
+    color: #2b542c;
+}
+
+.lock-type-permanent {
+    background: #fee;
+    color: #b22222;
+}
+
+.lock-type-temporary {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.email-sent-yes {
+    color: #2b542c;
+    font-weight: 500;
+}
+
+.email-sent-no {
+    color: #999;
+}
+
+.table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    margin-top: 15px;
+}
+
+.entries-info {
+    color: #666;
+    font-size: 14px;
+}
+
+.pagination-btn {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 5px;
+    transition: all 0.2s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #eb5202;
+    color: white;
+    border-color: #eb5202;
+}
+
+#nextPage {
+    background: #eb5202;
+    color: white;
+    border-color: #eb5202;
+}
+
+#nextPage:hover:not(:disabled) {
+    background: #d04a02;
+    border-color: #d04a02;
+}
+
+#nextPage:disabled {
+    background: #eb5202;
+    color: white;
+    border-color: #eb5202;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.pagination-btn:disabled:not(#nextPage) {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.blocked-users-message.blocked-users-message-info {
+    background: #e7f3fe;
+    border: 1px solid #bee5eb;
+    padding: 15px 20px;
+    margin: 20px;
+    border-radius: 3px;
+    color: #004085;
+}
+
+.hidden-row {
+    display: none;
+}
+
+/* Confirmation Modal Styles */
+#unblockConfirmationModal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+#unblockConfirmationModal.show-modal {
+    display: flex;
+}
+
+#unblockConfirmationModal > div {
+    background-color: #fefefe;
+    padding: 30px 50px;
+    border: 1px solid #888;
+    width: 400px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+#unblockConfirmationModal h3 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #eb5202;
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+}
+
+#unblockConfirmationModal p {
+    margin-bottom: 30px;
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+}
+
+.modal-button-container {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+#confirmUnblockBtn {
+    padding: 7px 25px;
+    background-color: #eb5202;
+    color: white;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+    border-radius: 4px;
+}
+
+#confirmUnblockBtn:hover {
+    background-color: #d04a02;
+}
+
+#cancelUnblockBtn {
+    padding: 7px 25px;
+    background-color: white;
+    color: #eb5202;
+    border: 1px solid #eb5202;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    color: black;
+    font-weight: 500;
+    border-radius: 4px;
+}
+
+#cancelUnblockBtn:hover {
+    background-color: #fff5f2;
+    border-color: #d04a02;
+}
+</style>
+
+<script>
+require(['jquery'], function($) {
+    // Function to show Magento-style success messages
+    function showMagentoSuccessMessage(message) {
+        // Find or create messages container at the very top of the page content
+        var messagesContainer = jQuery('.messages');
+        if (messagesContainer.length === 0) {
+            // Place message at the very top, before the navbar
+            var navbar = jQuery('.topnav').first().parent();
+            if (navbar.length === 0) {
+                navbar = jQuery('div[style*="padding: 0 1%"]').first();
+            }
+            
+            // Create messages container
+            messagesContainer = jQuery('<div class="messages" style="margin-bottom: 20px;"></div>');
+            
+            if (navbar.length > 0) {
+                navbar.before(messagesContainer);
+            } else {
+                var contentContainer = jQuery('.page-content').first();
+                if (contentContainer.length === 0) {
+                    contentContainer = jQuery('.admin__page-content').first();
+                }
+                if (contentContainer.length > 0) {
+                    contentContainer.prepend(messagesContainer);
+                } else {
+                    jQuery('body').prepend(messagesContainer);
+                }
+            }
+        }
+        
+        // Create success message
+        var successMessage = jQuery('<div class="message message-success success"><div data-ui-id="message-success">' + 
+            jQuery('<div>').text(message).html() + 
+            '</div></div>');
+        
+        // Remove any existing success messages first
+        messagesContainer.find('.message-success').remove();
+        
+        // Add the new success message
+        messagesContainer.append(successMessage);
+        
+        // Scroll to top to show the message
+        jQuery('html, body').animate({
+            scrollTop: 0
+        }, 300);
+    }
+    
+    $(document).ready(function() {
+        var currentPage = 1;
+        var perPage = parseInt($('#entriesPerPage').val());
+        var totalRows = $('.data-table-row').length;
+        var totalPages = Math.ceil(totalRows / perPage);
+
+        // Select All checkbox
+        $('#selectAll').on('change', function() {
+            $('.row-checkbox').prop('checked', this.checked);
+        });
+
+        // Individual checkbox change
+        $(document).on('change', '.row-checkbox', function() {
+            var allChecked = $('.row-checkbox:checked').length === $('.row-checkbox').length;
+            $('#selectAll').prop('checked', allChecked);
+        });
+
+        // Search functionality
+        $('#searchUsers').on('keyup', function() {
+            var searchTerm = $(this).val().toLowerCase();
+            $('.data-table-row').each(function() {
+                var email = $(this).data('email').toLowerCase();
+                if (email.indexOf(searchTerm) > -1) {
+                    $(this).removeClass('hidden-row');
+                } else {
+                    $(this).addClass('hidden-row');
+                }
+            });
+            updatePagination();
+        });
+
+        // Entries per page change
+        $('#entriesPerPage').on('change', function() {
+            perPage = parseInt($(this).val());
+            totalPages = Math.ceil(totalRows / perPage);
+            currentPage = 1;
+            updatePagination();
+        });
+
+        // Store form data for unblock action
+        var pendingUnblockData = null;
+        
+        // Function to perform the actual unblock
+        function performUnblock(formData) {
+            // Submit bulk unblock request using a single AJAX call
+            $.ajax({
+                url: '<?= $block->escapeUrl($block->getUrl('mobruteforce/blockedusers/index')) ?>',
+                type: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                data: {
+                    'form_key': '<?= $block->escapeHtml($block->getFormKey()) ?>',
+                    'option': 'manageUsers',
+                    'bulk_unblock_users': formData,
+                    'isAjax': '1'
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response && response.success && response.message) {
+                        // Show success message using Magento's messageManager
+                        showMagentoSuccessMessage(response.message);
+                        // Reload after a short delay to show the message
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1500);
+                    } else {
+                        // Reload if no message in response
+                        location.reload();
+                    }
+                },
+                error: function() {
+                    // Reload even on error to show any error messages
+                    location.reload();
+                }
+            });
+        }
+        
+        // Bulk action
+        $('#bulkAction').on('change', function() {
+            var action = $(this).val();
+            if (action === 'unblock') {
+                var selectedRows = $('.row-checkbox:checked');
+                if (selectedRows.length === 0) {
+                    alert('Please select at least one account to unblock.');
+                    $(this).val('');
+                    return;
+                }
+                
+                // Prepare form data
+                var formData = [];
+                selectedRows.each(function() {
+                    formData.push({
+                        customer_id: $(this).val(),
+                        email: $(this).data('email'),
+                        user_type: $(this).data('user-type')
+                    });
+                });
+                
+                // Store form data for later use
+                pendingUnblockData = formData;
+                
+                // Update confirmation message based on number of selected users
+                var selectedCount = selectedRows.length;
+                var confirmationText = '';
+                if (selectedCount === 1) {
+                    confirmationText = 'Are you sure you want to unblock this user?';
+                } else {
+                    confirmationText = 'Are you sure you want to unblock these users?';
+                }
+                $('#unblockConfirmationText').text(confirmationText);
+                
+                // Show confirmation modal
+                $('#unblockConfirmationModal').addClass('show-modal');
+                
+                // Reset dropdown
+                $(this).val('');
+            }
+        });
+        
+        // Confirm button click handler
+        $('#confirmUnblockBtn').on('click', function() {
+            if (pendingUnblockData) {
+                // Hide modal
+                $('#unblockConfirmationModal').removeClass('show-modal');
+                // Perform unblock
+                performUnblock(pendingUnblockData);
+                // Clear pending data
+                pendingUnblockData = null;
+            }
+        });
+        
+        // Cancel button click handler
+        $('#cancelUnblockBtn').on('click', function() {
+            // Hide modal
+            $('#unblockConfirmationModal').removeClass('show-modal');
+            // Clear pending data
+            pendingUnblockData = null;
+        });
+        
+        // Close modal when clicking outside of it
+        $(window).on('click', function(event) {
+            if ($(event.target).is('#unblockConfirmationModal')) {
+                $('#unblockConfirmationModal').removeClass('show-modal');
+                pendingUnblockData = null;
+            }
+        });
+
+        // Pagination
+        function updatePagination() {
+            var visibleRows = $('.data-table-row:not(.hidden-row)');
+            var start = (currentPage - 1) * perPage;
+            var end = start + perPage;
+            
+            visibleRows.each(function(index) {
+                if (index >= start && index < end) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+            
+            var visibleCount = visibleRows.length;
+            var showingFrom = visibleCount > 0 ? start + 1 : 0;
+            var showingTo = Math.min(end, visibleCount);
+            
+            $('#showingFrom').text(showingFrom);
+            $('#showingTo').text(showingTo);
+            $('#totalEntries').text(visibleCount);
+            
+            $('#prevPage').prop('disabled', currentPage === 1);
+            $('#nextPage').prop('disabled', currentPage >= Math.ceil(visibleCount / perPage));
+        }
+
+        $('#prevPage').on('click', function() {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePagination();
+            }
+        });
+
+        $('#nextPage').on('click', function() {
+            var visibleRows = $('.data-table-row:not(.hidden-row)').length;
+            if (currentPage < Math.ceil(visibleRows / perPage)) {
+                currentPage++;
+                updatePagination();
+            }
+        });
+
+        // Initial pagination
+        updatePagination();
+    });
+});
+</script>

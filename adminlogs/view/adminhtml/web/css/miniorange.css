@@ -1,0 +1,16 @@
+/* Target the main menu item for Customer Attribute Builder */
+.admin__menu [id*="miniorange_adminlogs"] > a:before,
+.admin__menu [id*="adminlogs"] > a:before { /* Target any menu item containing these identifiers */
+    content: url('../images/mo.png') !important;
+    display: block !important;
+    width: 50px !important;
+    height: 42px !important;
+    margin: 0 auto 5px auto !important;
+}
+
+.admin__menu [id*="miniorange_adminlogs"] > a,
+.admin__menu [id*="adminlogs"] > a {
+    color: #eca311 !important;
+    font-weight: bold !important;
+    text-transform: none !important;
+}

@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+
+<!-- This XML is used to add a menu item to our Magento Admin Backend Settings Page -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+
+		<!-- Adding a 2FA menu item in admin backend for access to other sub settings -->
+        <add id="MiniOrange_TwoFA::TwoFA"
+        	 title="miniOrange 2FA"
+        	 module="MiniOrange_TwoFA"
+        	 sortOrder="55"
+        	 resource="MiniOrange_TwoFA::TwoFA" />
+
+
+				<!--
+        	Adding a Account sub menu item to handle miniorange account related settings
+        	Parent Menu Item is the miniOrange SP menu item mentioned above.
+        	Action is the controllerAction to be called when menu item is clicked.
+    		-->
+         <add id="MiniOrange_TwoFA::account_settings"
+        	 title="Account"
+        	 module="MiniOrange_TwoFA"
+        	 sortOrder="0"
+        	 parent="MiniOrange_TwoFA::TwoFA"
+        	 action="motwofa/account"
+        	 resource="MiniOrange_TwoFA::account_settings"/>
+
+		<!--
+        	Adding a TwoFA Provider sub menu item to show settings that IDP needs
+        	Parent Menu Item is the miniOrange TwoFA menu item mentioned above.
+        	Action is the controllerAction to be called when menu item is clicked.
+    		-->
+		<add id="MiniOrange_TwoFA::signin_settings"
+        	 title="2FA Settings"
+        	 module="MiniOrange_TwoFA"
+        	 sortOrder="1"
+        	 parent="MiniOrange_TwoFA::TwoFA"
+        	 action="motwofa/signinsettings"
+        	 resource="MiniOrange_TwoFA::signin_settings"/>
+
+		<!--
+        	Adding a Sign In Settings sub menu item to show Sign In Settings Tab
+        	Parent Menu Item is the miniOrange TwoFA menu item mentioned above.
+        	Action is the controllerAction to be called when menu item is clicked.
+    		-->
+		<add id="MiniOrange_TwoFA::advance_2fa"
+        	 title="2FA Advance Settings"
+        	 module="MiniOrange_TwoFA"
+        	 sortOrder="2"
+        	 parent="MiniOrange_TwoFA::TwoFA"
+        	 action="motwofa/advance2fa"
+        	 resource="MiniOrange_TwoFA::advance_2fa"/>
+			
+		<add id="MiniOrange_TwoFA::user_management"
+        	 title="User management"
+        	 module="MiniOrange_TwoFA"
+        	 sortOrder="2"
+        	 parent="MiniOrange_TwoFA::TwoFA"
+        	 action="motwofa/usermanagement"
+        	 resource="MiniOrange_TwoFA::user_management"/>
+
+		<add id="MiniOrange_TwoFA::custom_gateway"
+        	 title="Custom Gateway"
+        	 module="MiniOrange_TwoFA"
+        	 sortOrder="3"
+        	 parent="MiniOrange_TwoFA::TwoFA"
+        	 action="motwofa/customgateway"
+        	 resource="MiniOrange_TwoFA::custom_gateway"/>
+
+		<add id="MiniOrange_TwoFA::upgrade"
+        	 title="Upgrade"
+        	 module="MiniOrange_TwoFA"
+        	 sortOrder="4"
+        	 parent="MiniOrange_TwoFA::TwoFA"
+        	 action="motwofa/upgrade"
+        	 resource="MiniOrange_TwoFA::upgrade"/>
+
+    </menu>
+</config>

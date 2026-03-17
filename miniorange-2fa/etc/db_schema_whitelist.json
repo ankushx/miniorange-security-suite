@@ -1,0 +1,21 @@
+{
+    "miniorange_tfa_users": {
+        "column": {
+            "id": true,
+            "username": true,
+            "email": true,
+            "countrycode": true,
+            "phone": true,
+            "configured_methods": true,
+            "active_method": true,
+            "status_of_motfa": true,
+            "force_reset": true,
+            "disable_motfa": true,
+            "backup_method": true,
+            "transactionId": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

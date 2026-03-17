@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category    MiniOrange
+ * @package     MiniOrange_BruteForceProtection
+ * @author      miniOrange
+ * @copyright   Copyright (c) 2024 miniOrange Inc. (https://www.miniorange.com)
+ * @license     https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="mo_bruteforce_locked_accounts" resource="default" engine="innodb" comment="MiniOrange BruteForce Protection Locked Accounts Table">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Primary Key"/>
+        <column xsi:type="int" name="customer_id" nullable="false" comment="Customer ID"/>
+        <column xsi:type="varchar" name="email" length="255" nullable="false" comment="Customer Email"/>
+        <column xsi:type="varchar" name="user_type" length="20" nullable="false" default="customer" comment="User type: admin/customer"/>
+        <column xsi:type="varchar" name="lock_type" nullable="false" length="20" default="none" comment="Lock type: none/temp/permanent"/>
+        <column xsi:type="timestamp" name="lock_until" nullable="true" comment="Temporary lock expiry timestamp"/>
+        <column xsi:type="int" name="failed_attempts" nullable="false" default="0" comment="Failed attempts count"/>
+        <column xsi:type="varchar" name="website" length="255" nullable="true" comment="Website name/ID (for customers to differentiate same user from different websites, NULL/default for admin)"/>
+        <column xsi:type="timestamp" name="first_time_lockout" nullable="true" comment="First time lockout timestamp"/>
+        <column xsi:type="smallint" name="sent_email" nullable="false" default="0" comment="Email notification sent flag (0=not sent, 1=sent)"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" on_update="true" default="CURRENT_TIMESTAMP" comment="Last update timestamp"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+
+        <constraint xsi:type="unique" referenceId="UNQ_MO_BRUTEFORCE_LOCKED_ACCOUNTS_CUSTOMER_EMAIL_TYPE_WEBSITE">
+            <column name="customer_id"/>
+            <column name="email"/>
+            <column name="user_type"/>
+            <column name="website"/>
+        </constraint>
+
+        <index referenceId="MO_BRUTEFORCE_LOCKED_ACCOUNTS_EMAIL" indexType="btree">
+            <column name="email"/>
+        </index>
+        
+        <index referenceId="MO_BRUTEFORCE_LOCKED_ACCOUNTS_USER_TYPE" indexType="btree">
+            <column name="user_type"/>
+        </index>
+    </table>
+
+    <table name="mo_bruteforce_forgot_password_locked_accounts" resource="default" engine="innodb" comment="MiniOrange BruteForce Protection Forgot Password Locked Accounts Table">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Primary Key"/>
+        <column xsi:type="int" name="customer_id" nullable="true" comment="Customer ID (NULL for non-existent admin users)"/>
+        <column xsi:type="varchar" name="email" length="255" nullable="false" comment="Customer Email"/>
+        <column xsi:type="varchar" name="user_type" length="20" nullable="false" default="customer" comment="User type: admin/customer"/>
+        <column xsi:type="varchar" name="lock_type" nullable="false" length="20" default="none" comment="Lock type: none/temp"/>
+        <column xsi:type="timestamp" name="lock_until" nullable="true" comment="Temporary lock expiry timestamp"/>
+        <column xsi:type="int" name="failed_attempts" nullable="false" default="0" comment="Failed attempts count"/>
+        <column xsi:type="varchar" name="website" length="255" nullable="true" comment="Website name/ID (for customers to differentiate same user from different websites, NULL/default for admin)"/>
+        <column xsi:type="timestamp" name="first_time_lockout" nullable="true" comment="First time lockout timestamp"/>
+        <column xsi:type="smallint" name="sent_email" nullable="false" default="0" comment="Email notification sent flag (0=not sent, 1=sent)"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Record creation timestamp"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" on_update="true" default="CURRENT_TIMESTAMP" comment="Last update timestamp"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY_FORGOT">
+            <column name="id"/>
+        </constraint>
+
+        <constraint xsi:type="unique" referenceId="UNQ_MO_BRUTEFORCE_FORGOT_PASSWORD_LOCKED_ACCOUNTS_CUSTOMER_ID">
+            <column name="customer_id"/>
+        </constraint>
+        
+        <index referenceId="MO_BRUTEFORCE_FORGOT_PASSWORD_LOCKED_ACCOUNTS_EMAIL" indexType="btree">
+            <column name="email"/>
+        </index>
+        
+        <index referenceId="MO_BRUTEFORCE_FORGOT_PASSWORD_LOCKED_ACCOUNTS_USER_TYPE" indexType="btree">
+            <column name="user_type"/>
+        </index>
+    </table>
+</schema>

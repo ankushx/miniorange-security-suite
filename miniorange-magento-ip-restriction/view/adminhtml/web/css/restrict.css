@@ -1,0 +1,105 @@
+/* IP Restriction Error Page Styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.cf-wrapper {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+    background: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.cf-error-overview {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.cf-error-container {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    text-align: center;
+}
+
+.cf-error-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cf-error-icon {
+    margin-bottom: 20px;
+}
+
+.cf-error-icon svg {
+    width: 64px;
+    height: 64px;
+}
+
+.cf-error-title {
+    font-size: 32px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 10px 0;
+}
+
+.cf-error-subtitle {
+    font-size: 18px;
+    font-weight: 400;
+    color: #666;
+    margin: 0 0 20px 0;
+}
+
+.cf-error-description {
+    margin: 20px 0;
+    color: #555;
+}
+
+.cf-error-description p {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.cf-error-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e5e5;
+    font-size: 12px;
+    color: #999;
+}
+
+.cf-error-footer-text {
+    margin: 5px 0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .cf-error-container {
+        padding: 20px;
+    }
+    
+    .cf-error-title {
+        font-size: 24px;
+    }
+    
+    .cf-error-subtitle {
+        font-size: 16px;
+    }
+}
+
+

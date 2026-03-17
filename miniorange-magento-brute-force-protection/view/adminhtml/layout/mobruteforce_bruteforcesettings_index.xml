@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>  
+        <css src="MiniOrange_BruteForceProtection::css/adminSettings.css"/>
+        <css src="MiniOrange_BruteForceProtection::css/upgrade.css"/>
+        <css src="MiniOrange_BruteForceProtection::css/all.min.css"/>
+    </head>
+    <body>
+        <!--
+            Defining our block and phtml file for BruteForce settings.
+            Calls our Admin Block for some common functionality.
+            -->
+        <referenceContainer name="content">
+            <!-- This adds the navbar to the phtml file for easy navigation -->
+            <block class="MiniOrange\BruteForceProtection\Block\BruteForce"
+                   name="miniorange.bruteforce.navbar"
+                   template="navbar.phtml"/>
+
+            <block class="MiniOrange\BruteForceProtection\Block\BruteForce"
+                   name="miniorange.bruteforce.support"
+                   template="Applications/support.phtml"/>
+
+            <block class="MiniOrange\BruteForceProtection\Block\BruteForce"
+                    name="miniorange.bruteforce.admin.bruteforce_settings"
+                    template="bruteforce_settings.phtml"/>
+                
+        </referenceContainer>
+        <!--
+            Defining our block and phtml file for adding common
+            javascript file to all of our pages
+            -->
+        <referenceContainer name="before.body.end">
+            <block class="MiniOrange\BruteForceProtection\Block\BruteForce"
+                   template="js.phtml"
+                   name="before_body_js"/>
+        </referenceContainer>
+    </body>
+</page>

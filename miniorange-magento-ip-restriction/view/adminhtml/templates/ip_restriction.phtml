@@ -1,0 +1,586 @@
+<?php
+$formKey = $block->getFormKey();
+$stores = $block->getStores();
+$websites = $block->getWebsites();
+$upgradeUrl = $block->getExtensionPageUrl('upgrade');
+
+// Build scope options - show all scopes, but only Admin is enabled
+$scopeOptions = [];
+$scopeOptions[] = [
+    'value' => 'admin',
+    'label' => 'Admin',
+    'type' => 'admin'
+];
+$scopeOptions[] = [
+    'value' => '',
+    'label' => 'Default Config',
+    'type' => 'default'
+];
+
+foreach ($websites as $website) {
+    $scopeOptions[] = [
+        'value' => 'websites_' . $website['id'],
+        'label' => $escaper->escapeHtml($website['name']),
+        'type' => 'website'
+    ];
+    
+    // Add stores under this website
+    foreach ($stores as $store) {
+        if ($store['website_id'] == $website['id']) {
+            $scopeOptions[] = [
+                'value' => 'stores_' . $store['id'],
+                'label' => '  └─ ' . $escaper->escapeHtml($store['name']), // Indented with tree indicator
+                'type' => 'store'
+            ];
+        }
+    }
+}
+
+// Always force admin scope
+$currentScope = 'admin';
+$currentScopeId = 0;
+$isDefaultConfig = false;
+$isAdminScope = true;
+$currentScopeValue = 'admin';
+
+// Get existing IPs - always use admin scope
+$existingDenylistIps = $block->getAdminDenylistIps();
+$denylistIpsString = implode('; ', $existingDenylistIps);
+?>
+
+<div class="p-6" style="width:100%;">
+    <!-- Header with Title and Action Buttons -->
+    <div class="header-container">
+        <div class="header-title">
+            <h1 class="text-3xl font-bold mb-6 text-black" style="font-size: 2.5rem; padding-top:1rem; margin: 0;">
+                IP Restriction
+            </h1>
+        </div>
+        <div class="header-actions">
+            <a href="javascript:void(0);" onclick="openSetupGuide();" class="btn-setup-guide">
+                <i class="fas fa-book"></i>
+                Setup Guide
+            </a>
+        </div>
+    </div>
+        
+        <form method="post" action="<?= $escaper->escapeUrl($block->getUrl('iprestriction/iprestrict/index')) ?>" id="ip-country-restrictions-form">
+            <?= $block->getFormKeyHtml() ?>
+            <input type="hidden" name="save_all" value="1">
+            <input type="hidden" name="save_country_restrictions" value="1">
+            <input type="hidden" name="scope" id="hiddenScope" value="admin">
+            <input type="hidden" name="scope_id" id="hiddenScopeId" value="0">
+            <input type="hidden" name="is_admin_scope" id="isAdminScope" value="1">
+            
+        <div class="scope-selector-container">
+            <div class="scope-selector-row">
+                <span class="scope-label">Scope:</span>
+                <div class="scope-dropdown-wrapper">
+                    <select id="scopeSelector" class="scope-dropdown" disabled style="opacity: 0.6; cursor: not-allowed;">
+                        <?php foreach ($scopeOptions as $option): ?>
+                            <?php
+                            $selected = '';
+                            $optionValue = $option['value'];
+                            $isAdmin = ($option['type'] === 'admin');
+                            
+                            // Match by currentScopeValue
+                            if ($currentScopeValue === $optionValue) {
+                                $selected = 'selected';
+                            }
+                            // Only Admin is enabled, all others are disabled and marked as Premium
+                            $disabledAttr = $isAdmin ? '' : 'disabled';
+                            $premiumText = $isAdmin ? '' : ' [Premium]';
+                            ?>
+                            <option value="<?= $escaper->escapeHtmlAttr($optionValue) ?>" 
+                                    <?= $selected ? 'selected="' . $escaper->escapeHtmlAttr($selected) . '"' : '' ?> 
+                                    <?= $disabledAttr ? 'disabled="' . $escaper->escapeHtmlAttr($disabledAttr) . '"' : '' ?> 
+                                    style="<?= $escaper->escapeHtmlAttr($isAdmin ? '' : 'color: #999; background-color: #f5f5f5;') ?>">
+                                <?= $escaper->escapeHtml($option['label'] . $premiumText) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <a href="<?= $escaper->escapeUrl($upgradeUrl) ?>" 
+                   style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold; text-decoration: none; cursor: pointer;">
+                    [Premium]
+                </a>
+            </div>
+            <div class="scope-description" style="opacity: 0.7;">
+                <i class="fas fa-info-circle" style="margin-right: 8px; color:rgb(58, 59, 59);"></i>
+                Only Admin scope is available. Settings are configured for admin access only.
+            </div>
+            
+            <!-- IP Denylist Dropdown -->
+            <div class="dropdown-container" style="margin-top: 20px;">
+                <div class="dropdown-header" onclick="toggleDropdown('ipDenylist')">
+                    <div class="dropdown-title">
+                        <i class="fas fa-ban"></i>
+                        IP Blacklist
+                    </div>
+                    <i class="fas fa-chevron-down dropdown-icon"></i>
+                </div>
+                <div class="dropdown-content" id="ipDenylist">
+                    <div class="dropdown-inner">
+                        <?php 
+                        // Always use admin scope for IP blacklist
+                        $ipBlacklistEnabled = $block->getIpBlacklistEnabled();
+                        ?>
+                        
+                        <!-- Enable IP Blacklist Toggle with Content -->
+                        <div class="form-section">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                                <div class="toggle-label" style="font-size: 1.6rem; font-weight: 500; color: #374151;">
+                                    Enable IP Blacklisting
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <!-- Hidden input to ensure '0' is sent when checkbox is unchecked -->
+                                    <input type="hidden" name="ip_blacklist_enabled" value="0" id="ipBlacklistEnabledHidden">
+                                    <input type="checkbox" name="ip_blacklist_enabled" value="1" class="peer sr-only" id="ipBlacklistEnable" <?= $ipBlacklistEnabled ? 'checked' : '' ?> onchange="toggleIpBlacklistSection()">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <!-- IP Denylist Content (always visible) -->
+                            <div id="ipBlacklistSection" style="margin-top: 30px;">
+                                
+                                <div class="form-group">
+                                    <label style="display: block; margin-bottom: 12px; font-weight: 600; font-size: 15px; color: #495057;">Blacklist IPs <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 5 IPs]</span></label>
+                                    <textarea name="admin_denylist_ips" 
+                                              id="adminDenylistIps"
+                                              placeholder="Enter all your IP addresses with ; (example: ip1; ip2; ip3;...;)" 
+                                              style="width: 100%; max-width: 600px; padding: 10px 14px; font-size: 14px; border: 1px solid #ced4da; border-radius: 4px; min-height: 120px; font-family: inherit; line-height: 1.5;"><?= $escaper->escapeHtml($denylistIpsString) ?></textarea>
+                                    <div id="ipValidationMessage" style="margin-top: 8px; font-size: 13px; display: none;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Country Restriction Dropdown -->
+            <div class="dropdown-container">
+                <div class="dropdown-header" onclick="toggleDropdown('countryRestrictions')">
+                    <div class="dropdown-title">
+                        <i class="fas fa-globe"></i>
+                        Country Restriction
+                    </div>
+                    <i class="fas fa-chevron-down dropdown-icon"></i>
+                </div>
+                <div class="dropdown-content" id="countryRestrictions">
+                    <div class="dropdown-inner">
+                        <?php 
+                        $geoip2LicenseKey = $block->getGeoIp2LicenseKey();
+                        
+                        // Always use admin scope for country restriction
+                        $countryRestrictionsEnabled = $block->getCountryRestrictionsEnabled();
+                        ?>
+                        
+                            <!-- Enable Country Restriction Toggle with Content -->
+                            <div class="form-section">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                                    <div class="toggle-label" style="font-size: 1.6rem; font-weight: 500; color: #374151;">
+                                        Enable Country Restriction
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <!-- Hidden input to ensure '0' is sent when checkbox is unchecked -->
+                                        <input type="hidden" name="country_restrictions_enabled" value="0" id="countryRestrictionsEnabledHidden">
+                                        <input type="checkbox" name="country_restrictions_enabled" value="1" class="peer sr-only" id="banEnable" <?= $countryRestrictionsEnabled ? 'checked' : '' ?>>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                
+                                <!-- Country Restriction Content (always visible) -->
+                                <div style="margin-top: 30px;">
+                            
+                            <!-- GeoIP2 Database Configuration -->
+                            <div style="margin-bottom: 30px;">
+                                <h3 style="margin-bottom: 15px; font-size: 18px; font-weight: 600; color: #495057; display: flex; align-items: center; gap: 10px;">
+                                    <i class="fas fa-database" style="font-size: 16px; color: #eb5202;"></i>
+                                    GeoIP2 Database Configuration
+                                </h3>
+                                <p style="margin-bottom: 25px; font-size: 14px; color: #6c757d; line-height: 1.5;">
+                                    Please download the GeoIP2 database to enable country restriction.
+                                </p>
+                                
+                                <!-- GeoIP2 License Key -->
+                                <div class="form-group" style="margin-bottom: 30px;">
+                                    <label for="geoip2LicenseKey" style="display: block; margin-bottom: 12px; font-weight: 600; font-size: 15px; color: #495057;">
+                                        GeoIP2 Licence Key
+                                    </label>
+                                    <input type="password" 
+                                           name="geoip2_license_key" 
+                                           id="geoip2LicenseKey" 
+                                           value="<?= $escaper->escapeHtmlAttr($geoip2LicenseKey) ?>" 
+                                           class="form-control" 
+                                           style="max-width: 500px; padding: 10px 14px; font-size: 14px; border: 1px solid #ced4da; border-radius: 4px;"
+                                           placeholder="Enter your MaxMind license key">
+                                    <div style="margin-top: 12px; font-size: 14px; color: #6c757d; line-height: 1.6;">
+                                        <p style="margin: 8px 0;"><strong style="color: #495057;">To get licence key:</strong> <a href="https://www.maxmind.com/en/accounts/current/license-key" target="_blank" style="color: #007bff; text-decoration: none;">Sign up for a MaxMind account</a></p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Manual Download Button -->
+                                <div class="form-group" style="margin-bottom: 35px;">
+                                    <label style="display: block; margin-bottom: 12px; font-weight: 600; font-size: 15px; color: #495057;">
+                                        Manual Download
+                                    </label>
+                                    <button type="button" 
+                                            onclick="downloadGeoIp2Database()" 
+                                            id="downloadGeoIpBtn"
+                                            class="btn-save" 
+                                            style="background: #eb5202; border-color: #eb5202; padding: 10px 20px; font-size: 14px; font-weight: 500;">
+                                        <i class="fas fa-download"></i> Download
+                                    </button>
+                                    <div id="geoip2DownloadStatus" style="margin-top: 12px; font-size: 14px; color: #6c757d;">
+                                    </div>
+                                </div>
+                                
+                                <!-- Automatic Update Settings -->
+                                <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 6px; border: 1px solid #dee2e6;">
+                                    <h4 style="margin: 0 0 18px 0; font-size: 16px; font-weight: 600; color: #495057;">Automatic Database Updates</h4>
+                                    
+                                    <?php 
+                                    $autoUpdateEnabled = $block->getConfigValue('geoip2/auto_update_enabled', 'default', 0);
+                                    ?>
+                                    
+                                    <div style="margin-bottom: 0;">
+                                        <label style="display: flex; align-items: center; cursor: pointer;">
+                                            <input type="checkbox" 
+                                                   name="geoip2_auto_update_enabled" 
+                                                   value="1" 
+                                                   <?= $autoUpdateEnabled == '1' ? 'checked' : '' ?>
+                                                   style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer;">
+                                            <span style="font-weight: 500; font-size: 15px; color: #495057;">Enable automatic weekly database updates</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <?php 
+                            // Always use admin scope for country denylist
+                            $denylistCodes = $block->getCountryDenylist();
+                            $countries = $block->getCountries();
+                            ?>
+                            
+                            <!-- Country Denylist Section -->
+                            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef;">
+                                <h3 style="font-size: 18px; font-weight: 600; color: #495057; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                                    <i class="fas fa-times-circle" style="color: #dc3545; font-size: 16px;"></i>
+                                    Country Denylist
+                                </h3>
+                                <p class="help-text" style="margin-bottom: 20px; font-size: 14px; color: #6c757d; line-height: 1.5;">
+                                    Countries that are blocked from accessing the site.
+                                </p>
+                                <div class="form-group">
+                                    <label style="display: block; margin-bottom: 10px; font-weight: 600; font-size: 15px; color: #495057;">Select Country <span style="color:rgb(221, 49, 49); font-size: 14px; font-weight: bold;">[Limited to 2 countries]</span></label>
+                                    <select id="countryDenylistDropdown" class="form-control" style="max-width: 500px; margin-bottom: 20px; padding: 10px 14px; font-size: 14px; border: 1px solid #ced4da; border-radius: 4px;">
+                                        <option value="">-- Select a country to add --</option>
+                                        <?php if (!empty($countries)): ?>
+                                            <?php foreach ($countries as $country): ?>
+                                                <option value="<?= $escaper->escapeHtmlAttr($country['code']) ?>" 
+                                                        data-name="<?= $escaper->escapeHtmlAttr($country['name']) ?>">
+                                                    <?= $escaper->escapeHtml($country['name']) ?> 
+                                                    (<?= $escaper->escapeHtml($country['code']) ?>)
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                    
+                                    <!-- Selected Countries Display -->
+                                    <div id="countryDenylistTags" style="min-height: 120px; max-height: 250px; overflow-y: auto; border: 1px solid #dee2e6; padding: 15px; border-radius: 6px; background: #f9f9f9; margin-top: 10px;">
+                                        <?php if (!empty($denylistCodes)): ?>
+                                            <?php foreach ($denylistCodes as $code): ?>
+                                                <?php 
+                                                $countryName = '';
+                                                foreach ($countries as $country) {
+                                                    if (strtoupper($country['code']) === strtoupper($code)) {
+                                                        $countryName = $country['name'];
+                                                        break;
+                                                    }
+                                                }
+                                                ?>
+                                                <span class="country-tag" 
+                                                      data-code="<?= $escaper->escapeHtmlAttr($code) ?>" 
+                                                      style="display: inline-block; background: #dc3545; color: white; padding: 5px 10px; margin: 5px; border-radius: 4px; font-size: 13px;">
+                                                    <?= $escaper->escapeHtml($countryName ?: $code) ?> 
+                                                    (<?= $escaper->escapeHtml($code) ?>)
+                                                    <span class="remove-tag" 
+                                                          onclick="removeCountryTag('denylist', '<?= $escaper->escapeJs($code) ?>')" 
+                                                          style="margin-left: 8px; cursor: pointer; font-weight: bold;">×</span>
+                                                    <input type="hidden" 
+                                                           name="country_denylist[]" 
+                                                           value="<?= $escaper->escapeHtmlAttr($code) ?>">
+                                                </span>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <p style="color: #999; font-style: italic; margin: 0; font-size: 14px;">No countries selected</p>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div id="countryValidationMessage" style="margin-top: 8px; font-size: 13px; display: none;"></div>
+                                </div>
+                            </div>
+                            
+                                </div> <!-- End country restriction content -->
+                            </div> <!-- End form-section -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Single Save Button at the bottom -->
+        <div style="margin-top: 30px; text-align: left;">
+            <button type="submit" class="btn-save">
+Save
+            </button>
+        </div>
+        </form>
+        
+        <!-- Separate form for saving GeoIP2 license key (for download button) -->
+        <form method="post" 
+              action="<?= $escaper->escapeUrl($block->getUrl('iprestriction/iprestrict/index')) ?>" 
+              id="geoip2-form" 
+              style="display: none;">
+            <?= $block->getFormKeyHtml() ?>
+            <input type="hidden" name="save_geoip2_license" value="1">
+            <input type="hidden" name="geoip2_license_key" id="geoip2LicenseKeyHidden" value="">
+        </form>
+</div>
+
+<script>
+function toggleDropdown(dropdownId) {
+    const dropdown = document.getElementById(dropdownId);
+    const header = dropdown.previousElementSibling;
+    
+    // Toggle active class on header
+    header.classList.toggle('active');
+    
+    // Toggle active class on content
+    dropdown.classList.toggle('active');
+}
+
+// Handle IP Blacklist toggle
+function toggleIpBlacklistSection() {
+    const ipBlacklistEnable = document.getElementById('ipBlacklistEnable');
+    const hiddenInput = document.getElementById('ipBlacklistEnabledHidden');
+    
+    const isEnabled = ipBlacklistEnable && ipBlacklistEnable.checked;
+    
+    // Update hidden input based on checkbox state
+    if (hiddenInput) {
+        hiddenInput.disabled = isEnabled;
+        if (!isEnabled) {
+            hiddenInput.value = '0';
+        }
+    }
+}
+
+// Handle Country Restrictions toggle
+document.addEventListener('DOMContentLoaded', function() {
+    // Update hidden input based on checkbox state for country restriction
+    const banEnable = document.getElementById('banEnable');
+    const hiddenInput = document.getElementById('countryRestrictionsEnabledHidden');
+    
+    if (banEnable && hiddenInput) {
+        banEnable.addEventListener('change', function() {
+            hiddenInput.disabled = this.checked;
+            if (!this.checked) {
+                hiddenInput.value = '0';
+            }
+        });
+        // Initialize on page load
+        hiddenInput.disabled = banEnable.checked;
+        if (!banEnable.checked) {
+            hiddenInput.value = '0';
+        }
+    }
+    
+    // Scope selector is disabled - no need to handle changes
+    // Always use admin scope
+});
+
+// Country tag management functions
+function addCountryTag(listType, countryCode, countryName) {
+    const tagsContainer = document.getElementById('countryDenylistTags');
+    const dropdown = document.getElementById('countryDenylistDropdown');
+    const validationMsg = document.getElementById('countryValidationMessage');
+    const maxCountries = 2; // Free version limit
+    
+    // Check current count
+    const currentTags = tagsContainer.querySelectorAll('.country-tag');
+    if (currentTags.length >= maxCountries) {
+        // Don't show message, just prevent adding - error will show on save
+        dropdown.value = '';
+        return;
+    }
+    
+    // Check if already exists
+    const existingTag = tagsContainer.querySelector('span[data-code="' + countryCode + '"]');
+    if (existingTag) {
+        return; // Already added
+    }
+    
+    // Remove "No countries selected" message if exists
+    const noCountriesMsg = tagsContainer.querySelector('p');
+    if (noCountriesMsg && noCountriesMsg.textContent.includes('No countries selected')) {
+        noCountriesMsg.remove();
+    }
+    
+    // Create tag element
+    const tag = document.createElement('span');
+    tag.className = 'country-tag';
+    tag.setAttribute('data-code', countryCode);
+    tag.style.cssText = 'display: inline-block; background: #dc3545; color: white; padding: 5px 10px; margin: 5px; border-radius: 4px; font-size: 13px;';
+    
+    const removeBtn = document.createElement('span');
+    removeBtn.className = 'remove-tag';
+    removeBtn.style.cssText = 'margin-left: 8px; cursor: pointer; font-weight: bold;';
+    removeBtn.textContent = '×';
+    removeBtn.onclick = function() {
+        removeCountryTag(listType, countryCode);
+    };
+    
+    const hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'country_denylist[]';
+    hiddenInput.value = countryCode;
+    
+    tag.innerHTML = countryName + ' (' + countryCode + ') ';
+    tag.appendChild(removeBtn);
+    tag.appendChild(hiddenInput);
+    
+    tagsContainer.appendChild(tag);
+    
+    // Reset dropdown
+    dropdown.value = '';
+}
+
+function removeCountryTag(listType, countryCode) {
+    const tagsContainer = document.getElementById('countryDenylistTags');
+    const tag = tagsContainer.querySelector('span[data-code="' + countryCode + '"]');
+    
+    if (tag) {
+        tag.remove();
+        
+        // Show "No countries selected" if container is empty
+        if (tagsContainer.querySelectorAll('.country-tag').length === 0) {
+            const noCountriesMsg = document.createElement('p');
+            noCountriesMsg.style.cssText = 'color: #999; font-style: italic; margin: 0;';
+            noCountriesMsg.textContent = 'No countries selected';
+            tagsContainer.appendChild(noCountriesMsg);
+        }
+    }
+}
+
+// Handle dropdown changes
+document.addEventListener('DOMContentLoaded', function() {
+    const denylistDropdown = document.getElementById('countryDenylistDropdown');
+    
+    if (denylistDropdown) {
+        denylistDropdown.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (selectedOption.value) {
+                const countryCode = selectedOption.value;
+                const countryName = selectedOption.getAttribute('data-name');
+                addCountryTag('denylist', countryCode, countryName);
+            }
+        });
+    }
+});
+
+// Toggle update frequency section based on auto update checkbox
+document.addEventListener('DOMContentLoaded', function() {
+    const autoUpdateCheckbox = document.querySelector('input[name="geoip2_auto_update_enabled"]');
+    const frequencySection = document.getElementById('updateFrequencySection');
+    
+    if (autoUpdateCheckbox && frequencySection) {
+        autoUpdateCheckbox.addEventListener('change', function() {
+            frequencySection.style.display = this.checked ? 'block' : 'none';
+        });
+    }
+});
+
+// GeoIP2 Download Function
+function downloadGeoIp2Database() {
+    const licenseKeyInput = document.getElementById('geoip2LicenseKey');
+    
+    // Validate required field
+    if (!licenseKeyInput || !licenseKeyInput.value.trim()) {
+        licenseKeyInput.setCustomValidity('Please enter your MaxMind license key.');
+        licenseKeyInput.reportValidity();
+        licenseKeyInput.focus();
+        return;
+    }
+    // Clear custom validity after validation passes
+    licenseKeyInput.setCustomValidity('');
+    
+    // Get download URL and form key
+    const downloadUrl = '<?= $escaper->escapeUrl($block->getUrl("iprestriction/geoip/index")) ?>';
+    const formKey = '<?= $escaper->escapeJs($block->getFormKey()) ?>';
+    
+    // Create form and submit (regular form submission, not AJAX)
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = downloadUrl;
+    form.style.display = 'none';
+    
+    // Add form key
+    const formKeyInput = document.createElement('input');
+    formKeyInput.type = 'hidden';
+    formKeyInput.name = 'form_key';
+    formKeyInput.value = formKey;
+    form.appendChild(formKeyInput);
+    
+    // Add license key
+    const licenseKeyInputField = document.createElement('input');
+    licenseKeyInputField.type = 'hidden';
+    licenseKeyInputField.name = 'geoip2_license_key';
+    licenseKeyInputField.value = licenseKeyInput.value.trim();
+    form.appendChild(licenseKeyInputField);
+    
+    // Append to body and submit
+    document.body.appendChild(form);
+    form.submit();
+}
+
+// Clear custom validity to prevent license key from blocking Save
+// This prevents the license key validation from blocking Save when Download was clicked
+document.addEventListener('DOMContentLoaded', function() {
+    const saveForm = document.getElementById('ip-country-restrictions-form');
+    const licenseKeyInput = document.getElementById('geoip2LicenseKey');
+    
+    if (!saveForm || !licenseKeyInput) {
+        return;
+    }
+    
+    // Clear validity immediately on page load (in case it was set previously)
+    licenseKeyInput.setCustomValidity('');
+    
+    // Clear validity on any interaction with the input field
+    licenseKeyInput.addEventListener('input', function() {
+        this.setCustomValidity('');
+    });
+    
+    // Clear validity when Save button is clicked (before HTML5 validation)
+    const saveButton = saveForm.querySelector('button[type="submit"]');
+    if (saveButton) {
+        saveButton.addEventListener('click', function(e) {
+            // Clear any custom validity message - license key is optional for saving
+            licenseKeyInput.setCustomValidity('');
+        }, true); // Use capture phase to run before validation
+    }
+    
+    // Also clear on form submit as final backup
+    saveForm.addEventListener('submit', function(e) {
+        licenseKeyInput.setCustomValidity('');
+    }, true); // Use capture phase
+});
+
+// Function to open Setup Guide
+function openSetupGuide() {
+    // You can replace this URL with your actual setup guide URL
+    const setupGuideUrl = 'https://plugins.miniorange.com/magento-recaptcha-ip-rate-limiting'; // Replace with actual URL
+    window.open(setupGuideUrl, '_blank');
+}
+
+// IP validation - no messages shown, validation happens on save
+</script>
