@@ -1,0 +1,71 @@
+{
+    "name": "miniorange_inc/miniorange-magento-security-suite",
+    "description": "MiniOrange Security Suite for Magento 2 - Comprehensive security with Admin Logs, 2FA, Brute Force Protection, and IP Restriction",
+    "type": "metapackage",
+    "license": [
+        "Commercial",
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "authors": [
+        {
+            "name": "miniOrange",
+            "homepage": "https://www.miniorange.com/",
+            "email": "info@xecurify.com"
+        }
+    ],
+    "version": "1.0.0",
+    "keywords": [
+        "Magento 2",
+        "Magento",
+        "Adobe Commerce",
+        "Security",
+        "Magento 2 Security Suite",
+        "Magento 2 Admin Logs",
+        "Magento 2 2FA",
+        "Magento 2 Brute Force Protection",
+        "Magento 2 IP Restriction",
+        "Magento 2 IP Blocking",
+        "Magento 2 Login Security",
+        "Admin Logs",
+        "User Activity Logs",
+        "Two Factor Authentication",
+        "2FA",
+        "MFA",
+        "Brute Force Protection",
+        "IP Restriction",
+        "IP Blocking",
+        "Login Security"
+    ],
+    "require": {
+        "php": "~7|~8"
+    },
+    "support": {
+        "email": "magentosupport@xecurify.com"
+    },
+    "replace": {
+        "miniorange_inc/adminlogs": "self.version",
+        "miniorange_inc/miniorange-2fa": "self.version",
+        "miniorange_inc/miniorange-magento-brute-force-protection": "self.version",
+        "miniorange_inc/miniorange-magento-ip-restriction": "self.version"
+    },
+    "autoload": {
+        "files": [
+            "registration.php",
+            "security-suite/registration.php",
+            "adminlogs/registration.php",
+            "miniorange-2fa/registration.php",
+            "miniorange-magento-brute-force-protection/registration.php",
+            "miniorange-magento-ip-restriction/registration.php"
+        ],
+        "psr-4": {
+            "MiniOrange\\SecuritySuite\\": "security-suite",
+            "MiniOrange\\AdminLogs\\": "adminlogs",
+            "MiniOrange\\TwoFA\\": "miniorange-2fa",
+            "MiniOrange\\BruteForceProtection\\": "miniorange-magento-brute-force-protection",
+            "MiniOrange\\IpRestriction\\": "miniorange-magento-ip-restriction"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
