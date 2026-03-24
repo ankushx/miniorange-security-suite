@@ -51,6 +51,7 @@
     },
     "autoload": {
         "files": [
+            "registration.php",
             "security-suite/registration.php",
             "adminlogs/registration.php",
             "miniorange-2fa/registration.php",
