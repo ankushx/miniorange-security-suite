@@ -1,7 +1,7 @@
 {
     "name": "miniorange_inc/miniorange-magento-security-suite",
     "description": "MiniOrange Security Suite for Magento 2 - Comprehensive security with Admin Logs, 2FA, Brute Force Protection, and IP Restriction",
-    "type": "metapackage",
+    "type": "magento2-modue",
     "license": [
         "Commercial",
         "OSL-3.0",
