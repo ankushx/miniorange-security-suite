@@ -1,5 +1,5 @@
 {
-    "name": "miniorange_inc/security-suite",
+    "name": "miniorange_inc/miniorange-magento-security-suite",
     "description": "Complete Security Suite Bundle Extension for Magento 2",
     "keywords": [
         "Security", "2FA", "SSO", "Single Sign On", "Authentication", "Magento security",
