@@ -12,6 +12,7 @@ class IpRestrictionConstants
     const MODULE_NAME = 'IpRestriction';
     const MODULE_DIR = 'MiniOrange_IpRestriction::';
     const MODULE_TITLE = 'miniOrange IP Restriction';
+    const SECURITY_SUITE_NAME = 'Security Suite';
     const MODULE_BASE = 'ipratelimit';
     const VERSION = 'v1.0.1';
 

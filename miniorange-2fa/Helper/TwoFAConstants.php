@@ -7,6 +7,7 @@ class TwoFAConstants
 {
     const MODULE_DIR = "MiniOrange_TwoFA";
     const MODULE_TITLE = "Two Factor Authentication";
+    const SECURITY_SUITE_NAME = 'Security Suite';
     const APPLICATION_NAME = "app_name";
     //ACL Settings
     const MODULE_BASE = "::TwoFA";

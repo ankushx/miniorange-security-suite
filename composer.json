@@ -1,22 +1,32 @@
 {
-    "name": "miniorange_inc/miniorange-security-suite",
+    "name": "miniorange_inc/miniorange-magento-security-suite",
     "description": "MiniOrange Security Suite for Magento 2 - Comprehensive security with Admin Logs, 2FA, Brute Force Protection, and IP Restriction",
     "type": "magento2-module",
     "license": [
-        "Commercial"
+        "Commercial",
+        "OSL-3.0",
+        "AFL-3.0"
     ],
     "authors": [
         {
-            "name": "miniOrange Team",
-            "homepage": "http://www.miniorange.com/",
+            "name": "miniOrange",
+            "homepage": "https://www.miniorange.com/",
             "email": "info@xecurify.com"
         }
     ],
+    "version": "1.0.0",
     "keywords": [
         "Magento 2",
         "Magento",
         "Adobe Commerce",
         "Security",
+        "Magento 2 Security Suite",
+        "Magento 2 Admin Logs",
+        "Magento 2 2FA",
+        "Magento 2 Brute Force Protection",
+        "Magento 2 IP Restriction",
+        "Magento 2 IP Blocking",
+        "Magento 2 Login Security",
         "Admin Logs",
         "User Activity Logs",
         "Two Factor Authentication",
@@ -28,10 +38,10 @@
         "Login Security"
     ],
     "require": {
-        "php": "~5|~6|~7|~8"
+        "php": "~7|~8"
     },
     "support": {
-        "email": "info@xecurify.com"
+        "email": "magentosupport@xecurify.com"
     },
     "replace": {
         "miniorange_inc/adminlogs": "self.version",

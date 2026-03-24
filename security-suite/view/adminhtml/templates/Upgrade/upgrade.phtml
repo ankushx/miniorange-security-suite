@@ -83,8 +83,8 @@ $versions = 'v1.0.0';
                 <div class="upgrade-banner">
                     <div class="plan-info">
                         <div class="plan-status">Current Plan</div>
-                        <div class="panel-title_report"><?php echo $plan_name; ?> <span
-                                class="plan-version">Version <?php echo $versions; ?></span>
+                            <div class="panel-title_report"> <?php echo $this->escapeHtml($plan_name); ?> <span 
+                                class="plan-version">Version <?php echo $this->escapeHtml($versions); ?></span>
 
                             <!-- <span>
                             <a href="https://plugins.miniorange.com/magento-oauth-single-sign-on-sso#pricing" target="_blank" class="btn btn-primary" style="float: right;font-size:1.4rem">
@@ -134,13 +134,13 @@ $versions = 'v1.0.0';
                     <?php foreach ($products as $product): ?>
                         <div class="product-card">
                             <div class="product-image">
-                                <img src="<?php echo $product['image']; ?>" loading="lazy" alt="<?php echo $product['alt']; ?>">
+                                <img src="<?php echo $this->escapeUrl($product['image']); ?>" loading="lazy" alt="<?php echo $this->escapeHtml($product['alt']); ?>">
                             </div>
                             <div class="product-details">
-                                <h3 class="product-title"><?php echo $product['title']; ?></h3>
-                                <p class="product-description"><?php echo $product['description']; ?></p>
+                                <h3 class="product-title"><?php echo $this->escapeHtml($product['title']); ?></h3>
+                                <p class="product-description"><?php echo $this->escapeHtml($product['description']); ?></p>
                                 <div class="product-actions">
-                                    <a href="<?php echo $product['link']; ?>" target="_blank"
+                                    <a href="<?php echo $this->escapeUrl($product['link']); ?>" target="_blank"
                                        class="btn btn-primary position">View Details</a>
                                 </div>
                             </div>

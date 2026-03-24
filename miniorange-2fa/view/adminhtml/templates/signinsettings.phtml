@@ -588,8 +588,8 @@
                             <div style="display: flex; align-items: center;">
                                 <form method="post" action="" style="display: inline;">
                                     <input type="hidden" name="form_key" value="<?= $block->escapeHtmlAttr($formKey) ?>" />
-                                    <input type="hidden" name="option" value="delete_existing_rule" />
-                                    <input type="hidden" name="delete_role" value="${rule.role || 'All Roles'}" />
+                                    <input type="hidden" name="option" value="delete_existing_rule" >
+                                    <input type="hidden" name="delete_role" value="${rule.role || 'All Roles'}" >
                                     <button type="submit" class="delete-btn" <?php print_r($create_account_first); ?>
                                             style="border:none; background-color:transparent; padding: 0.5rem; font-size: 1.4rem; cursor: pointer; color: black;" title="Delete Rule">
                                         <i class="fas fa-trash-alt"></i>
@@ -665,9 +665,9 @@
                             <div style="display: flex; align-items: center;">
                                 <form method="post" action="" style="display: inline;">
                                     <input type="hidden" name="form_key" value="<?= $block->escapeHtmlAttr($formKey) ?>" />
-                                    <input type="hidden" name="option" value="delete_existing_rule_customer" />
-                                    <input type="hidden" name="delete_site" value="${rule.site === 'base' ? 'base' : (rule.site || 'All Sites')}" />
-                                    <input type="hidden" name="delete_group" value="${rule.group || 'All Groups'}" />
+                                    <input type="hidden" name="option" value="delete_existing_rule_customer" >
+                                    <input type="hidden" name="delete_site" value="${rule.site === 'base' ? 'base' : (rule.site || 'All Sites')}" >
+                                    <input type="hidden" name="delete_group" value="${rule.group || 'All Groups'}" >
                                     <button type="submit" class="delete-btn" <?php print_r($create_account_first); ?>
                                             style="border:none; background-color:transparent; padding: 0.5rem; font-size: 1.4rem; cursor: pointer; color: black;" title="Delete Rule">
                                         <i class="fas fa-trash-alt"></i>

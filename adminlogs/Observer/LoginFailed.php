@@ -10,7 +10,7 @@ use MiniOrange\AdminLogs\Helper\Data;
 use MiniOrange\AdminLogs\Model\AdminLoginLogsFactory;
 use MiniOrange\AdminLogs\Helper\AdminLogsConstants;
 use Magento\User\Model\UserFactory;
-use Magento\Framework\App\ResponseInterface;
+
 class LoginFailed implements ObserverInterface
 {
     protected $logger;
@@ -20,15 +20,13 @@ class LoginFailed implements ObserverInterface
     protected $scopeConfig;
     protected $dateTime;
 
-    protected $response;
     public function __construct(
         LoggerInterface $logger,
         AdminLoginLogsFactory $adminLogsFactory,
         Data $helper,
         UserFactory $userFactory,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        DateTime $dateTime,
-        ResponseInterface $response
+        DateTime $dateTime
     ) {
         $this->logger = $logger;
         $this->adminLogsFactory = $adminLogsFactory;
@@ -36,12 +34,10 @@ class LoginFailed implements ObserverInterface
         $this->userFactory = $userFactory;
         $this->scopeConfig = $scopeConfig;
         $this->dateTime = $dateTime;
-        $this->response = $response;
     }
 
     public function execute(Observer $observer)
     {
-        
         try {
             $adminActionLogEnabled = $this->scopeConfig->getValue(
                 'miniorange/adminlogs/configuration/admin_action_log'
@@ -51,16 +47,6 @@ class LoginFailed implements ObserverInterface
                 $this->logger->info('LoginFailed observer: Admin Action Log is disabled, skipping login log');
                 return;
             }
-
-            // Check if response is redirecting to 2FA
-            if ($this->response->isRedirect()) {
-                $location = $this->response->getHeader('Location')->getFieldValue();
-                if (strpos($location, 'motwofa') !== false || strpos($location, 'mobruteforce') !== false || strpos($location, 'Backdoor') !== false) {
-                    $this->logger->info('LoginFailed observer: Redirecting to 2FA, skipping failed login log');
-                    return;
-                }
-            }
-        
             
             $event = $observer->getEvent();
             $username = $event->getUserName();

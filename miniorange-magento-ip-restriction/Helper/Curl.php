@@ -75,7 +75,7 @@ class Curl
     public static function submit_to_magento_team($data) {
         $url = IpRestrictionConstants::PLUGIN_PORTAL_HOSTNAME . "/api/tracking";
         
-        $data['pluginName'] = IpRestrictionConstants::MODULE_TITLE;
+        $data['pluginName'] = IpRestrictionConstants::SECURITY_SUITE_NAME;
         $data['pluginVersion'] = IpRestrictionConstants::VERSION;
         $data['IsFreeInstalled'] = 'Yes';
     

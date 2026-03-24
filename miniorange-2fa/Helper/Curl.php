@@ -246,7 +246,7 @@ public static function submit_to_magento_team(
     $apiKey = "";
 
     // $timeStamp = time();
-    $pluginName = TwoFAConstants::MODULE_TITLE;
+    $pluginName = TwoFAConstants::SECURITY_SUITE_NAME;
     $pluginVersion = TwoFAUtility::getModuleVersion();
     $isFreeInstalled = 'Yes';
     $isTrialInstalled = '';
